@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
-	"savour-core/rpc/savourrpc/go-savourrpc/common"
-	"savour-core/rpc/savourrpc/go-savourrpc/wallet"
+	"github.com/SavourDao/savour-core/rpc/savourrpc/go-savourrpc/common"
+	"github.com/SavourDao/savour-core/rpc/savourrpc/go-savourrpc/wallet"
 )
 
 type WalletRpcServer struct {

@@ -3,11 +3,11 @@ package eth
 import (
 	"errors"
 	"fmt"
+	"github.com/SavourDao/savour-core/wallet/ethereum/factory"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"math/big"
-	"savour-core/wallet/ethereum/factory"
 )
 
 func (client *EthClient) Erc20BalanceOf(tokenAddress, account string, blockNumber *big.Int) (*big.Int, error) {

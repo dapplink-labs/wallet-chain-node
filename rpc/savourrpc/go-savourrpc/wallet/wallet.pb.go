@@ -7,7 +7,7 @@
 package wallet
 
 import (
-	common "savour-core/rpc/savourrpc/go-savourrpc/common"
+	common "github.com/SavourDao/savour-core/rpc/savourrpc/go-savourrpc/common"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
