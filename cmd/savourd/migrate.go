@@ -1,1 +1,5 @@
 package savourd
+
+func MigrateCmd() {
+
+}

@@ -19,8 +19,7 @@ type Database struct {
 }
 
 type RpcServer struct {
-	Ip   string `yaml:"ip"`
-	Port int    `yaml:"port"`
+	RpcUrl string `yaml:"rpc_url"`
 }
 
 func LoadConfigFile(filePath string, cfg *Config) error {
