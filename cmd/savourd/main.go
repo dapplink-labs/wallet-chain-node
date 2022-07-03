@@ -1,5 +1,0 @@
-package savourd
-
-func main() {
-
-}

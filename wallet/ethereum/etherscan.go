@@ -1,4 +1,4 @@
-package eth
+package ethereum
 
 import (
 	etherscan "github.com/nanmu42/etherscan-api"

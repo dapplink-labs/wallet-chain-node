@@ -84,24 +84,17 @@ type transferParams struct {
 	Value *big.Int
 }
 
-type transferFromParams struct {
-	From  common.Address
-	To    common.Address
-	Value *big.Int
-}
-
 // UnpackTransfer unpack parameters binding the contract method 0xa9059cbb.
 //
 // Solidity: function transfer(_to address, _value uint256) returns()
-/*func (_Token *TokenContractWrapper) UnpackTransfer(data []byte) (to common.Address, value *big.Int, err error) {
+func (_Token *TokenContractWrapper) UnpackTransfer(data []byte) (to common.Address, value *big.Int, err error) {
 	params := transferParams{}
 	method, err := _Token.abi.MethodById(data)
 	if err != nil {
 		return
 	}
-
 	if method.Name != "transfer" {
-		err = errors.New(fmt.Sprintf("invalid method, not for transfer %v", method))
+		err = errors.New("invalid method, not for transfer")
 		return
 	}
 	err = _Token.unpackInput(&params, "transfer", data[4:])
@@ -110,41 +103,13 @@ type transferFromParams struct {
 	}
 	to, value = params.To, params.Value
 	return
-} */
-
-func (_Token *TokenContractWrapper) UnpackTransfer(data []byte) (from, to common.Address, value *big.Int, err error) {
-	method, err := _Token.abi.MethodById(data)
-	if err != nil {
-		return
-	}
-	switch method.Name {
-	case "transfer":
-		params := transferParams{}
-		err = _Token.unpackInput(&params, "transfer", data[4:])
-		if err != nil {
-			return
-		}
-		from = common.Address{}
-		to, value = params.To, params.Value
-	case "transferFrom":
-		params := transferFromParams{}
-		err = _Token.unpackInput(&params, "transferFrom", data[4:])
-		if err != nil {
-			return
-		}
-		from, to, value = params.From, params.To, params.Value
-	default:
-		err = errors.New("invalid method, not for transfer")
-		return
-	}
-	return
 }
 
 // call invokes the (constant) contract method with params as input values and
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-// from go-ethereum/accounts/abi/bind/base.go
+// from go-ethereum/accounts/abi/bind/solana.go
 func (_Token *TokenContractWrapper) call(opts *bind.CallOpts, blockNumber *big.Int,
 	result interface{}, method string, params ...interface{}) error {
 	// Don't crash on a lazy user
@@ -194,7 +159,7 @@ func (_Token *TokenContractWrapper) call(opts *bind.CallOpts, blockNumber *big.I
 }
 
 // RawTransact invokes the (paid) contract method with params as input values.
-// from go-ethereum/accounts/abi/bind/base.go
+// from go-ethereum/accounts/abi/bind/solana.go
 // modification: do not sign or send the transaction
 func (_Token *TokenContractWrapper) RawTransact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
 	// Otherwise pack up the parameters and invoke the contract
@@ -207,7 +172,7 @@ func (_Token *TokenContractWrapper) RawTransact(opts *bind.TransactOpts, method 
 
 // rawTransact executes an actual transaction invocation, first deriving any missing
 // authorization fields, and then scheduling the transaction for execution.
-// from go-ethereum/accounts/abi/bind/base.go
+// from go-ethereum/accounts/abi/bind/solana.go
 // modification: do not sign or send the transaction
 func (_Token *TokenContractWrapper) rawTransact(opts *bind.TransactOpts, contract *common.Address, input []byte) (*types.Transaction, error) {
 	// Ensure a valid value field and resolve the account nonce
@@ -259,7 +224,7 @@ func (_Token *TokenContractWrapper) unpackInput(v interface{}, name string, inpu
 
 // ensureContext is a helper method to ensure a context is not nil, even if the
 // user specified it as such.
-// from go-ethereum/accounts/abi/bind/base.go
+// from go-ethereum/accounts/abi/bind/solana.go
 func ensureContext(ctx context.Context) context.Context {
 	if ctx == nil {
 		return context.TODO()

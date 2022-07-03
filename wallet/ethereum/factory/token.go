@@ -1,3 +1,6 @@
+// Code generated - DO NOT EDIT.
+// This file is a generated binding and any manual changes will be lost.
+
 package factory
 
 import (
@@ -108,6 +111,7 @@ func NewTokenCaller(address common.Address, caller bind.ContractCaller) (*TokenC
 	return &TokenCaller{contract: contract}, nil
 }
 
+// NewTokenTransactor creates a new write-only instance of Token, bound to a specific deployed contract.
 func NewTokenTransactor(address common.Address, transactor bind.ContractTransactor) (*TokenTransactor, error) {
 	contract, err := bindToken(address, nil, transactor, nil)
 	if err != nil {
@@ -116,6 +120,7 @@ func NewTokenTransactor(address common.Address, transactor bind.ContractTransact
 	return &TokenTransactor{contract: contract}, nil
 }
 
+// NewTokenFilterer creates a new log filterer instance of Token, bound to a specific deployed contract.
 func NewTokenFilterer(address common.Address, filterer bind.ContractFilterer) (*TokenFilterer, error) {
 	contract, err := bindToken(address, nil, nil, filterer)
 	if err != nil {
@@ -124,6 +129,7 @@ func NewTokenFilterer(address common.Address, filterer bind.ContractFilterer) (*
 	return &TokenFilterer{contract: contract}, nil
 }
 
+// bindToken binds a generic wrapper to an already deployed contract.
 func bindToken(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
 	parsed, err := abi.JSON(strings.NewReader(TokenABI))
 	if err != nil {
@@ -132,30 +138,47 @@ func bindToken(address common.Address, caller bind.ContractCaller, transactor bi
 	return bind.NewBoundContract(address, parsed, caller, transactor, filterer), nil
 }
 
+// Call invokes the (constant) contract method with params as input values and
+// sets the output to result. The result type might be a single field for simple
+// returns, a slice of interfaces for anonymous returns and a struct for named
+// returns.
 func (_Token *TokenRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
 	return _Token.Contract.TokenCaller.contract.Call(opts, result, method, params...)
 }
 
+// Transfer initiates a plain transaction to move funds to the contract, calling
+// its default method if one is available.
 func (_Token *TokenRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
 	return _Token.Contract.TokenTransactor.contract.Transfer(opts)
 }
 
+// Transact invokes the (paid) contract method with params as input values.
 func (_Token *TokenRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
 	return _Token.Contract.TokenTransactor.contract.Transact(opts, method, params...)
 }
 
+// Call invokes the (constant) contract method with params as input values and
+// sets the output to result. The result type might be a single field for simple
+// returns, a slice of interfaces for anonymous returns and a struct for named
+// returns.
 func (_Token *TokenCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
 	return _Token.Contract.contract.Call(opts, result, method, params...)
 }
 
+// Transfer initiates a plain transaction to move funds to the contract, calling
+// its default method if one is available.
 func (_Token *TokenTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
 	return _Token.Contract.contract.Transfer(opts)
 }
 
+// Transact invokes the (paid) contract method with params as input values.
 func (_Token *TokenTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
 	return _Token.Contract.contract.Transact(opts, method, params...)
 }
 
+// Allowance is a free data retrieval call binding the contract method 0xdd62ed3e.
+//
+// Solidity: function allowance( address,  address) constant returns(uint256)
 func (_Token *TokenCaller) Allowance(opts *bind.CallOpts, arg0 common.Address, arg1 common.Address) (*big.Int, error) {
 	var (
 		ret0 = new(*big.Int)
@@ -165,14 +188,23 @@ func (_Token *TokenCaller) Allowance(opts *bind.CallOpts, arg0 common.Address, a
 	return *ret0, err
 }
 
+// Allowance is a free data retrieval call binding the contract method 0xdd62ed3e.
+//
+// Solidity: function allowance( address,  address) constant returns(uint256)
 func (_Token *TokenSession) Allowance(arg0 common.Address, arg1 common.Address) (*big.Int, error) {
 	return _Token.Contract.Allowance(&_Token.CallOpts, arg0, arg1)
 }
 
+// Allowance is a free data retrieval call binding the contract method 0xdd62ed3e.
+//
+// Solidity: function allowance( address,  address) constant returns(uint256)
 func (_Token *TokenCallerSession) Allowance(arg0 common.Address, arg1 common.Address) (*big.Int, error) {
 	return _Token.Contract.Allowance(&_Token.CallOpts, arg0, arg1)
 }
 
+// BalanceOf is a free data retrieval call binding the contract method 0x70a08231.
+//
+// Solidity: function balanceOf( address) constant returns(uint256)
 func (_Token *TokenCaller) BalanceOf(opts *bind.CallOpts, arg0 common.Address) (*big.Int, error) {
 	var (
 		ret0 = new(*big.Int)
@@ -182,14 +214,23 @@ func (_Token *TokenCaller) BalanceOf(opts *bind.CallOpts, arg0 common.Address) (
 	return *ret0, err
 }
 
+// BalanceOf is a free data retrieval call binding the contract method 0x70a08231.
+//
+// Solidity: function balanceOf( address) constant returns(uint256)
 func (_Token *TokenSession) BalanceOf(arg0 common.Address) (*big.Int, error) {
 	return _Token.Contract.BalanceOf(&_Token.CallOpts, arg0)
 }
 
+// BalanceOf is a free data retrieval call binding the contract method 0x70a08231.
+//
+// Solidity: function balanceOf( address) constant returns(uint256)
 func (_Token *TokenCallerSession) BalanceOf(arg0 common.Address) (*big.Int, error) {
 	return _Token.Contract.BalanceOf(&_Token.CallOpts, arg0)
 }
 
+// Decimals is a free data retrieval call binding the contract method 0x313ce567.
+//
+// Solidity: function decimals() constant returns(uint8)
 func (_Token *TokenCaller) Decimals(opts *bind.CallOpts) (uint8, error) {
 	var (
 		ret0 = new(uint8)
@@ -199,14 +240,23 @@ func (_Token *TokenCaller) Decimals(opts *bind.CallOpts) (uint8, error) {
 	return *ret0, err
 }
 
+// Decimals is a free data retrieval call binding the contract method 0x313ce567.
+//
+// Solidity: function decimals() constant returns(uint8)
 func (_Token *TokenSession) Decimals() (uint8, error) {
 	return _Token.Contract.Decimals(&_Token.CallOpts)
 }
 
+// Decimals is a free data retrieval call binding the contract method 0x313ce567.
+//
+// Solidity: function decimals() constant returns(uint8)
 func (_Token *TokenCallerSession) Decimals() (uint8, error) {
 	return _Token.Contract.Decimals(&_Token.CallOpts)
 }
 
+// Name is a free data retrieval call binding the contract method 0x06fdde03.
+//
+// Solidity: function name() constant returns(string)
 func (_Token *TokenCaller) Name(opts *bind.CallOpts) (string, error) {
 	var (
 		ret0 = new(string)
@@ -216,14 +266,23 @@ func (_Token *TokenCaller) Name(opts *bind.CallOpts) (string, error) {
 	return *ret0, err
 }
 
+// Name is a free data retrieval call binding the contract method 0x06fdde03.
+//
+// Solidity: function name() constant returns(string)
 func (_Token *TokenSession) Name() (string, error) {
 	return _Token.Contract.Name(&_Token.CallOpts)
 }
 
+// Name is a free data retrieval call binding the contract method 0x06fdde03.
+//
+// Solidity: function name() constant returns(string)
 func (_Token *TokenCallerSession) Name() (string, error) {
 	return _Token.Contract.Name(&_Token.CallOpts)
 }
 
+// Symbol is a free data retrieval call binding the contract method 0x95d89b41.
+//
+// Solidity: function symbol() constant returns(string)
 func (_Token *TokenCaller) Symbol(opts *bind.CallOpts) (string, error) {
 	var (
 		ret0 = new(string)
@@ -233,14 +292,23 @@ func (_Token *TokenCaller) Symbol(opts *bind.CallOpts) (string, error) {
 	return *ret0, err
 }
 
+// Symbol is a free data retrieval call binding the contract method 0x95d89b41.
+//
+// Solidity: function symbol() constant returns(string)
 func (_Token *TokenSession) Symbol() (string, error) {
 	return _Token.Contract.Symbol(&_Token.CallOpts)
 }
 
+// Symbol is a free data retrieval call binding the contract method 0x95d89b41.
+//
+// Solidity: function symbol() constant returns(string)
 func (_Token *TokenCallerSession) Symbol() (string, error) {
 	return _Token.Contract.Symbol(&_Token.CallOpts)
 }
 
+// TotalSupply is a free data retrieval call binding the contract method 0x18160ddd.
+//
+// Solidity: function totalSupply() constant returns(uint256)
 func (_Token *TokenCaller) TotalSupply(opts *bind.CallOpts) (*big.Int, error) {
 	var (
 		ret0 = new(*big.Int)
@@ -250,42 +318,72 @@ func (_Token *TokenCaller) TotalSupply(opts *bind.CallOpts) (*big.Int, error) {
 	return *ret0, err
 }
 
+// TotalSupply is a free data retrieval call binding the contract method 0x18160ddd.
+//
+// Solidity: function totalSupply() constant returns(uint256)
 func (_Token *TokenSession) TotalSupply() (*big.Int, error) {
 	return _Token.Contract.TotalSupply(&_Token.CallOpts)
 }
 
+// TotalSupply is a free data retrieval call binding the contract method 0x18160ddd.
+//
+// Solidity: function totalSupply() constant returns(uint256)
 func (_Token *TokenCallerSession) TotalSupply() (*big.Int, error) {
 	return _Token.Contract.TotalSupply(&_Token.CallOpts)
 }
 
+// Approve is a paid mutator transaction binding the contract method 0x095ea7b3.
+//
+// Solidity: function approve(_spender address, _value uint256) returns(success bool)
 func (_Token *TokenTransactor) Approve(opts *bind.TransactOpts, _spender common.Address, _value *big.Int) (*types.Transaction, error) {
 	return _Token.contract.Transact(opts, "approve", _spender, _value)
 }
 
+// Approve is a paid mutator transaction binding the contract method 0x095ea7b3.
+//
+// Solidity: function approve(_spender address, _value uint256) returns(success bool)
 func (_Token *TokenSession) Approve(_spender common.Address, _value *big.Int) (*types.Transaction, error) {
 	return _Token.Contract.Approve(&_Token.TransactOpts, _spender, _value)
 }
 
+// Approve is a paid mutator transaction binding the contract method 0x095ea7b3.
+//
+// Solidity: function approve(_spender address, _value uint256) returns(success bool)
 func (_Token *TokenTransactorSession) Approve(_spender common.Address, _value *big.Int) (*types.Transaction, error) {
 	return _Token.Contract.Approve(&_Token.TransactOpts, _spender, _value)
 }
 
+// ApproveAndCall is a paid mutator transaction binding the contract method 0xcae9ca51.
+//
+// Solidity: function approveAndCall(_spender address, _value uint256, _extraData bytes) returns(success bool)
 func (_Token *TokenTransactor) ApproveAndCall(opts *bind.TransactOpts, _spender common.Address, _value *big.Int, _extraData []byte) (*types.Transaction, error) {
 	return _Token.contract.Transact(opts, "approveAndCall", _spender, _value, _extraData)
 }
 
+// ApproveAndCall is a paid mutator transaction binding the contract method 0xcae9ca51.
+//
+// Solidity: function approveAndCall(_spender address, _value uint256, _extraData bytes) returns(success bool)
 func (_Token *TokenSession) ApproveAndCall(_spender common.Address, _value *big.Int, _extraData []byte) (*types.Transaction, error) {
 	return _Token.Contract.ApproveAndCall(&_Token.TransactOpts, _spender, _value, _extraData)
 }
 
+// ApproveAndCall is a paid mutator transaction binding the contract method 0xcae9ca51.
+//
+// Solidity: function approveAndCall(_spender address, _value uint256, _extraData bytes) returns(success bool)
 func (_Token *TokenTransactorSession) ApproveAndCall(_spender common.Address, _value *big.Int, _extraData []byte) (*types.Transaction, error) {
 	return _Token.Contract.ApproveAndCall(&_Token.TransactOpts, _spender, _value, _extraData)
 }
 
+// Burn is a paid mutator transaction binding the contract method 0x42966c68.
+//
+// Solidity: function burn(_value uint256) returns(success bool)
 func (_Token *TokenTransactor) Burn(opts *bind.TransactOpts, _value *big.Int) (*types.Transaction, error) {
 	return _Token.contract.Transact(opts, "burn", _value)
 }
 
+// Burn is a paid mutator transaction binding the contract method 0x42966c68.
+//
+// Solidity: function burn(_value uint256) returns(success bool)
 func (_Token *TokenSession) Burn(_value *big.Int) (*types.Transaction, error) {
 	return _Token.Contract.Burn(&_Token.TransactOpts, _value)
 }

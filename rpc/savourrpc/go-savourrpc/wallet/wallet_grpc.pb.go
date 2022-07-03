@@ -80,7 +80,6 @@ type WalletServiceServer interface {
 	GetNonce(context.Context, *NonceRequest) (*NonceResponse, error)
 	GetGasPrice(context.Context, *GasPriceRequest) (*GasPriceResponse, error)
 	SendTx(context.Context, *SendTxRequest) (*SendTxResponse, error)
-	mustEmbedUnimplementedWalletServiceServer()
 }
 
 // UnimplementedWalletServiceServer must be embedded to have forward compatible implementations.
