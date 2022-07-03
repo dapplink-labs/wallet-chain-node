@@ -2,13 +2,13 @@ package walletdispatcher
 
 import (
 	"context"
-	"github.com/SavourDao/savour-core/rpc/savourrpc/go-savourrpc/common"
+	"github.com/SavourDao/savour-core/rpc/common"
 	"github.com/SavourDao/savour-core/wallet"
 	"runtime/debug"
 	"strings"
 
 	"github.com/SavourDao/savour-core/config"
-	wallet2 "github.com/SavourDao/savour-core/rpc/savourrpc/go-savourrpc/wallet"
+	wallet2 "github.com/SavourDao/savour-core/rpc/wallet"
 	"github.com/SavourDao/savour-core/wallet/bitcoin"
 	"github.com/SavourDao/savour-core/wallet/ethereum"
 	"github.com/ethereum/go-ethereum/log"
@@ -27,6 +27,36 @@ type ChainType = string
 
 type WalletDispatcher struct {
 	registry map[ChainType]wallet.WalletAdaptor
+}
+
+func (d *WalletDispatcher) GetBalance(ctx context.Context, request *wallet2.BalanceRequest) (*wallet2.BalanceResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetTxByAddress(ctx context.Context, request *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetTxByHash(ctx context.Context, request *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetAccount(ctx context.Context, request *wallet2.AccountRequest) (*wallet2.AccountResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetUtxo(ctx context.Context, request *wallet2.UtxoRequest) (*wallet2.UtxoResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetMinRent(ctx context.Context, request *wallet2.MinRentRequest) (*wallet2.MinRentResponse, error) {
+	//TODO implement me
+	panic("implement me")
 }
 
 func New(conf *config.Config) (*WalletDispatcher, error) {

@@ -5,7 +5,7 @@ package main
 import (
 	"flag"
 	"github.com/SavourDao/savour-core/config"
-	wallet2 "github.com/SavourDao/savour-core/rpc/savourrpc/go-savourrpc/wallet"
+	wallet2 "github.com/SavourDao/savour-core/rpc/wallet"
 	"github.com/SavourDao/savour-core/walletdispatcher"
 	"github.com/ethereum/go-ethereum/log"
 	"google.golang.org/grpc"

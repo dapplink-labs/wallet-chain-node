@@ -2,8 +2,8 @@ package ethereum
 
 import (
 	"github.com/SavourDao/savour-core/config"
-	"github.com/SavourDao/savour-core/rpc/savourrpc/go-savourrpc/common"
-	wallet2 "github.com/SavourDao/savour-core/rpc/savourrpc/go-savourrpc/wallet"
+	"github.com/SavourDao/savour-core/rpc/common"
+	wallet2 "github.com/SavourDao/savour-core/rpc/wallet"
 	"github.com/SavourDao/savour-core/wallet"
 	"github.com/SavourDao/savour-core/wallet/fallback"
 	"github.com/SavourDao/savour-core/wallet/multiclient"
