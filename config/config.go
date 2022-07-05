@@ -25,11 +25,16 @@ type Node struct {
 	Confirmations uint64 `yaml:"confirmations"`
 }
 
+type SolanaNode struct {
+	PublicUrl string `yaml:"public_url"`
+}
+
 // Fullnode define
 type Fullnode struct {
-	Btc Node `yaml:"btc"`
-	Eth Node `yaml:"eth"`
-	Trx Node `yaml:"trx"`
+	Btc Node       `yaml:"btc"`
+	Eth Node       `yaml:"eth"`
+	Trx Node       `yaml:"trx"`
+	Sol SolanaNode `yaml:"solana"`
 }
 
 // Config instance define

@@ -16,6 +16,8 @@ fullnode:
     rpcs:
       - rpc_url:
     confirmations: 4
+  solana:
+    public_api: 'https://public-api.solscan.io'
 
 chains: [btc, eth]
 

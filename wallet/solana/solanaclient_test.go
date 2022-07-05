@@ -1,53 +1,62 @@
 package solana
 
 import (
-	"context"
+	"fmt"
 	"github.com/SavourDao/savour-core/config"
-	"github.com/davecgh/go-spew/spew"
-	"github.com/ethereum/go-ethereum/params"
-	"github.com/gagliardetto/solana-go"
-	"github.com/gagliardetto/solana-go/rpc"
-	"math/big"
-	"sync"
+	"testing"
 )
 
-type solanaClient struct {
-	*rpc.Client
-	chainConfig      *params.ChainConfig
-	cacheBlockNumber *big.Int
-	cacheTime        int64
-	rw               sync.RWMutex
-	confirmations    uint64
-	local            bool
-}
-
-// newSolanaClients init the eth client
-func newSolanaClients(conf *config.Config) ([]*solanaClient, error) {
-	endpoint := rpc.MainNetBeta_RPC
-	var clients []*solanaClient
-
-	client := rpc.New(endpoint)
-	clients = append(clients, &solanaClient{
-		Client: client,
+func mockConfig() []*solanaClient {
+	client, _ := newSolanaClients(&config.Config{Fullnode: config.Fullnode{
+		Sol: config.SolanaNode{
+			PublicUrl: "https://public-api.solscan.io",
+		},
+	},
 	})
-	return clients, nil
+	return client
 }
 
-func (sol *solanaClient) GetLatestBlockHeight() string {
-	pubKey := solana.MustPublicKeyFromBase58("7xLk17EQQ5KLDLDe44wCmupJKJjTGd8hs3eSVVhCx932")
-	out, err := sol.Client.GetBalance(
-		context.TODO(),
-		pubKey,
-		rpc.CommitmentFinalized,
-	)
-	if err != nil {
-		panic(err)
+func TestSolanaClient_GetBalance(t *testing.T) {
+	client, _ := newSolanaClients(nil)
+	balance := client[0].GetBalance("57vSaRTqN9iXaemgh4AoDsZ63mcaoshfMK8NP3Z5QNbs")
+	fmt.Printf("%s", balance)
+	if balance != "1.99359136" {
+		t.Fatalf("want 1 got %s", balance)
 	}
-	spew.Dump(out)
-	spew.Dump(out.Value) // total lamports on the account; 1 sol = 1000000000 lamports
+}
 
-	var lamportsOnAccount = new(big.Float).SetUint64(uint64(out.Value))
-	// Convert lamports to sol:
-	var solBalance = new(big.Float).Quo(lamportsOnAccount, new(big.Float).SetUint64(solana.LAMPORTS_PER_SOL))
-	return solBalance.String()
+func TestSolanaClient_GetTxByHash(t *testing.T) {
+	client := mockConfig()
+	client[0].GetTxByHash("2DdXMh6QcxnoHnBnAemkzn1QpAYgd1eN1tRxbHQYBmeSYEbjP9yRPA3PNkR7D2HRCcV84oQsYNM2K5KsF9wDBWgE")
+}
+
+//func TestSolanaClient_GetFee(t *testing.T) {
+//	client, _ := newSolanaClients(nil)
+//	balance := client[0].GetFee()
+//	fmt.Printf("%s", balance)
+//}
+
+func TestSolanaClient_GetTransferHistory(t *testing.T) {
+	client, _ := newSolanaClients(nil)
+	balance := client[0].GetTxByAddress("57vSaRTqN9iXaemgh4AoDsZ63mcaoshfMK8NP3Z5QNbs")
+	fmt.Println(balance)
+}
+
+func TestSolanaClient_SendTx(t *testing.T) {
+	client := mockConfig()
+	client[0].SendTx()
+}
+
+func TestSolanaClient_GetAccount(t *testing.T) {
+	client := mockConfig()
+	address, pri, _ := client[0].GetAccount()
+	fmt.Println(address)
+	fmt.Println(pri)
+}
+
+func TestSolanaClient_RequestAirdrop(t *testing.T) {
+	client := mockConfig()
+	//client[0].RequestAirdrop("9rZPARQ11UsUcyPDhZ6b98ii4HWYV8wNwfxCBexG8YVX")
+	balance := client[0].GetBalance("9rZPARQ11UsUcyPDhZ6b98ii4HWYV8wNwfxCBexG8YVX")
+	fmt.Println(balance)
 }
