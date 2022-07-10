@@ -6,6 +6,7 @@ require (
 	github.com/btcsuite/btcd v0.20.1-beta
 	github.com/ethereum/go-ethereum v1.9.15
 	github.com/hashicorp/golang-lru v0.5.4
+	github.com/mr-tron/base58 v1.2.0
 	github.com/nanmu42/etherscan-api v1.7.0
 	github.com/pkg/errors v0.9.1
 	github.com/portto/solana-go-sdk v1.18.0
@@ -42,7 +43,6 @@ require (
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mattn/go-isatty v0.0.11 // indirect
 	github.com/mattn/go-runewidth v0.0.4 // indirect
-	github.com/mr-tron/base58 v1.2.0 // indirect
 	github.com/olekukonko/tablewriter v0.0.2-0.20190409134802-7e037d187b0c // indirect
 	github.com/pborman/uuid v0.0.0-20170112150404-1b00554d8222 // indirect
 	github.com/peterh/liner v1.1.1-0.20190123174540-a2c9a5303de7 // indirect
