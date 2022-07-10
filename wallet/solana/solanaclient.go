@@ -165,7 +165,7 @@ var feePayer, _ = types.AccountFromBase58("4TMFNY9ntAn3CHzguSAvDNLPRoQTaK3sWbQQX
 // 9aE476sH92Vz7DMPyq5WLPkrKWivxeuTKEFKd2sZZcde
 var alice, _ = types.AccountFromBase58("4voSPg3tYuWbKzimpQK9EbXHmuyy5fUrtXvpLDMLkmY6TRncaTHAKGD8jUg3maB5Jbrd9CkQg4qjJMyN6sQvnEF2")
 
-func (sol *solanaClient) SendTx() {
+func (sol *solanaClient) SendTx() string {
 
 	// get nonce account
 	nonceAccountPubkey := common.PublicKeyFromString("DJyNpXgggw1WGgjTVzFsNjb3fuQZVMqhoakvSBfX9LYx")
@@ -201,6 +201,7 @@ func (sol *solanaClient) SendTx() {
 	}
 
 	fmt.Println("txhash", sig)
+	return sig
 }
 
 func (sol *solanaClient) GetNonce(address string) string {
