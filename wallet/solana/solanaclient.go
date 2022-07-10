@@ -60,7 +60,7 @@ func (sol *solanaClient) GetBalance(address string) string {
 		panic(err)
 	}
 
-	var lamportsOnAccount = new(big.Float).SetUint64(uint64(out.Value))
+	var lamportsOnAccount = new(big.Float).SetUint64(out.Value)
 	// Convert lamports to sol:
 	var solBalance = new(big.Float).Quo(lamportsOnAccount, new(big.Float).SetUint64(solana.LAMPORTS_PER_SOL))
 	return solBalance.String()
@@ -147,13 +147,6 @@ func (sol *solanaClient) RequestAirdrop(address string) {
 }
 
 func (sol *solanaClient) SendTx() {
-	//_, err := sol.Client.SendTransaction(
-	//	context.Background(),
-	//	&solana.Transaction{
-	//		Signatures: nil,
-	//		Message:    solana.Message{},
-	//	},
-	//)
 
 	// Create a new WS client (used for confirming transactions)
 	wsClient, err := ws.Connect(context.Background(), rpc.DevNet_WS)
@@ -215,10 +208,3 @@ func (sol *solanaClient) SendTx() {
 	}
 	spew.Dump(sig)
 }
-
-//GetSupportCoins(req *wallet2.SupportCoinsRequest) (*wallet2.SupportCoinsResponse, error)
-//GetNonce(req *wallet2.NonceRequest) (*wallet2.NonceResponse, error)
-//GetGasPrice(req *wallet2.GasPriceRequest) (*wallet2.GasPriceResponse, error)
-//SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxResponse, error)
-//GetUtxo(req *wallet2.UtxoRequest) (*wallet2.UtxoResponse, error)
-//GetMinRent(req *wallet2.MinRentRequest) (*wallet2.MinRentResponse, error)
