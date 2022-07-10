@@ -20,12 +20,30 @@ type WalletAdaptor struct {
 }
 
 func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.BalanceResponse, error) {
-	panic("implement me")
+	balance := a.getClient().GetBalance(req.Address)
+	return &wallet2.BalanceResponse{
+		Balance: balance,
+	}, nil
 }
 
 func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	txs := a.getClient().GetTxByAddress(req.Address)
+	list := make([]*wallet2.TxMessage, 0, len(txs))
+	for i := 0; i < len(txs); i++ {
+		list = append(list, &wallet2.TxMessage{
+			Hash:   txs[i].TxHash,
+			To:     txs[i].Dst,
+			From:   txs[i].Src,
+			Fee:    txs[i].TxHash,
+			Status: true,
+			Value:  string(rune(txs[i].Lamport)),
+			Type:   1,
+			Height: string(txs[i].Slot),
+		})
+	}
+	return &wallet2.TxAddressResponse{
+		Tx: list,
+	}, nil
 }
 
 func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {
