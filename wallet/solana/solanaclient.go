@@ -5,26 +5,25 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/SavourDao/savour-core/config"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/ethereum/go-ethereum/params"
-	bin "github.com/gagliardetto/binary"
-	"github.com/gagliardetto/solana-go"
-	"github.com/gagliardetto/solana-go/programs/system"
-	"github.com/gagliardetto/solana-go/rpc"
-	confirm "github.com/gagliardetto/solana-go/rpc/sendAndConfirmTransaction"
-	"github.com/gagliardetto/solana-go/rpc/ws"
-	"github.com/gagliardetto/solana-go/text"
+	"github.com/mr-tron/base58"
+	"github.com/portto/solana-go-sdk/client"
+	"github.com/portto/solana-go-sdk/common"
+	"github.com/portto/solana-go-sdk/program/memoprog"
+	"github.com/portto/solana-go-sdk/program/sysprog"
+	"github.com/portto/solana-go-sdk/rpc"
+	"github.com/portto/solana-go-sdk/types"
 	"io/ioutil"
 	"log"
 	"math/big"
 	"net/http"
-	"os"
+	"strconv"
 	"sync"
-	"time"
 )
 
 type solanaClient struct {
-	*rpc.Client
+	RpcClient        rpc.RpcClient
+	Client           client.Client
 	solanaConfig     config.SolanaNode
 	chainConfig      *params.ChainConfig
 	cacheBlockNumber *big.Int
@@ -34,35 +33,60 @@ type solanaClient struct {
 	local            bool
 }
 
-// newSolanaClients init the eth client
-func newSolanaClients(conf *config.Config) ([]*solanaClient, error) {
-	//endpoint := rpc.MainNetBeta_RPC
-	endpoint := rpc.DevNet_RPC
-	var clients []*solanaClient
+//func newLocalSolanaClient(network config.NetWorkType) *solanaClient {
+//	var para *params.ChainConfig
+//	switch network {
+//	case config.MainNet:
+//		para = params.MainnetChainConfig
+//	case config.TestNet:
+//		para = params.RopstenChainConfig
+//	case config.RegTest:
+//		para = params.AllCliqueProtocolChanges
+//	default:
+//		panic("unsupported network type")
+//	}
+//	return &solanaClient{
+//		Client:           &solanaClient,
+//		chainConfig:      para,
+//		cacheBlockNumber: nil,
+//		local:            true,
+//	}
+//}
 
-	client := rpc.New(endpoint)
+func (sol *solanaClient) GetLatestBlockHeight() (int64, error) {
+	return 0, nil
+}
+func newSolanaClients(conf *config.Config) ([]*solanaClient, error) {
+	endpoint := rpc.DevnetRPCEndpoint
+	if conf.Fullnode.Sol.NetWork == "testnet" {
+		endpoint = rpc.TestnetRPCEndpoint
+	} else if conf.Fullnode.Sol.NetWork == "mainnet" {
+		endpoint = rpc.MainnetRPCEndpoint
+	}
+	var clients []*solanaClient
+	rpcClient := rpc.NewRpcClient(endpoint)
 	clients = append(clients, &solanaClient{
-		Client:       client,
+		RpcClient:    rpcClient,
 		solanaConfig: conf.Fullnode.Sol,
 	})
-
 	return clients, nil
 }
 
 func (sol *solanaClient) GetBalance(address string) string {
-	pubKey := solana.MustPublicKeyFromBase58(address)
-	out, err := sol.Client.GetBalance(
+	balance, err := sol.RpcClient.GetBalanceWithConfig(
 		context.TODO(),
-		pubKey,
-		rpc.CommitmentFinalized,
+		address,
+		rpc.GetBalanceConfig{
+			Commitment: rpc.CommitmentProcessed,
+		},
 	)
 	if err != nil {
-		panic(err)
+		log.Fatalf("failed to get balance with cfg, err: %v", err)
 	}
 
-	var lamportsOnAccount = new(big.Float).SetUint64(out.Value)
+	var lamportsOnAccount = new(big.Float).SetUint64(balance.Result.Value)
 	// Convert lamports to sol:
-	var solBalance = new(big.Float).Quo(lamportsOnAccount, new(big.Float).SetUint64(solana.LAMPORTS_PER_SOL))
+	var solBalance = new(big.Float).Quo(lamportsOnAccount, new(big.Float).SetUint64(1000000000))
 	return solBalance.String()
 }
 
@@ -102,25 +126,20 @@ func (sol *solanaClient) GetTxByAddress(address string) []GetTxByAddressTx {
 }
 
 func (sol *solanaClient) GetAccount() (string, string, error) {
-	account := solana.NewWallet()
-	address := account.PublicKey().String()
-	private := account.PrivateKey.String()
+	account := types.NewAccount()
+	fmt.Println(account.PublicKey.ToBase58())
+	fmt.Println(base58.Encode(account.PrivateKey))
+
+	address := account.PublicKey.ToBase58()
+	private := base58.Encode(account.PrivateKey)
 	return address, private, nil
 }
 
-func (sol *solanaClient) GetTxByHash(hash string) *rpc.GetTransactionResult {
-	txSig := solana.MustSignatureFromBase58(hash)
-	out, err := sol.Client.GetTransaction(
+func (sol *solanaClient) GetTxByHash(hash string) rpc.GetTransactionResponse {
+	out, err := sol.RpcClient.GetTransaction(
 		context.TODO(),
-		txSig,
-		&rpc.GetTransactionOpts{
-			Encoding: solana.EncodingBase64,
-		},
+		hash,
 	)
-	if err != nil {
-		panic(err)
-	}
-	_, err = solana.TransactionFromDecoder(bin.NewBinDecoder(out.Transaction.GetBinary()))
 	if err != nil {
 		panic(err)
 	}
@@ -128,83 +147,78 @@ func (sol *solanaClient) GetTxByHash(hash string) *rpc.GetTransactionResult {
 }
 
 func (sol *solanaClient) RequestAirdrop(address string) {
-	publicKey, _ := solana.PublicKeyFromBase58(address)
-
-	if true {
-		// Airdrop 5 sol to the account so it will have something to transfer:
-		out, err := sol.Client.RequestAirdrop(
-			context.TODO(),
-			publicKey,
-			solana.LAMPORTS_PER_SOL*1,
-			rpc.CommitmentFinalized,
-		)
-		if err != nil {
-			panic(err)
-		}
-		fmt.Println("airdrop transaction signature:", out)
-		time.Sleep(time.Second * 5)
+	c := client.NewClient(rpc.DevnetRPCEndpoint)
+	sig, err := c.RequestAirdrop(
+		context.TODO(),
+		address,
+		1e9, // lamports (1 SOL = 10^9 lamports)
+	)
+	if err != nil {
+		log.Fatalf("failed to request airdrop, err: %v", err)
 	}
+	fmt.Println(sig)
 }
+
+// FUarP2p5EnxD66vVDL4PWRoWMzA56ZVHG24hpEDFShEz
+var feePayer, _ = types.AccountFromBase58("4TMFNY9ntAn3CHzguSAvDNLPRoQTaK3sWbQQXdDXaE6KWRBLufGL6PJdsD2koiEe3gGmMdRK3aAw7sikGNksHJrN")
+
+// 9aE476sH92Vz7DMPyq5WLPkrKWivxeuTKEFKd2sZZcde
+var alice, _ = types.AccountFromBase58("4voSPg3tYuWbKzimpQK9EbXHmuyy5fUrtXvpLDMLkmY6TRncaTHAKGD8jUg3maB5Jbrd9CkQg4qjJMyN6sQvnEF2")
 
 func (sol *solanaClient) SendTx() {
 
-	// Create a new WS client (used for confirming transactions)
-	wsClient, err := ws.Connect(context.Background(), rpc.DevNet_WS)
+	// get nonce account
+	nonceAccountPubkey := common.PublicKeyFromString("DJyNpXgggw1WGgjTVzFsNjb3fuQZVMqhoakvSBfX9LYx")
+	nonceAccount, err := sol.Client.GetNonceAccount(context.Background(), nonceAccountPubkey.ToBase58())
 	if err != nil {
-		panic(err)
+		log.Fatalf("failed to get nonce account, err: %v", err)
 	}
 
-	recent, err := sol.Client.GetRecentBlockhash(context.TODO(), rpc.CommitmentFinalized)
+	// create a tx
+	tx, err := types.NewTransaction(types.NewTransactionParam{
+		Signers: []types.Account{feePayer, alice},
+		Message: types.NewMessage(types.NewMessageParam{
+			FeePayer:        feePayer.PublicKey,
+			RecentBlockhash: nonceAccount.Nonce.ToBase58(),
+			Instructions: []types.Instruction{
+				sysprog.AdvanceNonceAccount(sysprog.AdvanceNonceAccountParam{
+					Nonce: nonceAccountPubkey,
+					Auth:  alice.PublicKey,
+				}),
+				memoprog.BuildMemo(memoprog.BuildMemoParam{
+					Memo: []byte("use nonce"),
+				}),
+			},
+		}),
+	})
 	if err != nil {
-		panic(err)
-	}
-	// The public key of the account that you will send sol TO:
-	accountTo := solana.MustPublicKeyFromBase58("9rZPARQ11UsUcyPDhZ6b98ii4HWYV8wNwfxCBexG8YVX")
-	// The amount to send (in lamports);
-	// 1 sol = 1000000000 lamports
-	amount := uint64(3333)
-	accountFrom, err := solana.PrivateKeyFromBase58("2qbHWS73PBBhmn3RusnQYRjsBax1ZLuieNXTyAtNp6ZkeRSJ8BaDcheM73FWwE4vg2cvxHG6pcvnZzVojUVGgecH")
-	//accountFrom, err := solana.PrivateKeyFromSolanaKeygenFile("/path/to/.config/solana/id.json")
-
-	tx, err := solana.NewTransaction(
-		[]solana.Instruction{
-			system.NewTransferInstruction(
-				amount,
-				accountFrom.PublicKey(),
-				accountTo,
-			).Build(),
-		},
-		recent.Value.Blockhash,
-		solana.TransactionPayer(accountFrom.PublicKey()),
-	)
-	if err != nil {
-		panic(err)
+		log.Fatalf("failed to new a transaction, err: %v", err)
 	}
 
-	_, err = tx.Sign(
-		func(key solana.PublicKey) *solana.PrivateKey {
-			if accountFrom.PublicKey().Equals(key) {
-				return &accountFrom
-			}
-			return nil
-		},
-	)
+	sig, err := sol.Client.SendTransaction(context.Background(), tx)
 	if err != nil {
-		panic(fmt.Errorf("unable to sign transaction: %w", err))
+		log.Fatalf("failed to send tx, err: %v", err)
 	}
-	spew.Dump(tx)
-	// Pretty print the transaction:
-	tx.EncodeTree(text.NewTreeEncoder(os.Stdout, "Transfer SOL"))
 
-	// Send transaction, and wait for confirmation:
-	sig, err := confirm.SendAndConfirmTransaction(
-		context.TODO(),
-		sol.Client,
-		wsClient,
-		tx,
-	)
+	fmt.Println("txhash", sig)
+}
+
+func (sol *solanaClient) GetNonce(address string) string {
+	nonceAccountAddr := "DJyNpXgggw1WGgjTVzFsNjb3fuQZVMqhoakvSBfX9LYx"
+	nonce, err := sol.Client.GetNonceFromNonceAccount(context.Background(), nonceAccountAddr)
 	if err != nil {
-		panic(err)
+		log.Fatalf("failed to get nonce account, err: %v", err)
 	}
-	spew.Dump(sig)
+
+	fmt.Println("nonce", nonce)
+	return nonce
+}
+
+func (sol *solanaClient) GetMinRent() string {
+	bal, err := sol.RpcClient.GetMinimumBalanceForRentExemption(context.Background(), 100)
+	if err != nil {
+		log.Fatalf("failed to get nonce account, err: %v", err)
+	}
+	fmt.Println("nonce", bal.Result)
+	return strconv.FormatUint(bal.Result, 10)
 }

@@ -6,35 +6,27 @@ import (
 	"testing"
 )
 
-func mockConfig() []*solanaClient {
+func newTestClient() *solanaClient {
 	client, _ := newSolanaClients(&config.Config{Fullnode: config.Fullnode{
 		Sol: config.SolanaNode{
 			PublicUrl: "https://public-api.solscan.io",
+			NetWork:   "devnet",
 		},
 	},
 	})
-	return client
+	return client[0]
 }
 
 func TestSolanaClient_GetBalance(t *testing.T) {
-	client, _ := newSolanaClients(nil)
-	balance := client[0].GetBalance("57vSaRTqN9iXaemgh4AoDsZ63mcaoshfMK8NP3Z5QNbs")
+	client := newTestClient()
+	balance := client.GetBalance("RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7")
 	fmt.Printf("%s", balance)
-	if balance != "1.99359136" {
-		t.Fatalf("want 1 got %s", balance)
-	}
 }
 
 func TestSolanaClient_GetTxByHash(t *testing.T) {
-	client := mockConfig()
-	client[0].GetTxByHash("2DdXMh6QcxnoHnBnAemkzn1QpAYgd1eN1tRxbHQYBmeSYEbjP9yRPA3PNkR7D2HRCcV84oQsYNM2K5KsF9wDBWgE")
+	client := newTestClient()
+	client.GetTxByHash("4F78cfDYrddKwHxQUrkBurGNMh6xfNee47XNbN91Wn7jNQmV3yhTC9ELBMA91FFJTbGtovYeXgPNmPYSJkFd4C8v")
 }
-
-//func TestSolanaClient_GetFee(t *testing.T) {
-//	client, _ := newSolanaClients(nil)
-//	balance := client[0].GetFee()
-//	fmt.Printf("%s", balance)
-//}
 
 func TestSolanaClient_GetTransferHistory(t *testing.T) {
 	client, _ := newSolanaClients(nil)
@@ -42,21 +34,31 @@ func TestSolanaClient_GetTransferHistory(t *testing.T) {
 	fmt.Println(balance)
 }
 
-func TestSolanaClient_SendTx(t *testing.T) {
-	client := mockConfig()
-	client[0].SendTx()
-}
-
 func TestSolanaClient_GetAccount(t *testing.T) {
-	client := mockConfig()
-	address, pri, _ := client[0].GetAccount()
+	client := newTestClient()
+	address, pri, _ := client.GetAccount()
 	fmt.Println(address)
 	fmt.Println(pri)
 }
 
 func TestSolanaClient_RequestAirdrop(t *testing.T) {
-	client := mockConfig()
+	client := newTestClient()
 	//client[0].RequestAirdrop("9rZPARQ11UsUcyPDhZ6b98ii4HWYV8wNwfxCBexG8YVX")
-	balance := client[0].GetBalance("9rZPARQ11UsUcyPDhZ6b98ii4HWYV8wNwfxCBexG8YVX")
+	balance := client.GetBalance("9rZPARQ11UsUcyPDhZ6b98ii4HWYV8wNwfxCBexG8YVX")
 	fmt.Println(balance)
+}
+
+func TestSolanaClient_SendTx(t *testing.T) {
+	client := newTestClient()
+	client.SendTx()
+}
+
+func TestSolanaClient_GetNonce(t *testing.T) {
+	client := newTestClient()
+	client.GetNonce("9rZPARQ11UsUcyPDhZ6b98ii4HWYV8wNwfxCBexG8YVX")
+}
+
+func TestSolanaClient_GetMinRent(t *testing.T) {
+	client := newTestClient()
+	client.GetMinRent()
 }

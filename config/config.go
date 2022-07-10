@@ -27,6 +27,7 @@ type Node struct {
 
 type SolanaNode struct {
 	PublicUrl string `yaml:"public_url"`
+	NetWork   string `yaml:"network"`
 }
 
 // Fullnode define
