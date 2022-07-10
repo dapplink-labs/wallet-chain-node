@@ -18,6 +18,8 @@ fullnode:
     confirmations: 4
   solana:
     public_api: 'https://public-api.solscan.io'
+    NonceAccountAddr: DJyNpXgggw1WGgjTVzFsNjb3fuQZVMqhoakvSBfX9LYx
+    FeeAccountPriKey: 4TMFNY9ntAn3CHzguSAvDNLPRoQTaK3sWbQQXdDXaE6KWRBLufGL6PJdsD2koiEe3gGmMdRK3aAw7sikGNksHJrN
 
 chains: [btc, eth]
 

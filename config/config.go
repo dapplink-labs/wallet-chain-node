@@ -26,8 +26,10 @@ type Node struct {
 }
 
 type SolanaNode struct {
-	PublicUrl string `yaml:"public_url"`
-	NetWork   string `yaml:"network"`
+	PublicUrl        string `yaml:"public_url"`
+	NetWork          string `yaml:"network"`
+	NonceAccountAddr string `yaml:"NonceAccountAddr"`
+	FeeAccountPriKey string `yaml:"FeeAccountPriKey"`
 }
 
 // Fullnode define

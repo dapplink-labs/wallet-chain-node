@@ -50,7 +50,7 @@ func TestSolanaClient_RequestAirdrop(t *testing.T) {
 
 func TestSolanaClient_SendTx(t *testing.T) {
 	client := newTestClient()
-	client.SendTx()
+	client.SendTx("4voSPg3tYuWbKzimpQK9EbXHmuyy5fUrtXvpLDMLkmY6TRncaTHAKGD8jUg3maB5Jbrd9CkQg4qjJMyN6sQvnEF2")
 }
 
 func TestSolanaClient_GetNonce(t *testing.T) {

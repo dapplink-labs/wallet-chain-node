@@ -54,7 +54,11 @@ type solanaClient struct {
 //}
 
 func (sol *solanaClient) GetLatestBlockHeight() (int64, error) {
-	return 0, nil
+	res, err := sol.RpcClient.GetBlockHeight(context.Background())
+	if err != nil {
+		return 0, err
+	}
+	return int64(res.Result), nil
 }
 func newSolanaClients(conf *config.Config) ([]*solanaClient, error) {
 	endpoint := rpc.DevnetRPCEndpoint
@@ -72,7 +76,7 @@ func newSolanaClients(conf *config.Config) ([]*solanaClient, error) {
 	return clients, nil
 }
 
-func (sol *solanaClient) GetBalance(address string) string {
+func (sol *solanaClient) GetBalance(address string) (string, error) {
 	balance, err := sol.RpcClient.GetBalanceWithConfig(
 		context.TODO(),
 		address,
@@ -82,12 +86,13 @@ func (sol *solanaClient) GetBalance(address string) string {
 	)
 	if err != nil {
 		log.Fatalf("failed to get balance with cfg, err: %v", err)
+		return "", err
 	}
 
 	var lamportsOnAccount = new(big.Float).SetUint64(balance.Result.Value)
 	// Convert lamports to sol:
 	var solBalance = new(big.Float).Quo(lamportsOnAccount, new(big.Float).SetUint64(1000000000))
-	return solBalance.String()
+	return solBalance.String(), nil
 }
 
 type GetTxByAddressRes struct {
@@ -108,12 +113,12 @@ type GetTxByAddressTx struct {
 	TxNumberSolTransfer int    `json:"txNumberSolTransfer"`
 }
 
-func (sol *solanaClient) GetTxByAddress(address string) []GetTxByAddressTx {
+func (sol *solanaClient) GetTxByAddress(address string) ([]GetTxByAddressTx, error) {
 	url := sol.solanaConfig.PublicUrl + "/account/solTransfers?limit=20&account=" + address
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println(err)
-		return nil
+		return nil, err
 	}
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
@@ -121,32 +126,31 @@ func (sol *solanaClient) GetTxByAddress(address string) []GetTxByAddressTx {
 	err = json.Unmarshal(body, &res)
 	if err != nil {
 		log.Println(err)
+		return nil, err
 	}
-	return res.Data
+	return res.Data, nil
 }
 
 func (sol *solanaClient) GetAccount() (string, string, error) {
 	account := types.NewAccount()
-	fmt.Println(account.PublicKey.ToBase58())
-	fmt.Println(base58.Encode(account.PrivateKey))
-
 	address := account.PublicKey.ToBase58()
 	private := base58.Encode(account.PrivateKey)
 	return address, private, nil
 }
 
-func (sol *solanaClient) GetTxByHash(hash string) rpc.GetTransactionResponse {
+func (sol *solanaClient) GetTxByHash(hash string) (interface{}, error) {
 	out, err := sol.RpcClient.GetTransaction(
 		context.TODO(),
 		hash,
 	)
 	if err != nil {
-		panic(err)
+		log.Fatalf("failed to request airdrop, err: %v", err)
+		return nil, err
 	}
-	return out
+	return out, nil
 }
 
-func (sol *solanaClient) RequestAirdrop(address string) {
+func (sol *solanaClient) RequestAirdrop(address string) (string, error) {
 	c := client.NewClient(rpc.DevnetRPCEndpoint)
 	sig, err := c.RequestAirdrop(
 		context.TODO(),
@@ -155,35 +159,31 @@ func (sol *solanaClient) RequestAirdrop(address string) {
 	)
 	if err != nil {
 		log.Fatalf("failed to request airdrop, err: %v", err)
+		return "", err
 	}
-	fmt.Println(sig)
+	return sig, nil
 }
 
-// FUarP2p5EnxD66vVDL4PWRoWMzA56ZVHG24hpEDFShEz
-var feePayer, _ = types.AccountFromBase58("4TMFNY9ntAn3CHzguSAvDNLPRoQTaK3sWbQQXdDXaE6KWRBLufGL6PJdsD2koiEe3gGmMdRK3aAw7sikGNksHJrN")
+func (sol *solanaClient) SendTx(pri string) (string, error) {
 
-// 9aE476sH92Vz7DMPyq5WLPkrKWivxeuTKEFKd2sZZcde
-var alice, _ = types.AccountFromBase58("4voSPg3tYuWbKzimpQK9EbXHmuyy5fUrtXvpLDMLkmY6TRncaTHAKGD8jUg3maB5Jbrd9CkQg4qjJMyN6sQvnEF2")
-
-func (sol *solanaClient) SendTx() string {
-
-	// get nonce account
-	nonceAccountPubkey := common.PublicKeyFromString("DJyNpXgggw1WGgjTVzFsNjb3fuQZVMqhoakvSBfX9LYx")
+	nonceAccountPubkey := common.PublicKeyFromString(sol.solanaConfig.NonceAccountAddr)
 	nonceAccount, err := sol.Client.GetNonceAccount(context.Background(), nonceAccountPubkey.ToBase58())
 	if err != nil {
 		log.Fatalf("failed to get nonce account, err: %v", err)
+		return "", err
 	}
+	var feePayer, _ = types.AccountFromBase58(sol.solanaConfig.FeeAccountPriKey)
+	var userAccount, _ = types.AccountFromBase58(pri)
 
-	// create a tx
 	tx, err := types.NewTransaction(types.NewTransactionParam{
-		Signers: []types.Account{feePayer, alice},
+		Signers: []types.Account{feePayer, userAccount},
 		Message: types.NewMessage(types.NewMessageParam{
 			FeePayer:        feePayer.PublicKey,
 			RecentBlockhash: nonceAccount.Nonce.ToBase58(),
 			Instructions: []types.Instruction{
 				sysprog.AdvanceNonceAccount(sysprog.AdvanceNonceAccountParam{
 					Nonce: nonceAccountPubkey,
-					Auth:  alice.PublicKey,
+					Auth:  userAccount.PublicKey,
 				}),
 				memoprog.BuildMemo(memoprog.BuildMemoParam{
 					Memo: []byte("use nonce"),
@@ -193,33 +193,33 @@ func (sol *solanaClient) SendTx() string {
 	})
 	if err != nil {
 		log.Fatalf("failed to new a transaction, err: %v", err)
+		return "", err
 	}
 
 	sig, err := sol.Client.SendTransaction(context.Background(), tx)
 	if err != nil {
 		log.Fatalf("failed to send tx, err: %v", err)
+		return "", err
 	}
 
-	fmt.Println("txhash", sig)
-	return sig
+	return sig, nil
 }
 
-func (sol *solanaClient) GetNonce(address string) string {
-	nonceAccountAddr := "DJyNpXgggw1WGgjTVzFsNjb3fuQZVMqhoakvSBfX9LYx"
-	nonce, err := sol.Client.GetNonceFromNonceAccount(context.Background(), nonceAccountAddr)
+func (sol *solanaClient) GetNonce() (string, error) {
+	nonce, err := sol.Client.GetNonceFromNonceAccount(context.Background(), sol.solanaConfig.NonceAccountAddr)
 	if err != nil {
 		log.Fatalf("failed to get nonce account, err: %v", err)
+		return "", err
 	}
-
-	fmt.Println("nonce", nonce)
-	return nonce
+	return nonce, nil
 }
 
-func (sol *solanaClient) GetMinRent() string {
+func (sol *solanaClient) GetMinRent() (string, error) {
 	bal, err := sol.RpcClient.GetMinimumBalanceForRentExemption(context.Background(), 100)
 	if err != nil {
-		log.Fatalf("failed to get nonce account, err: %v", err)
+		log.Fatalf("failed to get GetMinimumBalanceForRentExemption , err: %v", err)
+		return "", err
+
 	}
-	fmt.Println("nonce", bal.Result)
-	return strconv.FormatUint(bal.Result, 10)
+	return strconv.FormatUint(bal.Result, 10), nil
 }
