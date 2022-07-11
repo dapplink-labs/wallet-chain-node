@@ -168,7 +168,6 @@ func (wa *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxResp
 		}, err
 	}
 	log.Info("broadcast tx", "tx", hexutil.Encode([]byte(req.RawTx)))
-
 	txHash := fmt.Sprintf("0x%x", signedTx.Hash())
 	if err := wa.getClient().SendTransaction(context.TODO(), signedTx); err != nil {
 		log.Error("braoadcast tx failed", "tx_hash", txHash, "err", err)
