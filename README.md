@@ -45,7 +45,7 @@ go build 或者 go install savour-core
 
 将 savour-core fork 到您自己的代码仓库
 
-### 第二步： clone 你自己仓库的代码
+### 第二步： clone 您自己仓库的代码
 
 ```bash
 git@github.com:guoshijiang/savour-core.git
