@@ -17,12 +17,10 @@ parent:
   <a href="https://pkg.go.dev/github.com/SavourDao/savour-core">
     <img alt="GoDoc" src="https://godoc.org/github.com/SavourDao/savour-core?status.svg" />
   </a>
-  <a href="https://goreportcard.com/report/github.com/SavourDao/savour-core">
-    <img alt="Go report card" src="https://goreportcard.com/badge/github.com/SavourDao/savour-core"/>
-  </a>
 </div>
 
 Savour Core 是 Savour 项目的钱包的后端服务，使用 golang 编写，提供 grpc 接口给上层服务访问
+
 **注意**: 需要 [Go 1.18+](https://golang.org/dl/)
 
 ## 安装
