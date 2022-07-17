@@ -39,6 +39,12 @@ go build 或者 go install savour-core
 ./savour-core -c ./config.yml
 ```
 
+### 启动 RPC 接口测试界面
+
+```bash
+grpcui -plaintext 127.0.0.1:8089
+```
+
 ## 贡献代码
 
 ### 第一步： fork 仓库
