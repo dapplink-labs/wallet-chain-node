@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/SavourDao/savour-core/rpc/common"
 	"github.com/SavourDao/savour-core/wallet"
+	"github.com/SavourDao/savour-core/wallet/solana"
 	"runtime/debug"
 	"strings"
 
@@ -29,32 +30,7 @@ type WalletDispatcher struct {
 	registry map[ChainType]wallet.WalletAdaptor
 }
 
-func (d *WalletDispatcher) GetBalance(ctx context.Context, request *wallet2.BalanceRequest) (*wallet2.BalanceResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (d *WalletDispatcher) GetTxByAddress(ctx context.Context, request *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (d *WalletDispatcher) GetTxByHash(ctx context.Context, request *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (d *WalletDispatcher) GetAccount(ctx context.Context, request *wallet2.AccountRequest) (*wallet2.AccountResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (d *WalletDispatcher) GetUtxo(ctx context.Context, request *wallet2.UtxoRequest) (*wallet2.UtxoResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (d *WalletDispatcher) GetMinRent(ctx context.Context, request *wallet2.MinRentRequest) (*wallet2.MinRentResponse, error) {
+func (d *WalletDispatcher) mustEmbedUnimplementedWalletServiceServer() {
 	//TODO implement me
 	panic("implement me")
 }
@@ -66,6 +42,7 @@ func New(conf *config.Config) (*WalletDispatcher, error) {
 	walletAdaptorFactoryMap := map[string]func(conf *config.Config) (wallet.WalletAdaptor, error){
 		bitcoin.ChainName:  bitcoin.NewChainAdaptor,
 		ethereum.ChainName: ethereum.NewChainAdaptor,
+		solana.ChainName:   solana.NewChainAdaptor,
 	}
 	supportedChains := []string{bitcoin.ChainName, ethereum.ChainName}
 	for _, c := range conf.Chains {
@@ -125,16 +102,11 @@ func (d *WalletDispatcher) preHandler(req interface{}) (resp *CommonReply) {
 	chain := req.(CommonRequest).GetChain()
 	if _, ok := d.registry[chain]; !ok {
 		return &CommonReply{
-			Error:        &common.Error{Code: 2000},
-			SupportCoins: nil,
+			Error:   &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+			Support: false,
 		}
 	}
 	return nil
-}
-
-func (d *WalletDispatcher) GetNonce(ctx context.Context, request *wallet2.NonceRequest) (*wallet2.NonceResponse, error) {
-	//TODO implement me
-	panic("implement me")
 }
 
 func (d *WalletDispatcher) GetSupportCoins(ctx context.Context, request *wallet2.SupportCoinsRequest) (*wallet2.SupportCoinsResponse, error) {
@@ -142,17 +114,100 @@ func (d *WalletDispatcher) GetSupportCoins(ctx context.Context, request *wallet2
 	panic("implement me")
 }
 
+func (d *WalletDispatcher) GetNonce(ctx context.Context, request *wallet2.NonceRequest) (*wallet2.NonceResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.NonceResponse{
+			Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+		}, nil
+	}
+	return d.registry[request.Chain].GetNonce(request)
+}
+
 func (d *WalletDispatcher) GetGasPrice(ctx context.Context, request *wallet2.GasPriceRequest) (*wallet2.GasPriceResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.GasPriceResponse{
+			Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+			Gas:   "",
+		}, nil
+	}
+	return d.registry[request.Chain].GetGasPrice(request)
 }
 
 func (d *WalletDispatcher) SendTx(ctx context.Context, request *wallet2.SendTxRequest) (*wallet2.SendTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.SendTxResponse{
+			Error:  &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+			TxHash: "",
+		}, nil
+	}
+	return d.registry[request.Chain].SendTx(request)
 }
 
-func (d *WalletDispatcher) mustEmbedUnimplementedWalletServiceServer() {
-	//TODO implement me
-	panic("implement me")
+func (d *WalletDispatcher) GetBalance(ctx context.Context, request *wallet2.BalanceRequest) (*wallet2.BalanceResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.BalanceResponse{
+			Error:   &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+			Balance: "",
+		}, nil
+	}
+	return d.registry[request.Chain].GetBalance(request)
+}
+
+func (d *WalletDispatcher) GetTxByAddress(ctx context.Context, request *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.TxAddressResponse{
+			Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+			Tx:    nil,
+		}, nil
+	}
+	return d.registry[request.Chain].GetTxByAddress(request)
+}
+
+func (d *WalletDispatcher) GetTxByHash(ctx context.Context, request *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.TxHashResponse{
+			Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+			Tx:    nil,
+		}, nil
+	}
+	return d.registry[request.Chain].GetTxByHash(request)
+}
+
+func (d *WalletDispatcher) GetAccount(ctx context.Context, request *wallet2.AccountRequest) (*wallet2.AccountResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.AccountResponse{
+			Error:         &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+			AccountNumber: "",
+			Sequence:      "",
+		}, nil
+	}
+	return d.registry[request.Chain].GetAccount(request)
+}
+
+func (d *WalletDispatcher) GetUtxo(ctx context.Context, request *wallet2.UtxoRequest) (*wallet2.UtxoResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.UtxoResponse{
+			Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+		}, nil
+	}
+	return d.registry[request.Chain].GetUtxo(request)
+}
+
+func (d *WalletDispatcher) GetMinRent(ctx context.Context, request *wallet2.MinRentRequest) (*wallet2.MinRentResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.MinRentResponse{
+			Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+			Value: "",
+		}, nil
+	}
+	return d.registry[request.Chain].GetMinRent(request)
 }
