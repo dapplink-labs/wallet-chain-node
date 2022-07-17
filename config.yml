@@ -19,5 +19,5 @@ fullnode:
   solana:
     public_api: 'https://public-api.solscan.io'
 
-chains: [eth, sol]
+chains: [btc, eth, solana, trx]
 

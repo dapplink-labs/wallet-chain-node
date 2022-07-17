@@ -46,7 +46,7 @@ func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.
 }
 
 func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {
-	_ = a.getClient().GetTxByHash(req.Hast)
+	_ = a.getClient().GetTxByHash(req.Hash)
 	return &wallet2.TxHashResponse{
 		Tx: &wallet2.TxMessage{
 			//Hash:   tx.Result,
