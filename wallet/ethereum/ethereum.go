@@ -22,7 +22,7 @@ import (
 
 const (
 	ChainName = "eth"
-	Symbol    = "eth"
+	Coin      = "eth"
 )
 
 type WalletAdaptor struct {
@@ -68,11 +68,11 @@ func stringToInt(amount string) *big.Int {
 }
 
 func (wa *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.BalanceResponse, error) {
-	key := strings.Join([]string{req.ChainId, req.CoinId, req.Address, req.ContractAddress}, ":")
+	key := strings.Join([]string{req.Chain, req.Coin, req.Address, req.ContractAddress}, ":")
 	balanceCache := cache.GetBalanceCache()
 	if r, exist := balanceCache.Get(key); exist {
 		return &wallet2.BalanceResponse{
-			Error:   &common.Error{Code: 2000},
+			Error:   &common.Error{Code: common.ReturnCode_SUCCESS},
 			Balance: r.(*big.Int).String(),
 		}, nil
 	}
@@ -86,13 +86,13 @@ func (wa *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balan
 	if err != nil {
 		log.Error("get balance error", "err", err)
 		return &wallet2.BalanceResponse{
-			Error:   &common.Error{Code: 404},
+			Error:   &common.Error{Code: common.ReturnCode_ERROR},
 			Balance: "0",
 		}, err
 	} else {
 		balanceCache.Add(key, result)
 		return &wallet2.BalanceResponse{
-			Error:   &common.Error{Code: 2000},
+			Error:   &common.Error{Code: common.ReturnCode_SUCCESS},
 			Balance: result.String(),
 		}, nil
 	}
@@ -133,12 +133,12 @@ func (wa *WalletAdaptor) GetNonce(req *wallet2.NonceRequest) (*wallet2.NonceResp
 	if err != nil {
 		log.Error("get nonce failed", "err", err)
 		return &wallet2.NonceResponse{
-			Error: &common.Error{Code: 404},
+			Error: &common.Error{Code: common.ReturnCode_ERROR},
 			Nonce: strconv.FormatUint(nonce, 10),
 		}, nil
 	}
 	return &wallet2.NonceResponse{
-		Error: &common.Error{Code: 2000},
+		Error: &common.Error{Code: common.ReturnCode_SUCCESS},
 		Nonce: strconv.FormatUint(nonce, 10),
 	}, nil
 }
@@ -148,12 +148,12 @@ func (wa *WalletAdaptor) GetGasPrice(req *wallet2.GasPriceRequest) (*wallet2.Gas
 	if err != nil {
 		log.Error("get gas price failed", "err", err)
 		return &wallet2.GasPriceResponse{
-			Error: &common.Error{Code: 404},
+			Error: &common.Error{Code: common.ReturnCode_ERROR},
 			Gas:   "",
 		}, nil
 	}
 	return &wallet2.GasPriceResponse{
-		Error: &common.Error{Code: 2000},
+		Error: &common.Error{Code: common.ReturnCode_SUCCESS},
 		Gas:   price.String(),
 	}, nil
 }
@@ -163,7 +163,7 @@ func (wa *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxResp
 	if err := rlp.DecodeBytes([]byte(req.RawTx), signedTx); err != nil {
 		log.Error("signedTx DecodeBytes failed", "err", err)
 		return &wallet2.SendTxResponse{
-			Error:  &common.Error{Code: 404},
+			Error:  &common.Error{Code: common.ReturnCode_ERROR},
 			TxHash: "",
 		}, err
 	}
@@ -172,13 +172,13 @@ func (wa *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxResp
 	if err := wa.getClient().SendTransaction(context.TODO(), signedTx); err != nil {
 		log.Error("braoadcast tx failed", "tx_hash", txHash, "err", err)
 		return &wallet2.SendTxResponse{
-			Error:  &common.Error{Code: 404},
+			Error:  &common.Error{Code: common.ReturnCode_ERROR},
 			TxHash: "",
 		}, err
 	}
 	log.Info("braoadcast tx success", "tx_hash", txHash)
 	return &wallet2.SendTxResponse{
-		Error:  &common.Error{Code: 404},
+		Error:  &common.Error{Code: common.ReturnCode_ERROR},
 		TxHash: txHash,
 	}, nil
 }

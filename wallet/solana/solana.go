@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	ChainName = "solana"
+	ChainName = "SOL"
 	Symbol    = "SOL"
 )
 
