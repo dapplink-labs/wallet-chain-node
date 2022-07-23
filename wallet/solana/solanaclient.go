@@ -33,25 +33,22 @@ type solanaClient struct {
 	local            bool
 }
 
-//func newLocalSolanaClient(network config.NetWorkType) *solanaClient {
-//	var para *params.ChainConfig
-//	switch network {
-//	case config.MainNet:
-//		para = params.MainnetChainConfig
-//	case config.TestNet:
-//		para = params.RopstenChainConfig
-//	case config.RegTest:
-//		para = params.AllCliqueProtocolChanges
-//	default:
-//		panic("unsupported network type")
-//	}
-//	return &solanaClient{
-//		Client:           &solanaClient,
-//		chainConfig:      para,
-//		cacheBlockNumber: nil,
-//		local:            true,
-//	}
-//}
+func newLocalSolanaClient(network config.NetWorkType) *solanaClient {
+	var endpoint string
+	switch network {
+	case config.MainNet:
+		endpoint = rpc.MainnetRPCEndpoint
+	case config.TestNet:
+		endpoint = rpc.TestnetRPCEndpoint
+	default:
+		panic("unsupported network type")
+	}
+	rpcClient := rpc.NewRpcClient(endpoint)
+
+	return &solanaClient{
+		RpcClient: rpcClient,
+	}
+}
 
 func (sol *solanaClient) GetLatestBlockHeight() (int64, error) {
 	res, err := sol.RpcClient.GetBlockHeight(context.Background())
@@ -60,6 +57,7 @@ func (sol *solanaClient) GetLatestBlockHeight() (int64, error) {
 	}
 	return int64(res.Result), nil
 }
+
 func newSolanaClients(conf *config.Config) ([]*solanaClient, error) {
 	endpoint := rpc.DevnetRPCEndpoint
 	if conf.Fullnode.Sol.NetWork == "testnet" {
@@ -138,7 +136,39 @@ func (sol *solanaClient) GetAccount() (string, string, error) {
 	return address, private, nil
 }
 
-func (sol *solanaClient) GetTxByHash(hash string) (interface{}, error) {
+type Header struct {
+	NumReadonlySignedAccounts   int `json:"numReadonlySignedAccounts"`
+	NumReadonlyUnsignedAccounts int `json:"numReadonlyUnsignedAccounts"`
+	NumRequiredSignatures       int `json:"numRequiredSignatures"`
+}
+type Instructions struct {
+	Accounts       []int  `json:"accounts"`
+	Data           string `json:"data"`
+	ProgramIDIndex int    `json:"programIdIndex"`
+}
+type Message struct {
+	AccountKeys     []string       `json:"accountKeys"`
+	Header          Header         `json:"header"`
+	Instructions    []Instructions `json:"instructions"`
+	RecentBlockhash string         `json:"recentBlockhash"`
+}
+type Transaction struct {
+	Message    Message  `json:"message"`
+	Signatures []string `json:"signatures"`
+}
+
+type TxMessage struct {
+	Hash   string
+	From   string
+	To     string
+	Fee    string
+	Status bool
+	Value  string
+	Type   int32
+	Height string
+}
+
+func (sol *solanaClient) GetTxByHash(hash string) (*TxMessage, error) {
 	out, err := sol.RpcClient.GetTransaction(
 		context.TODO(),
 		hash,
@@ -147,9 +177,72 @@ func (sol *solanaClient) GetTxByHash(hash string) (interface{}, error) {
 		log.Fatalf("failed to request airdrop, err: %v", err)
 		return nil, err
 	}
-	return out, nil
+	message := out.Result.Transaction.(map[string]interface{})["message"]
+	accountKeys := message.((map[string]interface{}))["accountKeys"].([]interface{})
+	signatures := out.Result.Transaction.(map[string]interface{})["signatures"].([]interface{})
+	_hash := signatures[0]
+	if out.Result.Meta.Err != nil || len(out.Result.Meta.LogMessages) == 0 || _hash == "" {
+		log.Fatalf("not found tx, err: %v", err)
+		return nil, err
+	}
+	var txMessage []*TxMessage
+	for i := 0; i < len(accountKeys); i++ {
+		to := accountKeys[i].(string)
+		amount := out.Result.Meta.PostBalances[i] - out.Result.Meta.PreBalances[i]
+
+		if to != "" && amount > 0 {
+			txMessage = append(txMessage, &TxMessage{
+				Hash:   hash,
+				From:   "",
+				To:     to,
+				Fee:    strconv.FormatUint(out.Result.Meta.Fee, 10),
+				Status: true,
+				Value:  strconv.FormatInt(amount, 10),
+				Type:   1,
+				Height: strconv.FormatUint(out.Result.Slot, 10),
+			})
+		}
+	}
+
+	for i := 0; i < len(out.Result.Meta.PostTokenBalances); i++ {
+		postToken := out.Result.Meta.PostTokenBalances[i]
+
+		preTokenBalance := getPreTokenBalance(out.Result.Meta.PreTokenBalances, postToken.AccountIndex)
+		if preTokenBalance == nil {
+			continue
+		}
+		postAmount, _ := strconv.ParseFloat(postToken.UITokenAmount.Amount, 64)
+		preAmount, _ := strconv.ParseFloat(preTokenBalance.UITokenAmount.Amount, 64)
+		amount := postAmount - preAmount
+		if amount > 0 {
+			txMessage = append(txMessage, &TxMessage{
+				Hash:   hash,
+				From:   "",
+				To:     postToken.Owner,
+				Fee:    strconv.FormatUint(out.Result.Meta.Fee, 10),
+				Status: true,
+				Value:  strconv.FormatFloat(amount, 'E', -1, 10),
+				Type:   1,
+				Height: strconv.FormatUint(out.Result.Slot, 10),
+			})
+		}
+	}
+	if len(txMessage) > 0 {
+		return txMessage[0], nil
+	}
+	log.Fatalf("not found tx, err: %v", err)
+	return nil, err
 }
 
+func getPreTokenBalance(preTokenBalance []rpc.TransactionMetaTokenBalance, accountIndex uint64) *rpc.TransactionMetaTokenBalance {
+	for j := 0; j < len(preTokenBalance); j++ {
+		preToken := preTokenBalance[j]
+		if preToken.AccountIndex == accountIndex {
+			return &preTokenBalance[j]
+		}
+	}
+	return nil
+}
 func (sol *solanaClient) RequestAirdrop(address string) (string, error) {
 	c := client.NewClient(rpc.DevnetRPCEndpoint)
 	sig, err := c.RequestAirdrop(

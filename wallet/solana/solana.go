@@ -48,7 +48,7 @@ func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.
 			Status: true,
 			Value:  string(rune(txs[i].Lamport)),
 			Type:   1,
-			Height: string(txs[i].Slot),
+			Height: string(rune(txs[i].Slot)),
 		})
 	}
 	if err != nil {
@@ -67,17 +67,23 @@ func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.
 }
 
 func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {
-	_, _ = a.getClient().GetTxByHash(req.Hast)
+	tx, err := a.getClient().GetTxByHash(req.Hast)
+	if err != nil {
+		return &wallet2.TxHashResponse{
+			Error: &common.Error{Code: 404},
+			Tx:    nil,
+		}, err
+	}
 	return &wallet2.TxHashResponse{
 		Tx: &wallet2.TxMessage{
-			//Hash:   tx.Result,
-			//To:     tx.Dst,
-			//From:   txs[i].Src,
-			//Fee:    txs[i].TxHash,
-			//Status: true,
-			//Value:  string(rune(txs[i].Lamport)),
-			//Type:   1,
-			//Height: string(txs[i].Slot),
+			Hash:   tx.Hash,
+			To:     tx.To,
+			From:   tx.From,
+			Fee:    tx.Fee,
+			Status: tx.Status,
+			Value:  tx.Value,
+			Type:   tx.Type,
+			Height: tx.Height,
 		},
 	}, nil
 }
@@ -155,9 +161,9 @@ func newWalletAdaptor(client *solanaClient) wallet.WalletAdaptor {
 	}
 }
 
-//func NewLocalWalletAdaptor(network config.NetWorkType) wallet.WalletAdaptor {
-//	return newWalletAdaptor(newLocalEthClient(network))
-//}
+func NewLocalWalletAdaptor(network config.NetWorkType) wallet.WalletAdaptor {
+	return newWalletAdaptor(newLocalSolanaClient(network))
+}
 
 func (w *WalletAdaptor) GetSupportCoins(req *wallet2.SupportCoinsRequest) (*wallet2.SupportCoinsResponse, error) {
 	return nil, nil
