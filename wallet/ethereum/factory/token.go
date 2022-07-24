@@ -142,8 +142,8 @@ func bindToken(address common.Address, caller bind.ContractCaller, transactor bi
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Token *TokenRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _Token.Contract.TokenCaller.contract.Call(opts, result, method, params...)
+func (_Token *TokenRaw) Call(opts *bind.CallOpts,  results *[]interface{}, method string, params ...interface{}) error {
+	return _Token.Contract.TokenCaller.contract.Call(opts, results, method, params...)
 }
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
@@ -161,8 +161,8 @@ func (_Token *TokenRaw) Transact(opts *bind.TransactOpts, method string, params 
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Token *TokenCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _Token.Contract.contract.Call(opts, result, method, params...)
+func (_Token *TokenCallerRaw) Call(opts *bind.CallOpts,  results *[]interface{}, method string, params ...interface{}) error {
+	return _Token.Contract.contract.Call(opts, results, method, params...)
 }
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
@@ -183,7 +183,7 @@ func (_Token *TokenCaller) Allowance(opts *bind.CallOpts, arg0 common.Address, a
 	var (
 		ret0 = new(*big.Int)
 	)
-	out := ret0
+	out := new([]interface{})
 	err := _Token.contract.Call(opts, out, "allowance", arg0, arg1)
 	return *ret0, err
 }
@@ -209,7 +209,7 @@ func (_Token *TokenCaller) BalanceOf(opts *bind.CallOpts, arg0 common.Address) (
 	var (
 		ret0 = new(*big.Int)
 	)
-	out := ret0
+	out := new([]interface{})
 	err := _Token.contract.Call(opts, out, "balanceOf", arg0)
 	return *ret0, err
 }
@@ -235,7 +235,7 @@ func (_Token *TokenCaller) Decimals(opts *bind.CallOpts) (uint8, error) {
 	var (
 		ret0 = new(uint8)
 	)
-	out := ret0
+	out := new([]interface{})
 	err := _Token.contract.Call(opts, out, "decimals")
 	return *ret0, err
 }
@@ -261,7 +261,7 @@ func (_Token *TokenCaller) Name(opts *bind.CallOpts) (string, error) {
 	var (
 		ret0 = new(string)
 	)
-	out := ret0
+	out := new([]interface{})
 	err := _Token.contract.Call(opts, out, "name")
 	return *ret0, err
 }
@@ -287,7 +287,7 @@ func (_Token *TokenCaller) Symbol(opts *bind.CallOpts) (string, error) {
 	var (
 		ret0 = new(string)
 	)
-	out := ret0
+	out := new ([]interface{})
 	err := _Token.contract.Call(opts, out, "symbol")
 	return *ret0, err
 }
@@ -313,7 +313,7 @@ func (_Token *TokenCaller) TotalSupply(opts *bind.CallOpts) (*big.Int, error) {
 	var (
 		ret0 = new(*big.Int)
 	)
-	out := ret0
+	out := new([]interface{})
 	err := _Token.contract.Call(opts, out, "totalSupply")
 	return *ret0, err
 }
@@ -860,8 +860,8 @@ func bindTokenRecipient(address common.Address, caller bind.ContractCaller, tran
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_TokenRecipient *TokenRecipientRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _TokenRecipient.Contract.TokenRecipientCaller.contract.Call(opts, result, method, params...)
+func (_TokenRecipient *TokenRecipientRaw) Call(opts *bind.CallOpts, results *[]interface{}, method string, params ...interface{}) error {
+	return _TokenRecipient.Contract.TokenRecipientCaller.contract.Call(opts, results, method, params...)
 }
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
@@ -879,8 +879,8 @@ func (_TokenRecipient *TokenRecipientRaw) Transact(opts *bind.TransactOpts, meth
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_TokenRecipient *TokenRecipientCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _TokenRecipient.Contract.contract.Call(opts, result, method, params...)
+func (_TokenRecipient *TokenRecipientCallerRaw) Call(opts *bind.CallOpts,  results *[]interface{}, method string, params ...interface{}) error {
+	return _TokenRecipient.Contract.contract.Call(opts, results, method, params...)
 }
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
