@@ -155,7 +155,8 @@ func (_Token *TokenContractWrapper) call(opts *bind.CallOpts, blockNumber *big.I
 	if err != nil {
 		return err
 	}
-	return _Token.abi.Unpack(result, method, output)
+	result, err = _Token.abi.Unpack(method, output)
+	return err
 }
 
 // RawTransact invokes the (paid) contract method with params as input values.
@@ -217,7 +218,8 @@ func (_Token *TokenContractWrapper) unpackInput(v interface{}, name string, inpu
 		if len(input)%32 != 0 {
 			return fmt.Errorf("abi: improperly formatted output: %s - Bytes: [%+v]", string(input), input)
 		}
-		return method.Inputs.Unpack(v, input)
+		v, err = method.Inputs.Unpack(input)
+		return nil
 	}
 	return fmt.Errorf("abi: could not locate named method")
 }
