@@ -90,19 +90,10 @@ func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHash
 }
 
 func (a *WalletAdaptor) GetAccount(req *wallet2.AccountRequest) (*wallet2.AccountResponse, error) {
-	address, _, err := a.getClient().GetAccount()
-	if err != nil {
-		log.Error("get GetAccount error", "err", err)
-		return &wallet2.AccountResponse{
-			Error:         &common.Error{Code: common.ReturnCode_ERROR},
-			AccountNumber: "",
-		}, err
-	} else {
-		return &wallet2.AccountResponse{
-			Error:         &common.Error{Code: common.ReturnCode_SUCCESS},
-			AccountNumber: address,
-		}, nil
-	}
+	return &wallet2.AccountResponse{
+		Error:         &common.Error{Code: common.ReturnCode_ERROR},
+		AccountNumber: "",
+	}, nil
 }
 
 func (a *WalletAdaptor) GetMinRent(req *wallet2.MinRentRequest) (*wallet2.MinRentResponse, error) {
