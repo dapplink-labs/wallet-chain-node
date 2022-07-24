@@ -9,6 +9,7 @@ import (
 	"github.com/SavourDao/savour-core/walletdispatcher"
 	"github.com/ethereum/go-ethereum/log"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	"net"
 )
 
@@ -35,6 +36,7 @@ func main() {
 		log.Error("net listen failed", "err", err)
 		panic(err)
 	}
+	reflection.Register(grpcServer)
 
 	log.Info("savour dao start success", "port", conf.Server.Port)
 

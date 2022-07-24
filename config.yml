@@ -1,9 +1,9 @@
 server:
-  port: 8888
+  port: 8089
   timeout: 120s
   sleep: 10s
 
-network: testnet
+network: mainnet
 
 fullnode:
   btc:
@@ -14,12 +14,12 @@ fullnode:
     confirmations: 1
   eth:
     rpcs:
-      - rpc_url:
+      - rpc_url: 'https://mainnet.infura.io/v3/b48b6387e66d4f3497245873747f6e4d'
     confirmations: 4
   solana:
     public_api: 'https://public-api.solscan.io'
     NonceAccountAddr: DJyNpXgggw1WGgjTVzFsNjb3fuQZVMqhoakvSBfX9LYx
     FeeAccountPriKey: 4TMFNY9ntAn3CHzguSAvDNLPRoQTaK3sWbQQXdDXaE6KWRBLufGL6PJdsD2koiEe3gGmMdRK3aAw7sikGNksHJrN
 
-chains: [btc, eth]
+chains: [btc, eth, solana, trx]
 
