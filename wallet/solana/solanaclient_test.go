@@ -29,8 +29,8 @@ func TestSolanaClient_GetTxByHash(t *testing.T) {
 }
 
 func TestSolanaClient_GetTransferHistory(t *testing.T) {
-	client, _ := newSolanaClients(nil)
-	balance, _ := client[0].GetTxByAddress("57vSaRTqN9iXaemgh4AoDsZ63mcaoshfMK8NP3Z5QNbs")
+	client := newTestClient()
+	balance, _ := client.GetTxByAddress("BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo", 1, 10)
 	fmt.Println(balance)
 }
 

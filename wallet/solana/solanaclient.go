@@ -111,8 +111,9 @@ type GetTxByAddressTx struct {
 	TxNumberSolTransfer int    `json:"txNumberSolTransfer"`
 }
 
-func (sol *solanaClient) GetTxByAddress(address string) ([]GetTxByAddressTx, error) {
-	url := sol.solanaConfig.PublicUrl + "/account/solTransfers?limit=20&account=" + address
+func (sol *solanaClient) GetTxByAddress(address string, page uint32, size uint32) ([]GetTxByAddressTx, error) {
+	offset := (page - 1) * size
+	url := sol.solanaConfig.PublicUrl + "/account/solTransfers?limit=" + strconv.FormatInt(int64(size), 10) + "&account=" + address + "&offset=" + strconv.FormatInt(int64(offset), 10)
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println(err)
