@@ -37,16 +37,16 @@ func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balanc
 }
 
 func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
-	txs, err := a.getClient().GetTxByAddress(req.Address)
+	txs, err := a.getClient().GetTxByAddress(req.Address, req.Page, req.Pagesize)
 	list := make([]*wallet2.TxMessage, 0, len(txs))
 	for i := 0; i < len(txs); i++ {
 		list = append(list, &wallet2.TxMessage{
 			Hash:   txs[i].TxHash,
-			To:     txs[i].Dst,
-			From:   txs[i].Src,
+			To:     []*wallet2.Address{{Address: txs[i].Dst}},
+			From:   []*wallet2.Address{{Address: txs[i].Src}},
 			Fee:    txs[i].TxHash,
 			Status: true,
-			Value:  string(rune(txs[i].Lamport)),
+			Value:  []*wallet2.Value{{Value: string(rune(txs[i].Lamport))}},
 			Type:   1,
 			Height: string(rune(txs[i].Slot)),
 		})
@@ -77,11 +77,11 @@ func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHash
 	return &wallet2.TxHashResponse{
 		Tx: &wallet2.TxMessage{
 			Hash:   tx.Hash,
-			To:     tx.To,
-			From:   tx.From,
+			To:     []*wallet2.Address{{Address: tx.To}},
+			From:   []*wallet2.Address{{Address: tx.From}},
 			Fee:    tx.Fee,
 			Status: tx.Status,
-			Value:  tx.Value,
+			Value:  []*wallet2.Value{{Value: tx.Value}},
 			Type:   tx.Type,
 			Height: tx.Height,
 		},
@@ -91,7 +91,7 @@ func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHash
 func (a *WalletAdaptor) GetAccount(req *wallet2.AccountRequest) (*wallet2.AccountResponse, error) {
 	address, _, err := a.getClient().GetAccount()
 	if err != nil {
-		log.Error("get GetTxByAddress error", "err", err)
+		log.Error("get GetAccount error", "err", err)
 		return &wallet2.AccountResponse{
 			Error:         &common.Error{Code: 404},
 			AccountNumber: "",
@@ -107,7 +107,7 @@ func (a *WalletAdaptor) GetAccount(req *wallet2.AccountRequest) (*wallet2.Accoun
 func (a *WalletAdaptor) GetMinRent(req *wallet2.MinRentRequest) (*wallet2.MinRentResponse, error) {
 	value, err := a.getClient().GetMinRent()
 	if err != nil {
-		log.Error("get GetTxByAddress error", "err", err)
+		log.Error("get GetMinRent error", "err", err)
 		return &wallet2.MinRentResponse{
 			Error: &common.Error{Code: 404},
 			Value: "",
