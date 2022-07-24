@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	ChainName = "SOL"
-	Symbol    = "SOL"
+	ChainName = "sol"
+	Symbol    = "sol"
 )
 
 type WalletAdaptor struct {
@@ -67,7 +67,7 @@ func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.
 }
 
 func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {
-	tx, err := a.getClient().GetTxByHash(req.Hast)
+	tx, err := a.getClient().GetTxByHash(req.Hash)
 	if err != nil {
 		return &wallet2.TxHashResponse{
 			Error: &common.Error{Code: 404},

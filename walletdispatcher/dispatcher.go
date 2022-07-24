@@ -44,7 +44,7 @@ func New(conf *config.Config) (*WalletDispatcher, error) {
 		ethereum.ChainName: ethereum.NewChainAdaptor,
 		solana.ChainName:   solana.NewChainAdaptor,
 	}
-	supportedChains := []string{bitcoin.ChainName, ethereum.ChainName}
+	supportedChains := []string{bitcoin.ChainName, ethereum.ChainName, solana.ChainName}
 	for _, c := range conf.Chains {
 		if factory, ok := walletAdaptorFactoryMap[c]; ok {
 			adaptor, err := factory(conf)

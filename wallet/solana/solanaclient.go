@@ -60,9 +60,9 @@ func (sol *solanaClient) GetLatestBlockHeight() (int64, error) {
 
 func newSolanaClients(conf *config.Config) ([]*solanaClient, error) {
 	endpoint := rpc.DevnetRPCEndpoint
-	if conf.Fullnode.Sol.NetWork == "testnet" {
+	if conf.NetWork == "testnet" {
 		endpoint = rpc.TestnetRPCEndpoint
-	} else if conf.Fullnode.Sol.NetWork == "mainnet" {
+	} else if conf.NetWork == "mainnet" {
 		endpoint = rpc.MainnetRPCEndpoint
 	}
 	var clients []*solanaClient
