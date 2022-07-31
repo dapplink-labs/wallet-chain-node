@@ -2,16 +2,16 @@ package walletdispatcher
 
 import (
 	"context"
-	"github.com/SavourDao/savour-core/rpc/common"
-	"github.com/SavourDao/savour-core/wallet"
-	"github.com/SavourDao/savour-core/wallet/solana"
+	"github.com/SavourDao/savour-hd/rpc/common"
+	"github.com/SavourDao/savour-hd/wallet"
+	"github.com/SavourDao/savour-hd/wallet/solana"
 	"runtime/debug"
 	"strings"
 
-	"github.com/SavourDao/savour-core/config"
-	wallet2 "github.com/SavourDao/savour-core/rpc/wallet"
-	"github.com/SavourDao/savour-core/wallet/bitcoin"
-	"github.com/SavourDao/savour-core/wallet/ethereum"
+	"github.com/SavourDao/savour-hd/config"
+	wallet2 "github.com/SavourDao/savour-hd/rpc/wallet"
+	"github.com/SavourDao/savour-hd/wallet/bitcoin"
+	"github.com/SavourDao/savour-hd/wallet/ethereum"
 	"github.com/ethereum/go-ethereum/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"

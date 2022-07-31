@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/SavourDao/savour-core/config"
+	"github.com/SavourDao/savour-hd/config"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"

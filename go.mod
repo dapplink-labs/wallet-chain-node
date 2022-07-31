@@ -1,4 +1,4 @@
-module github.com/SavourDao/savour-core
+module github.com/SavourDao/savour-hd
 
 go 1.18
 

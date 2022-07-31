@@ -2,7 +2,7 @@ package solana
 
 import (
 	"fmt"
-	"github.com/SavourDao/savour-core/config"
+	"github.com/SavourDao/savour-hd/config"
 	"testing"
 )
 
