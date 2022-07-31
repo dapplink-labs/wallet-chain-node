@@ -1,8 +1,8 @@
 package fallback
 
 import (
-	"github.com/SavourDao/savour-core/rpc/common"
-	"github.com/SavourDao/savour-core/rpc/wallet"
+	"github.com/SavourDao/savour-hd/rpc/common"
+	"github.com/SavourDao/savour-hd/rpc/wallet"
 )
 
 type WalletAdaptor struct{}

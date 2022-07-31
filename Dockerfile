@@ -1,16 +1,16 @@
-# Build savour-core in a stock Go builder container
+# Build savour-hd in a stock Go builder container
 FROM golang:1.13-alpine as builder
 
 RUN apk add --no-cache make gcc musl-dev linux-headers
 
 ADD . /savour-core
-RUN cd /savour-core && build/env.sh go build
+RUN cd /savour-hd && build/env.sh go build
 
-# Pull savour-core into a second stage deploy alpine container
+# Pull savour-hd into a second stage deploy alpine container
 FROM alpine:latest
 
 RUN apk add --no-cache ca-certificates
-RUN mkdir /etc/savour-core
+RUN mkdir /etc/savour-hd
 
 ARG CONFIG=config.yml
 

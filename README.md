@@ -8,14 +8,14 @@ parent:
 </div>
 
 <div align="center">
-  <a href="https://github.com/SavourDao/savour-core/releases/latest">
+  <a href="https://github.com/SavourDao/savour-hd/releases/latest">
     <img alt="Version" src="https://img.shields.io/github/tag/SavourDao/savour-core.svg" />
   </a>
-  <a href="https://github.com/SavourDao/savour-core/blob/main/LICENSE">
+  <a href="https://github.com/SavourDao/savour-hd/blob/main/LICENSE">
     <img alt="License: Apache-2.0" src="https://img.shields.io/github/license/SavourDao/savour-core.svg" />
   </a>
-  <a href="https://pkg.go.dev/github.com/SavourDao/savour-core">
-    <img alt="GoDoc" src="https://godoc.org/github.com/SavourDao/savour-core?status.svg" />
+  <a href="https://pkg.go.dev/github.com/SavourDao/savour-hd">
+    <img alt="GoDoc" src="https://godoc.org/github.com/SavourDao/savour-hd?status.svg" />
   </a>
 </div>
 
@@ -31,12 +31,12 @@ go mod tidy
 ```
 ### 构建程序
 ```bash
-go build 或者 go install savour-core
+go build 或者 go install savour-hd
 ```
 
 ### 启动程序
 ```bash
-./savour-core -c ./config.yml
+./savour-hd -c ./config.yml
 ```
 
 ### 启动 RPC 接口测试界面
@@ -54,7 +54,7 @@ grpcui -plaintext 127.0.0.1:8089
 ### 第二步： clone 您自己仓库的代码
 
 ```bash
-git@github.com:guoshijiang/savour-core.git
+git@github.com:guoshijiang/savour-hd.git
 ```
 
 ### 第三步：建立分支编写提交代码

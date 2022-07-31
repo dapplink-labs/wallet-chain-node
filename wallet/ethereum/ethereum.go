@@ -3,13 +3,14 @@ package ethereum
 import (
 	"context"
 	"fmt"
-	"github.com/SavourDao/savour-core/cache"
-	"github.com/SavourDao/savour-core/config"
-	"github.com/SavourDao/savour-core/rpc/common"
-	wallet2 "github.com/SavourDao/savour-core/rpc/wallet"
-	"github.com/SavourDao/savour-core/wallet"
-	"github.com/SavourDao/savour-core/wallet/fallback"
-	"github.com/SavourDao/savour-core/wallet/multiclient"
+	"github.com/SavourDao/savour-hd/cache"
+	"github.com/SavourDao/savour-hd/config"
+	"github.com/SavourDao/savour-hd/rpc/common"
+	wallet2 "github.com/SavourDao/savour-hd/rpc/wallet"
+	"github.com/SavourDao/savour-hd/wallet"
+	"github.com/SavourDao/savour-hd/wallet/fallback"
+	"github.com/SavourDao/savour-hd/wallet/multiclient"
+	"github.com/ethereum/go-ethereum"
 	ethcommon "github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/types"
@@ -104,8 +105,57 @@ func (wa *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2
 }
 
 func (wa *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	key := strings.Join([]string{req.Coin, req.Hash}, ":")
+	txCache := cache.GetTxCache()
+	if r, exist := txCache.Get(key); exist {
+		return r.(*wallet2.TxHashResponse), nil
+	}
+
+	tx, _, err := wa.getClient().TransactionByHash(context.TODO(), ethcommon.HexToHash(req.Hash))
+	if err != nil {
+		if err == ethereum.NotFound {
+			return &wallet2.TxHashResponse{
+				Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: "Ethereum Tx NotFound", Detail: "Ethereum Tx NotFoun", CanRetry: true},
+			}, nil
+		}
+		log.Error("get transaction error", "err", err)
+		return &wallet2.TxHashResponse{
+			Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: "Ethereum Tx NotFound", Detail: err.Error(), CanRetry: true},
+		}, nil
+	}
+
+	receipt, err := wa.getClient().TransactionReceipt(context.TODO(), ethcommon.HexToHash(req.Hash))
+	if err != nil {
+		log.Error("get transaction receipt error", "err", err)
+		return &wallet2.TxHashResponse{
+			Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: "Get transaction receipt error", Detail: err.Error(), CanRetry: true},
+		}, nil
+	}
+	ok := true
+	if receipt.Status != 0 {
+		ok = false
+	}
+	var from_addrs []*wallet2.Address
+	var to_addrs []*wallet2.Address
+	var value_list []*wallet2.Value
+	from_addrs = append(from_addrs, &wallet2.Address{Address: ""})
+	to_addrs = append(to_addrs, &wallet2.Address{Address: tx.To().Hex()})
+	value_list = append(value_list, &wallet2.Value{Value: tx.Value().String()})
+	return &wallet2.TxHashResponse{
+		Error: &common.Error{Code: common.ReturnCode_SUCCESS},
+		Tx: &wallet2.TxMessage{
+			Hash:            tx.Hash().Hex(),
+			Index:           1,
+			From:            from_addrs,
+			To:              to_addrs,
+			Value:           value_list,
+			Fee:             tx.GasFeeCap().String(),
+			Status:          ok,
+			Type:            1,
+			Height:          receipt.BlockNumber.String(),
+			ContractAddress: tx.To().String(),
+		},
+	}, nil
 }
 
 func (wa *WalletAdaptor) GetAccount(req *wallet2.AccountRequest) (*wallet2.AccountResponse, error) {

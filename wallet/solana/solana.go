@@ -1,12 +1,12 @@
 package solana
 
 import (
-	"github.com/SavourDao/savour-core/config"
-	"github.com/SavourDao/savour-core/rpc/common"
-	wallet2 "github.com/SavourDao/savour-core/rpc/wallet"
-	"github.com/SavourDao/savour-core/wallet"
-	"github.com/SavourDao/savour-core/wallet/fallback"
-	"github.com/SavourDao/savour-core/wallet/multiclient"
+	"github.com/SavourDao/savour-hd/config"
+	"github.com/SavourDao/savour-hd/rpc/common"
+	wallet2 "github.com/SavourDao/savour-hd/rpc/wallet"
+	"github.com/SavourDao/savour-hd/wallet"
+	"github.com/SavourDao/savour-hd/wallet/fallback"
+	"github.com/SavourDao/savour-hd/wallet/multiclient"
 	"github.com/ethereum/go-ethereum/log"
 )
 
