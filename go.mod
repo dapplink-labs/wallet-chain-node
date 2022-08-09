@@ -11,7 +11,7 @@ require (
 	github.com/mr-tron/base58 v1.2.0
 	github.com/nanmu42/etherscan-api v1.7.0
 	github.com/pkg/errors v0.9.1
-	github.com/portto/solana-go-sdk v1.18.0
+	github.com/portto/solana-go-sdk v1.19.1
 	github.com/shopspring/decimal v1.3.1
 	go.uber.org/atomic v1.9.0
 	google.golang.org/grpc v1.47.0
