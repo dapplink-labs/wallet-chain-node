@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/btcsuite/btcd v0.22.0-beta
-	github.com/ethereum/go-ethereum v1.10.20
+	github.com/ethereum/go-ethereum v1.10.23
 	github.com/fbsobreira/gotron-sdk v0.0.0-20211102183839-58a64f4da5f4
 	github.com/golang/protobuf v1.5.2
 	github.com/hashicorp/golang-lru v0.5.5-0.20210104140557-80c98217689d
