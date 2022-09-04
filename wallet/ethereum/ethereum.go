@@ -47,9 +47,6 @@ func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
 	for i, client := range clients {
 		clis[i] = client
 	}
-	fmt.Println("1111")
-	fmt.Println(conf.Fullnode.Eth.TpApiUrl)
-	fmt.Println("1111")
 	return &WalletAdaptor{
 		clients:      multiclient.New(clis),
 		etherscanCli: NewEtherscanClient(conf.Fullnode.Eth.TpApiUrl, conf.Fullnode.Eth.TpApiKey),
