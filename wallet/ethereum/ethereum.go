@@ -131,15 +131,22 @@ func (wa *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2
 		from_addrs = append(from_addrs, &wallet2.Address{Address: ktx.From})
 		to_addrs = append(to_addrs, &wallet2.Address{Address: ktx.To})
 		value_list = append(value_list, &wallet2.Value{Value: ktx.Value.Int().String()})
+		ok := true
+		if ktx.TxReceiptStatus != "0" {
+			ok = false
+		}
+		bigIntGasUsed := int64(ktx.GasUsed)
+		bigIntGasPrice := big.NewInt(ktx.GasPrice.Int().Int64())
+		tx_fee := bigIntGasPrice.Int64() * bigIntGasUsed
 		tx := &wallet2.TxMessage{
 			Hash:            ktx.Hash,
 			From:            from_addrs,
 			To:              to_addrs,
 			Value:           value_list,
-			Fee:             "0",
-			Status:          false,
+			Fee:             strconv.FormatInt(tx_fee, 10),
+			Status:          ok,
 			Type:            1,
-			Height:          string(rune(ktx.BlockNumber)),
+			Height:          string(ktx.BlockNumber),
 			ContractAddress: ktx.ContractAddress,
 		}
 		tx_list = append(tx_list, tx)
