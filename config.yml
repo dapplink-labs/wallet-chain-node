@@ -16,6 +16,9 @@ fullnode:
     rpcs:
       - rpc_url: 'https://eth-mainnet.nodereal.io/v1/1659dfb40aa24bbb8153a677b98064d7'
     confirmations: 4
+    tp_api_url: 'https://api.etherscan.io/api?'
+    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+
   solana:
     public_api: 'https://public-api.solscan.io'
     NonceAccountAddr: DJyNpXgggw1WGgjTVzFsNjb3fuQZVMqhoakvSBfX9LYx

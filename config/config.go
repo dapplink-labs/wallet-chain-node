@@ -22,6 +22,8 @@ type RPC struct {
 
 type Node struct {
 	RPCs          []*RPC `yaml:"rpcs"`
+	TpApiUrl      string `yaml:"tp_api_url"`
+	TpApiKey      string `yaml:"tp-api-key"`
 	Confirmations uint64 `yaml:"confirmations"`
 }
 

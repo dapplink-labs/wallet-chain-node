@@ -16,6 +16,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/nanmu42/etherscan-api"
 	"math/big"
 	"strconv"
 	"strings"
@@ -26,9 +27,15 @@ const (
 	Coin      = "eth"
 )
 
+var (
+	Startblock = 0
+	Endblock   = 999999999
+)
+
 type WalletAdaptor struct {
 	fallback.WalletAdaptor
-	clients *multiclient.MultiClient
+	clients      *multiclient.MultiClient
+	etherscanCli *etherscan.Client
 }
 
 func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
@@ -40,8 +47,12 @@ func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
 	for i, client := range clients {
 		clis[i] = client
 	}
+	fmt.Println("1111")
+	fmt.Println(conf.Fullnode.Eth.TpApiUrl)
+	fmt.Println("1111")
 	return &WalletAdaptor{
-		clients: multiclient.New(clis),
+		clients:      multiclient.New(clis),
+		etherscanCli: NewEtherscanClient(conf.Fullnode.Eth.TpApiUrl, conf.Fullnode.Eth.TpApiKey),
 	}, nil
 }
 
@@ -103,8 +114,44 @@ func (wa *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balan
 }
 
 func (wa *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	key := strings.Join([]string{req.Coin, req.Address, strconv.Itoa(int(req.Page)), strconv.Itoa(int(req.Pagesize))}, ":")
+	txCache := cache.GetTxCache()
+	if r, exist := txCache.Get(key); exist {
+		return r.(*wallet2.TxAddressResponse), nil
+	}
+	txs, err := wa.etherscanCli.NormalTxByAddress(req.Address, &Startblock, &Endblock, int(req.Page), int(req.Pagesize), false)
+	if err != nil {
+		return &wallet2.TxAddressResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  err.Error(),
+		}, err
+	}
+	var tx_list []*wallet2.TxMessage
+	for _, ktx := range txs {
+		var from_addrs []*wallet2.Address
+		var to_addrs []*wallet2.Address
+		var value_list []*wallet2.Value
+		from_addrs = append(from_addrs, &wallet2.Address{Address: ktx.From})
+		to_addrs = append(to_addrs, &wallet2.Address{Address: ktx.To})
+		value_list = append(value_list, &wallet2.Value{Value: ktx.Value.Int().String()})
+		tx := &wallet2.TxMessage{
+			Hash:            ktx.Hash,
+			From:            from_addrs,
+			To:              to_addrs,
+			Value:           value_list,
+			Fee:             "0",
+			Status:          false,
+			Type:            1,
+			Height:          string(rune(ktx.BlockNumber)),
+			ContractAddress: ktx.ContractAddress,
+		}
+		tx_list = append(tx_list, tx)
+	}
+	return &wallet2.TxAddressResponse{
+		Code: common.ReturnCode_SUCCESS,
+		Msg:  "get address tx success",
+		Tx:   tx_list,
+	}, nil
 }
 
 func (wa *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {
