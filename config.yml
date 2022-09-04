@@ -14,7 +14,7 @@ fullnode:
     confirmations: 1
   eth:
     rpcs:
-      - rpc_url: 'https://mainnet.infura.io/v3/b48b6387e66d4f3497245873747f6e4d'
+      - rpc_url: 'https://eth-mainnet.nodereal.io/v1/1659dfb40aa24bbb8153a677b98064d7'
     confirmations: 4
   solana:
     public_api: 'https://public-api.solscan.io'

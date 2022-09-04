@@ -66,136 +66,18 @@ func (ReturnCode) EnumDescriptor() ([]byte, []int) {
 	return file_savourrpc_common_proto_rawDescGZIP(), []int{0}
 }
 
-// 错误Type
-type Error struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Code     ReturnCode `protobuf:"varint,1,opt,name=code,proto3,enum=savourrpc.ReturnCode" json:"code,omitempty"`
-	Brief    string     `protobuf:"bytes,2,opt,name=brief,proto3" json:"brief,omitempty"`
-	Detail   string     `protobuf:"bytes,3,opt,name=detail,proto3" json:"detail,omitempty"`
-	CanRetry bool       `protobuf:"varint,4,opt,name=can_retry,json=canRetry,proto3" json:"can_retry,omitempty"`
-}
-
-func (x *Error) Reset() {
-	*x = Error{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_savourrpc_common_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *Error) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Error) ProtoMessage() {}
-
-func (x *Error) ProtoReflect() protoreflect.Message {
-	mi := &file_savourrpc_common_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Error.ProtoReflect.Descriptor instead.
-func (*Error) Descriptor() ([]byte, []int) {
-	return file_savourrpc_common_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *Error) GetCode() ReturnCode {
-	if x != nil {
-		return x.Code
-	}
-	return ReturnCode_SUCCESS
-}
-
-func (x *Error) GetBrief() string {
-	if x != nil {
-		return x.Brief
-	}
-	return ""
-}
-
-func (x *Error) GetDetail() string {
-	if x != nil {
-		return x.Detail
-	}
-	return ""
-}
-
-func (x *Error) GetCanRetry() bool {
-	if x != nil {
-		return x.CanRetry
-	}
-	return false
-}
-
-type Empty struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-}
-
-func (x *Empty) Reset() {
-	*x = Empty{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_savourrpc_common_proto_msgTypes[1]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *Empty) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Empty) ProtoMessage() {}
-
-func (x *Empty) ProtoReflect() protoreflect.Message {
-	mi := &file_savourrpc_common_proto_msgTypes[1]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Empty.ProtoReflect.Descriptor instead.
-func (*Empty) Descriptor() ([]byte, []int) {
-	return file_savourrpc_common_proto_rawDescGZIP(), []int{1}
-}
-
 var File_savourrpc_common_proto protoreflect.FileDescriptor
 
 var file_savourrpc_common_proto_rawDesc = []byte{
 	0x0a, 0x16, 0x73, 0x61, 0x76, 0x6f, 0x75, 0x72, 0x72, 0x70, 0x63, 0x2f, 0x63, 0x6f, 0x6d, 0x6d,
 	0x6f, 0x6e, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x09, 0x73, 0x61, 0x76, 0x6f, 0x75, 0x72,
-	0x72, 0x70, 0x63, 0x22, 0x7d, 0x0a, 0x05, 0x45, 0x72, 0x72, 0x6f, 0x72, 0x12, 0x29, 0x0a, 0x04,
-	0x63, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x15, 0x2e, 0x73, 0x61, 0x76,
-	0x6f, 0x75, 0x72, 0x72, 0x70, 0x63, 0x2e, 0x52, 0x65, 0x74, 0x75, 0x72, 0x6e, 0x43, 0x6f, 0x64,
-	0x65, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x62, 0x72, 0x69, 0x65, 0x66,
-	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x62, 0x72, 0x69, 0x65, 0x66, 0x12, 0x16, 0x0a,
-	0x06, 0x64, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x64,
-	0x65, 0x74, 0x61, 0x69, 0x6c, 0x12, 0x1b, 0x0a, 0x09, 0x63, 0x61, 0x6e, 0x5f, 0x72, 0x65, 0x74,
-	0x72, 0x79, 0x18, 0x04, 0x20, 0x01, 0x28, 0x08, 0x52, 0x08, 0x63, 0x61, 0x6e, 0x52, 0x65, 0x74,
-	0x72, 0x79, 0x22, 0x07, 0x0a, 0x05, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x2a, 0x24, 0x0a, 0x0a, 0x52,
-	0x65, 0x74, 0x75, 0x72, 0x6e, 0x43, 0x6f, 0x64, 0x65, 0x12, 0x0b, 0x0a, 0x07, 0x53, 0x55, 0x43,
-	0x43, 0x45, 0x53, 0x53, 0x10, 0x00, 0x12, 0x09, 0x0a, 0x05, 0x45, 0x52, 0x52, 0x4f, 0x52, 0x10,
-	0x01, 0x42, 0x34, 0x5a, 0x32, 0x67, 0x69, 0x74, 0x2e, 0x73, 0x61, 0x76, 0x6f, 0x75, 0x72, 0x2e,
-	0x69, 0x6f, 0x2f, 0x73, 0x61, 0x76, 0x6f, 0x75, 0x72, 0x2f, 0x73, 0x61, 0x76, 0x6f, 0x75, 0x72,
-	0x72, 0x70, 0x63, 0x2f, 0x67, 0x6f, 0x2d, 0x73, 0x61, 0x76, 0x6f, 0x75, 0x72, 0x72, 0x70, 0x63,
-	0x2f, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x72, 0x70, 0x63, 0x2a, 0x24, 0x0a, 0x0a, 0x52, 0x65, 0x74, 0x75, 0x72, 0x6e, 0x43, 0x6f, 0x64,
+	0x65, 0x12, 0x0b, 0x0a, 0x07, 0x53, 0x55, 0x43, 0x43, 0x45, 0x53, 0x53, 0x10, 0x00, 0x12, 0x09,
+	0x0a, 0x05, 0x45, 0x52, 0x52, 0x4f, 0x52, 0x10, 0x01, 0x42, 0x34, 0x5a, 0x32, 0x67, 0x69, 0x74,
+	0x2e, 0x73, 0x61, 0x76, 0x6f, 0x75, 0x72, 0x2e, 0x69, 0x6f, 0x2f, 0x73, 0x61, 0x76, 0x6f, 0x75,
+	0x72, 0x2f, 0x73, 0x61, 0x76, 0x6f, 0x75, 0x72, 0x72, 0x70, 0x63, 0x2f, 0x67, 0x6f, 0x2d, 0x73,
+	0x61, 0x76, 0x6f, 0x75, 0x72, 0x72, 0x70, 0x63, 0x2f, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x62,
+	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -211,19 +93,15 @@ func file_savourrpc_common_proto_rawDescGZIP() []byte {
 }
 
 var file_savourrpc_common_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_savourrpc_common_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_savourrpc_common_proto_goTypes = []interface{}{
 	(ReturnCode)(0), // 0: savourrpc.ReturnCode
-	(*Error)(nil),   // 1: savourrpc.Error
-	(*Empty)(nil),   // 2: savourrpc.Empty
 }
 var file_savourrpc_common_proto_depIdxs = []int32{
-	0, // 0: savourrpc.Error.code:type_name -> savourrpc.ReturnCode
-	1, // [1:1] is the sub-list for method output_type
-	1, // [1:1] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	0, // [0:0] is the sub-list for method output_type
+	0, // [0:0] is the sub-list for method input_type
+	0, // [0:0] is the sub-list for extension type_name
+	0, // [0:0] is the sub-list for extension extendee
+	0, // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_savourrpc_common_proto_init() }
@@ -231,46 +109,19 @@ func file_savourrpc_common_proto_init() {
 	if File_savourrpc_common_proto != nil {
 		return
 	}
-	if !protoimpl.UnsafeEnabled {
-		file_savourrpc_common_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Error); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_savourrpc_common_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Empty); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_savourrpc_common_proto_rawDesc,
 			NumEnums:      1,
-			NumMessages:   2,
+			NumMessages:   0,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_savourrpc_common_proto_goTypes,
 		DependencyIndexes: file_savourrpc_common_proto_depIdxs,
 		EnumInfos:         file_savourrpc_common_proto_enumTypes,
-		MessageInfos:      file_savourrpc_common_proto_msgTypes,
 	}.Build()
 	File_savourrpc_common_proto = out.File
 	file_savourrpc_common_proto_rawDesc = nil
