@@ -102,7 +102,8 @@ func (d *WalletDispatcher) preHandler(req interface{}) (resp *CommonReply) {
 	chain := req.(CommonRequest).GetChain()
 	if _, ok := d.registry[chain]; !ok {
 		return &CommonReply{
-			Error:   &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+			Code:    common.ReturnCode_ERROR,
+			Msg:     config.UnsupportedOperation,
 			Support: false,
 		}
 	}
@@ -118,7 +119,8 @@ func (d *WalletDispatcher) GetNonce(ctx context.Context, request *wallet2.NonceR
 	resp := d.preHandler(request)
 	if resp != nil {
 		return &wallet2.NonceResponse{
-			Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+			Code: common.ReturnCode_ERROR,
+			Msg:  config.UnsupportedOperation,
 		}, nil
 	}
 	return d.registry[request.Chain].GetNonce(request)
@@ -128,8 +130,9 @@ func (d *WalletDispatcher) GetGasPrice(ctx context.Context, request *wallet2.Gas
 	resp := d.preHandler(request)
 	if resp != nil {
 		return &wallet2.GasPriceResponse{
-			Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
-			Gas:   "",
+			Code: common.ReturnCode_ERROR,
+			Msg:  config.UnsupportedOperation,
+			Gas:  "",
 		}, nil
 	}
 	return d.registry[request.Chain].GetGasPrice(request)
@@ -139,7 +142,8 @@ func (d *WalletDispatcher) SendTx(ctx context.Context, request *wallet2.SendTxRe
 	resp := d.preHandler(request)
 	if resp != nil {
 		return &wallet2.SendTxResponse{
-			Error:  &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+			Code:   common.ReturnCode_ERROR,
+			Msg:    config.UnsupportedOperation,
 			TxHash: "",
 		}, nil
 	}
@@ -150,7 +154,8 @@ func (d *WalletDispatcher) GetBalance(ctx context.Context, request *wallet2.Bala
 	resp := d.preHandler(request)
 	if resp != nil {
 		return &wallet2.BalanceResponse{
-			Error:   &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+			Code:    common.ReturnCode_ERROR,
+			Msg:     config.UnsupportedOperation,
 			Balance: "",
 		}, nil
 	}
@@ -161,8 +166,9 @@ func (d *WalletDispatcher) GetTxByAddress(ctx context.Context, request *wallet2.
 	resp := d.preHandler(request)
 	if resp != nil {
 		return &wallet2.TxAddressResponse{
-			Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
-			Tx:    nil,
+			Code: common.ReturnCode_ERROR,
+			Msg:  config.UnsupportedOperation,
+			Tx:   nil,
 		}, nil
 	}
 	return d.registry[request.Chain].GetTxByAddress(request)
@@ -172,8 +178,9 @@ func (d *WalletDispatcher) GetTxByHash(ctx context.Context, request *wallet2.TxH
 	resp := d.preHandler(request)
 	if resp != nil {
 		return &wallet2.TxHashResponse{
-			Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
-			Tx:    nil,
+			Code: common.ReturnCode_ERROR,
+			Msg:  config.UnsupportedOperation,
+			Tx:   nil,
 		}, nil
 	}
 	return d.registry[request.Chain].GetTxByHash(request)
@@ -183,7 +190,8 @@ func (d *WalletDispatcher) GetAccount(ctx context.Context, request *wallet2.Acco
 	resp := d.preHandler(request)
 	if resp != nil {
 		return &wallet2.AccountResponse{
-			Error:         &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+			Code:          common.ReturnCode_ERROR,
+			Msg:           config.UnsupportedOperation,
 			AccountNumber: "",
 			Sequence:      "",
 		}, nil
@@ -195,7 +203,8 @@ func (d *WalletDispatcher) GetUtxo(ctx context.Context, request *wallet2.UtxoReq
 	resp := d.preHandler(request)
 	if resp != nil {
 		return &wallet2.UtxoResponse{
-			Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+			Code: common.ReturnCode_ERROR,
+			Msg:  config.UnsupportedOperation,
 		}, nil
 	}
 	return d.registry[request.Chain].GetUtxo(request)
@@ -205,7 +214,8 @@ func (d *WalletDispatcher) GetMinRent(ctx context.Context, request *wallet2.MinR
 	resp := d.preHandler(request)
 	if resp != nil {
 		return &wallet2.MinRentResponse{
-			Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+			Code:  common.ReturnCode_ERROR,
+			Msg:   config.UnsupportedOperation,
 			Value: "",
 		}, nil
 	}

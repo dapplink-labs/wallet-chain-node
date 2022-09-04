@@ -84,7 +84,7 @@ func (w *WalletAdaptor) GetSupportCoins(req *wallet2.SupportCoinsRequest) (*wall
 
 func (w *WalletAdaptor) GetNonce(req *wallet2.NonceRequest) (*wallet2.NonceResponse, error) {
 	return &wallet2.NonceResponse{
-		Error: &common.Error{Code: 404},
+		Code:  common.ReturnCode_ERROR,
 		Nonce: "",
 	}, nil
 }

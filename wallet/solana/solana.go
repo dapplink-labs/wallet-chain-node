@@ -26,12 +26,14 @@ func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balanc
 	if err != nil {
 		log.Error("get balance error", "err", err)
 		return &wallet2.BalanceResponse{
-			Error:   &common.Error{Code: common.ReturnCode_ERROR},
+			Code:    common.ReturnCode_ERROR,
+			Msg:     "get balance error",
 			Balance: "0",
 		}, err
 	} else {
 		return &wallet2.BalanceResponse{
-			Error:   &common.Error{Code: common.ReturnCode_SUCCESS},
+			Code:    common.ReturnCode_SUCCESS,
+			Msg:     "get balance success",
 			Balance: balance,
 		}, nil
 	}
@@ -55,13 +57,15 @@ func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.
 	if err != nil {
 		log.Error("get GetTxByAddress error", "err", err)
 		return &wallet2.TxAddressResponse{
-			Error: &common.Error{Code: common.ReturnCode_ERROR},
-			Tx:    nil,
+			Code: common.ReturnCode_ERROR,
+			Msg:  "get tx list fail",
+			Tx:   nil,
 		}, err
 	} else {
 		return &wallet2.TxAddressResponse{
-			Error: &common.Error{Code: common.ReturnCode_SUCCESS},
-			Tx:    list,
+			Code: common.ReturnCode_SUCCESS,
+			Msg:  "get tx list success",
+			Tx:   list,
 		}, nil
 	}
 
@@ -71,8 +75,9 @@ func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHash
 	tx, err := a.getClient().GetTxByHash(req.Hash)
 	if err != nil {
 		return &wallet2.TxHashResponse{
-			Error: &common.Error{Code: common.ReturnCode_ERROR},
-			Tx:    nil,
+			Code: common.ReturnCode_ERROR,
+			Msg:  err.Error(),
+			Tx:   nil,
 		}, err
 	}
 	return &wallet2.TxHashResponse{
@@ -91,7 +96,8 @@ func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHash
 
 func (a *WalletAdaptor) GetAccount(req *wallet2.AccountRequest) (*wallet2.AccountResponse, error) {
 	return &wallet2.AccountResponse{
-		Error:         &common.Error{Code: common.ReturnCode_ERROR},
+		Code:          common.ReturnCode_ERROR,
+		Msg:           "do not support",
 		AccountNumber: "",
 	}, nil
 }
@@ -101,12 +107,14 @@ func (a *WalletAdaptor) GetMinRent(req *wallet2.MinRentRequest) (*wallet2.MinRen
 	if err != nil {
 		log.Error("get GetMinRent error", "err", err)
 		return &wallet2.MinRentResponse{
-			Error: &common.Error{Code: common.ReturnCode_ERROR},
+			Code:  common.ReturnCode_ERROR,
+			Msg:   err.Error(),
 			Value: "",
 		}, err
 	} else {
 		return &wallet2.MinRentResponse{
-			Error: &common.Error{Code: common.ReturnCode_SUCCESS},
+			Code:  common.ReturnCode_SUCCESS,
+			Msg:   "get mint rent success",
 			Value: value,
 		}, nil
 	}
@@ -135,12 +143,14 @@ func (w *WalletAdaptor) GetNonce(req *wallet2.NonceRequest) (*wallet2.NonceRespo
 	if err != nil {
 		log.Error("get GetNonce error", "err", err)
 		return &wallet2.NonceResponse{
-			Error: &common.Error{Code: common.ReturnCode_ERROR},
+			Code:  common.ReturnCode_ERROR,
+			Msg:   err.Error(),
 			Nonce: "",
 		}, err
 	} else {
 		return &wallet2.NonceResponse{
-			Error: &common.Error{Code: common.ReturnCode_SUCCESS},
+			Code:  common.ReturnCode_SUCCESS,
+			Msg:   "get nonce success",
 			Nonce: value,
 		}, nil
 	}
@@ -174,12 +184,14 @@ func (w *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxRespo
 	if err != nil {
 		log.Error("get GetNonce error", "err", err)
 		return &wallet2.SendTxResponse{
-			Error:  &common.Error{Code: common.ReturnCode_ERROR},
+			Code:   common.ReturnCode_ERROR,
+			Msg:    "send tx fail",
 			TxHash: "",
 		}, err
 	} else {
 		return &wallet2.SendTxResponse{
-			Error:  &common.Error{Code: common.ReturnCode_SUCCESS},
+			Code:   common.ReturnCode_SUCCESS,
+			Msg:    "send tx success",
 			TxHash: value,
 		}, nil
 	}
