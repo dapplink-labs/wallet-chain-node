@@ -128,6 +128,7 @@ func (wa *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2
 		var from_addrs []*wallet2.Address
 		var to_addrs []*wallet2.Address
 		var value_list []*wallet2.Value
+		var direction int32
 		from_addrs = append(from_addrs, &wallet2.Address{Address: ktx.From})
 		to_addrs = append(to_addrs, &wallet2.Address{Address: ktx.To})
 		value_list = append(value_list, &wallet2.Value{Value: ktx.Value.Int().String()})
@@ -138,6 +139,11 @@ func (wa *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2
 		bigIntGasUsed := int64(ktx.GasUsed)
 		bigIntGasPrice := big.NewInt(ktx.GasPrice.Int().Int64())
 		tx_fee := bigIntGasPrice.Int64() * bigIntGasUsed
+		if req.Address == ktx.From {
+			direction = 0 // 转出
+		} else {
+			direction = 1 // 转入
+		}
 		tx := &wallet2.TxMessage{
 			Hash:            ktx.Hash,
 			From:            from_addrs,
@@ -145,8 +151,8 @@ func (wa *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2
 			Value:           value_list,
 			Fee:             strconv.FormatInt(tx_fee, 10),
 			Status:          ok,
-			Type:            1,
-			Height:          string(ktx.BlockNumber),
+			Type:            direction,
+			Height:          strconv.Itoa(ktx.BlockNumber),
 			ContractAddress: ktx.ContractAddress,
 		}
 		tx_list = append(tx_list, tx)
@@ -164,7 +170,6 @@ func (wa *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHas
 	if r, exist := txCache.Get(key); exist {
 		return r.(*wallet2.TxHashResponse), nil
 	}
-
 	tx, _, err := wa.getClient().TransactionByHash(context.TODO(), ethcommon.HexToHash(req.Hash))
 	if err != nil {
 		if err == ethereum.NotFound {
@@ -203,13 +208,13 @@ func (wa *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHas
 		Msg:  "get transaction success",
 		Tx: &wallet2.TxMessage{
 			Hash:            tx.Hash().Hex(),
-			Index:           1,
+			Index:           uint32(receipt.TransactionIndex),
 			From:            from_addrs,
 			To:              to_addrs,
 			Value:           value_list,
 			Fee:             tx.GasFeeCap().String(),
 			Status:          ok,
-			Type:            1,
+			Type:            0,
 			Height:          receipt.BlockNumber.String(),
 			ContractAddress: tx.To().String(),
 		},
@@ -238,7 +243,11 @@ func (wa *WalletAdaptor) GetMinRent(req *wallet2.MinRentRequest) (*wallet2.MinRe
 }
 
 func (wa *WalletAdaptor) GetSupportCoins(req *wallet2.SupportCoinsRequest) (*wallet2.SupportCoinsResponse, error) {
-	return nil, nil
+	return &wallet2.SupportCoinsResponse{
+		Code:    common.ReturnCode_SUCCESS,
+		Msg:     "this coin support",
+		Support: true,
+	}, nil
 }
 
 func (wa *WalletAdaptor) GetNonce(req *wallet2.NonceRequest) (*wallet2.NonceResponse, error) {
