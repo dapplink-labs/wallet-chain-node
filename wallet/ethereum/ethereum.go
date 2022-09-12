@@ -10,13 +10,17 @@ import (
 	"github.com/SavourDao/savour-hd/wallet"
 	"github.com/SavourDao/savour-hd/wallet/fallback"
 	"github.com/SavourDao/savour-hd/wallet/multiclient"
+	"github.com/btcsuite/btcd/btcec"
 	"github.com/ethereum/go-ethereum"
 	ethcommon "github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rlp"
 	"github.com/nanmu42/etherscan-api"
+	"github.com/shopspring/decimal"
+	"math"
 	"math/big"
 	"strconv"
 	"strings"
@@ -36,71 +40,6 @@ type WalletAdaptor struct {
 	fallback.WalletAdaptor
 	clients      *multiclient.MultiClient
 	etherscanCli *etherscan.Client
-}
-
-func (a *WalletAdaptor) ConvertAddress(req *wallet2.ConvertAddressRequest) (*wallet2.ConvertAddressResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a *WalletAdaptor) ValidAddress(req *wallet2.ValidAddressRequest) (*wallet2.ValidAddressResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a *WalletAdaptor) GetUtxoInsFromData(req *wallet2.UtxoInsFromDataRequest) (*wallet2.UtxoInsResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a *WalletAdaptor) GetAccountTxFromData(req *wallet2.TxFromDataRequest) (*wallet2.AccountTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a *WalletAdaptor) GetUtxoTxFromData(req *wallet2.TxFromDataRequest) (*wallet2.UtxoTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a *WalletAdaptor) GetAccountTxFromSignedData(req *wallet2.TxFromSignedDataRequest) (*wallet2.AccountTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a *WalletAdaptor) GetUtxoTxFromSignedData(req *wallet2.TxFromSignedDataRequest) (*wallet2.UtxoTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a *WalletAdaptor) CreateAccountSignedTx(req *wallet2.CreateAccountSignedTxRequest) (*wallet2.CreateSignedTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a *WalletAdaptor) CreateAccountTx(req *wallet2.CreateAccountTxRequest) (*wallet2.CreateAccountTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a *WalletAdaptor) CreateUtxoSignedTx(req *wallet2.CreateUtxoSignedTxRequest) (*wallet2.CreateSignedTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a *WalletAdaptor) CreateUtxoTx(req *wallet2.CreateUtxoTxRequest) (*wallet2.CreateUtxoTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a *WalletAdaptor) VerifyAccountSignedTx(req *wallet2.VerifySignedTxRequest) (*wallet2.VerifySignedTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a *WalletAdaptor) VerifyUtxoSignedTx(req *wallet2.VerifySignedTxRequest) (*wallet2.VerifySignedTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
 }
 
 func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
@@ -139,6 +78,27 @@ func stringToInt(amount string) *big.Int {
 		return nil
 	}
 	return intAmount
+}
+
+func (a *WalletAdaptor) blockNumber() *big.Int {
+	return a.getClient().blockNumber()
+}
+
+func (a *WalletAdaptor) makeSigner() (types.Signer, error) {
+	height := a.blockNumber()
+	if height == nil {
+		err := fmt.Errorf("fail to get height in making signer")
+		return nil, err
+	}
+	log.Info("make signer", "height", height.Uint64())
+	return types.MakeSigner(a.getClient().chainConfig, height), nil
+}
+
+func (a *WalletAdaptor) makeSignerOffline(height int64) types.Signer {
+	if height == 0 {
+		height = math.MaxInt64
+	}
+	return types.MakeSigner(a.getClient().chainConfig, big.NewInt(height))
 }
 
 func (wa *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.BalanceResponse, error) {
@@ -278,27 +238,6 @@ func (wa *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHas
 	}, nil
 }
 
-func (wa *WalletAdaptor) GetAccount(req *wallet2.AccountRequest) (*wallet2.AccountResponse, error) {
-	return &wallet2.AccountResponse{
-		Code: common.ReturnCode_ERROR,
-		Msg:  "Do not support this interface",
-	}, nil
-}
-
-func (wa *WalletAdaptor) GetUtxo(req *wallet2.UtxoRequest) (*wallet2.UtxoResponse, error) {
-	return &wallet2.UtxoResponse{
-		Code: common.ReturnCode_ERROR,
-		Msg:  "Do not support this interface",
-	}, nil
-}
-
-func (wa *WalletAdaptor) GetMinRent(req *wallet2.MinRentRequest) (*wallet2.MinRentResponse, error) {
-	return &wallet2.MinRentResponse{
-		Code: common.ReturnCode_ERROR,
-		Msg:  "Do not support this interface",
-	}, nil
-}
-
 func (wa *WalletAdaptor) GetSupportCoins(req *wallet2.SupportCoinsRequest) (*wallet2.SupportCoinsResponse, error) {
 	return &wallet2.SupportCoinsResponse{
 		Code:    common.ReturnCode_SUCCESS,
@@ -368,4 +307,404 @@ func (wa *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxResp
 		Msg:    "Send and  braoadcast tx success",
 		TxHash: txHash,
 	}, nil
+}
+
+func (a *WalletAdaptor) ConvertAddress(req *wallet2.ConvertAddressRequest) (*wallet2.ConvertAddressResponse, error) {
+	publicKey, err := btcec.ParsePubKey(req.PublicKey, btcec.S256())
+	if err != nil {
+		log.Error(" btcec.ParsePubKey failed", "err", err)
+		return &wallet2.ConvertAddressResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  err.Error(),
+		}, err
+	}
+	log.Info("convert req pub to address", "address", crypto.PubkeyToAddress(*publicKey.ToECDSA()).String())
+
+	return &wallet2.ConvertAddressResponse{
+		Code:    common.ReturnCode_SUCCESS,
+		Address: crypto.PubkeyToAddress(*publicKey.ToECDSA()).String(),
+	}, nil
+}
+
+func (a *WalletAdaptor) ValidAddress(req *wallet2.ValidAddressRequest) (*wallet2.ValidAddressResponse, error) {
+	valid := ethcommon.IsHexAddress(req.Address)
+	stdAddr := ethcommon.HexToAddress(req.Address)
+	log.Info("valid address", "address", req.Address, "valid", valid, "standardAddreess", stdAddr.String())
+
+	isContract := false
+	if !a.getClient().local {
+		isContract = a.getClient().isContractAddress(stdAddr)
+	}
+	return &wallet2.ValidAddressResponse{
+		Code:             common.ReturnCode_SUCCESS,
+		Valid:            valid,
+		CanWithdrawal:    !isContract,
+		CanonicalAddress: stdAddr.String(),
+	}, nil
+}
+
+func (a *WalletAdaptor) GetAccountTxFromData(req *wallet2.TxFromDataRequest) (*wallet2.AccountTxResponse, error) {
+	rawTx := new(types.Transaction)
+	if err := rlp.DecodeBytes(req.RawData, rawTx); err != nil {
+		log.Error("signedTx unmarlshal failed", "err", err)
+		return &wallet2.AccountTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  err.Error(),
+		}, err
+	}
+
+	reply, err := a.queryRawTransaction(req.Chain != req.Symbol, rawTx)
+	if err != nil {
+		log.Error("queryRawTransaction failed", "err", err)
+		return &wallet2.AccountTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  err.Error(),
+		}, nil
+	}
+	signer := a.makeSignerOffline(req.Height)
+	reply.SignHash = signer.Hash(rawTx).Bytes()
+	return reply, nil
+}
+
+func (a *WalletAdaptor) GetAccountTxFromSignedData(req *wallet2.TxFromSignedDataRequest) (*wallet2.AccountTxResponse, error) {
+	signedTx := new(types.Transaction)
+	if err := rlp.DecodeBytes(req.SignedTxData, signedTx); err != nil {
+		log.Error("signedTx unmarlshal failed", "err", err)
+		return &wallet2.AccountTxResponse{
+			Code: common.ReturnCode_SUCCESS,
+			Msg:  err.Error(),
+		}, err
+	}
+	return a.queryTransaction(req.Chain != req.Symbol, signedTx, nil, 0, a.makeSignerOffline(req.Height))
+}
+
+func (a *WalletAdaptor) CreateAccountSignedTx(req *wallet2.CreateAccountSignedTxRequest) (*wallet2.CreateSignedTxResponse, error) {
+	tx := new(types.Transaction)
+	if err := rlp.DecodeBytes(req.TxData, tx); err != nil {
+		log.Error("tx unmarlshal failed", "err", err)
+		return &wallet2.CreateSignedTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  err.Error(),
+		}, err
+	}
+	signer, err := a.makeSigner()
+	if err != nil {
+		return nil, err
+	}
+
+	signedTx, err := tx.WithSignature(signer, req.Signature)
+	if err != nil {
+		log.Error("tx WithSignature failed", "err", err)
+		return &wallet2.CreateSignedTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  err.Error(),
+		}, err
+	}
+
+	signedTxData, err := rlp.EncodeToBytes(signedTx)
+	if err != nil {
+		log.Error("signedTx EncodeToBytes failed", "err", err)
+		return &wallet2.CreateSignedTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  err.Error(),
+		}, err
+	}
+
+	return &wallet2.CreateSignedTxResponse{
+		Code:         common.ReturnCode_SUCCESS,
+		SignedTxData: signedTxData,
+		Hash:         signedTx.Hash().Bytes(),
+	}, nil
+}
+
+func (a *WalletAdaptor) CreateAccountTx(req *wallet2.CreateAccountTxRequest) (*wallet2.CreateAccountTxResponse, error) {
+	if !ethcommon.IsHexAddress(req.From) {
+		log.Info("invalid from address", "from", req.From)
+		return &wallet2.CreateAccountTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "invalid from address",
+		}, nil
+	}
+
+	if !ethcommon.IsHexAddress(req.To) {
+		log.Info("invalid to address", "to", req.To)
+		return &wallet2.CreateAccountTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "invalid to address",
+		}, nil
+	}
+
+	if req.Amount == "" {
+		log.Info("amount can not be zero", "amount", req.Amount)
+		return &wallet2.CreateAccountTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "zero amount",
+		}, nil
+	}
+
+	if req.GasLimit == "" {
+		log.Info("gas uints can not be zero", "gas_unit", req.GasLimit)
+		return &wallet2.CreateAccountTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "zero gasunits",
+		}, nil
+	}
+
+	if req.GasPrice == "" {
+		log.Info("gas price can not be zero", "gas_price", req.GasPrice)
+		return &wallet2.CreateAccountTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "zero gasprice",
+		}, nil
+	}
+
+	// get nonce from chain
+	nonce := req.Nonce
+	// calc amount
+	assetAmount := stringToInt(req.Amount)
+	if assetAmount == nil {
+		log.Error("convert asset amount failed")
+		return &wallet2.CreateAccountTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "convert asset amount failed",
+		}, nil
+	}
+
+	// convert gas price
+	gasPrice := stringToInt(req.GasPrice)
+	if gasPrice == nil {
+		log.Error("convert gasPrice failed")
+		return &wallet2.CreateAccountTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "convert gasPrice failed",
+		}, nil
+	}
+
+	gasLimit := stringToInt(req.GasLimit)
+	if gasLimit == nil {
+		log.Error("convert gasLimit failed")
+		return &wallet2.CreateAccountTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "convert gasLimit failed",
+		}, nil
+	}
+
+	var err error
+	// make transaction
+	var tx *types.Transaction
+	if len(req.ContractAddress) > 0 {
+		tx, err = a.getClient().Erc20RawTransfer(req.ContractAddress, nonce, ethcommon.HexToAddress(req.To), assetAmount,
+			gasLimit.Uint64(), gasPrice)
+		if err != nil {
+			log.Error("ERC20 tx raw transfer failed", "err", err)
+			return nil, err
+		}
+	} else {
+		tx = types.NewTransaction(nonce, ethcommon.HexToAddress(req.To), assetAmount, gasLimit.Uint64(), gasPrice, nil)
+	}
+	txData, err := rlp.EncodeToBytes(tx)
+	if err != nil {
+		log.Error("tx EncodeToBytes failed", "err", err)
+		return &wallet2.CreateAccountTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  err.Error(),
+		}, err
+	}
+
+	signer, err := a.makeSigner()
+	if err != nil {
+		return nil, err
+	}
+
+	return &wallet2.CreateAccountTxResponse{
+		Code:     common.ReturnCode_SUCCESS,
+		TxData:   txData,
+		SignHash: signer.Hash(tx).Bytes(),
+	}, nil
+}
+
+func (a *WalletAdaptor) VerifyAccountSignedTx(req *wallet2.VerifySignedTxRequest) (*wallet2.VerifySignedTxResponse, error) {
+	signedTx := new(types.Transaction)
+	if err := rlp.DecodeBytes(req.SignedTxData, signedTx); err != nil {
+		log.Error("signedTx DecodeBytess failed", "err", err)
+		return &wallet2.VerifySignedTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  err.Error(),
+		}, err
+	}
+	signer := a.makeSignerOffline(req.Height)
+	sender, err := signer.Sender(signedTx)
+	if err != nil {
+		log.Error("failed to get sender from signed tx", "err", err)
+		return &wallet2.VerifySignedTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  err.Error(),
+		}, err
+	}
+	var expectedSender string
+	if len(req.Addresses) > 0 {
+		expectedSender = req.Addresses[0]
+	} else {
+		expectedSender = req.Sender
+	}
+	return &wallet2.VerifySignedTxResponse{
+		Code:     common.ReturnCode_SUCCESS,
+		Verified: sender == ethcommon.HexToAddress(expectedSender),
+	}, err
+}
+
+// queryTransaction retrieve transaction information from a signed data.
+func (a *WalletAdaptor) queryTransaction(isERC20 bool, tx *types.Transaction, receipt *types.Receipt, blockNumber uint64, signer types.Signer) (*wallet2.AccountTxResponse, error) {
+	reply, err := a.queryRawTransaction(isERC20, tx)
+	if err != nil {
+		return &wallet2.AccountTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  err.Error(),
+		}, nil
+	}
+	reply.SignHash = signer.Hash(tx).Bytes()
+	msg, err := tx.AsMessage(signer, nil)
+	if err != nil {
+		log.Error("tx as message err", "err", err)
+		return &wallet2.AccountTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  err.Error(),
+		}, nil
+	}
+
+	gasUsed := new(big.Int)
+	if receipt != nil {
+		gasUsed = gasUsed.SetUint64(receipt.GasUsed).Mul(gasUsed, tx.GasPrice())
+		if isERC20 {
+			// Check ERC20 Transfer event log
+			err := a.validateAndQueryERC20TransferReceipt(ethcommon.HexToAddress(reply.ContractAddress),
+				msg.From().String(), reply.To, reply.Amount, receipt)
+			if err != nil {
+				return &wallet2.AccountTxResponse{
+					Code: common.ReturnCode_ERROR,
+					Msg:  err.Error(),
+				}, nil
+			}
+		}
+	}
+
+	log.Info("QueryTransaction", "from", msg.From().String(),
+		"block_number", blockNumber,
+		"gas_used", decimal.NewFromBigInt(gasUsed, 0).String())
+	reply.From = msg.From().String()
+	reply.CostFee = decimal.NewFromBigInt(gasUsed, 0).String()
+	reply.BlockHeight = blockNumber
+	reply.Status = wallet2.TxStatus_Success
+	reply.TxHash = tx.Hash().String()
+	return reply, nil
+}
+
+// queryRawTransaction retrieve transaction information from a raw(unsigned) data.
+func (a *WalletAdaptor) queryRawTransaction(isERC20 bool, rawTx *types.Transaction) (*wallet2.AccountTxResponse, error) {
+	var amount *big.Int
+	var to ethcommon.Address
+	contractAddress := ""
+	var err error
+	if isERC20 {
+		// erc20 transfer transaction
+		to, amount, err = a.validateAndQueryERC20RawTransfer(*rawTx.To(), rawTx)
+		if err != nil {
+			return nil, err
+		}
+		contractAddress = rawTx.To().String()
+	} else {
+		// ether transaction
+		to = *rawTx.To()
+		amount = rawTx.Value()
+	}
+	log.Info("QueryRawTransaction",
+		"is_erc20", isERC20,
+		"to", to.String(),
+		"nonce", rawTx.Nonce(),
+		"amount", decimal.NewFromBigInt(amount, 0).String(),
+		"gas_limit", decimal.NewFromBigInt(big.NewInt(int64(rawTx.Gas())), 0).String(),
+		"gas_price", decimal.NewFromBigInt(rawTx.GasPrice(), 0).String())
+
+	return &wallet2.AccountTxResponse{
+		Code:            common.ReturnCode_SUCCESS,
+		To:              to.String(),
+		Nonce:           rawTx.Nonce(),
+		Amount:          decimal.NewFromBigInt(amount, 0).String(),
+		GasLimit:        decimal.NewFromBigInt(big.NewInt(int64(rawTx.Gas())), 0).String(),
+		GasPrice:        decimal.NewFromBigInt(rawTx.GasPrice(), 0).String(),
+		ContractAddress: contractAddress,
+	}, nil
+}
+
+func (a *WalletAdaptor) GetUtxoInsFromData(req *wallet2.UtxoInsFromDataRequest) (*wallet2.UtxoInsResponse, error) {
+	return &wallet2.UtxoInsResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Don't support",
+	}, nil
+}
+
+func (a *WalletAdaptor) GetUtxoTxFromData(req *wallet2.TxFromDataRequest) (*wallet2.UtxoTxResponse, error) {
+	return &wallet2.UtxoTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Don't support",
+	}, nil
+}
+
+func (a *WalletAdaptor) GetUtxoTxFromSignedData(req *wallet2.TxFromSignedDataRequest) (*wallet2.UtxoTxResponse, error) {
+	return &wallet2.UtxoTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Don't support",
+	}, nil
+}
+
+func (a *WalletAdaptor) CreateUtxoSignedTx(req *wallet2.CreateUtxoSignedTxRequest) (*wallet2.CreateSignedTxResponse, error) {
+	return &wallet2.CreateSignedTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Don't support",
+	}, nil
+}
+
+func (a *WalletAdaptor) CreateUtxoTx(req *wallet2.CreateUtxoTxRequest) (*wallet2.CreateUtxoTxResponse, error) {
+	return &wallet2.CreateUtxoTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Don't support",
+	}, nil
+}
+
+func (a *WalletAdaptor) VerifyUtxoSignedTx(req *wallet2.VerifySignedTxRequest) (*wallet2.VerifySignedTxResponse, error) {
+	return &wallet2.VerifySignedTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Don't support",
+	}, nil
+}
+
+func (wa *WalletAdaptor) GetAccount(req *wallet2.AccountRequest) (*wallet2.AccountResponse, error) {
+	return &wallet2.AccountResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Do not support this interface",
+	}, nil
+}
+
+func (wa *WalletAdaptor) GetUtxo(req *wallet2.UtxoRequest) (*wallet2.UtxoResponse, error) {
+	return &wallet2.UtxoResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Do not support this interface",
+	}, nil
+}
+
+func (wa *WalletAdaptor) GetMinRent(req *wallet2.MinRentRequest) (*wallet2.MinRentResponse, error) {
+	return &wallet2.MinRentResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Do not support this interface",
+	}, nil
+}
+
+type semaphore chan struct{}
+
+func (s semaphore) Acquire() {
+	s <- struct{}{}
+}
+
+func (s semaphore) Release() {
+	<-s
 }

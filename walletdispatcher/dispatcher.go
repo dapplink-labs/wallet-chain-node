@@ -30,76 +30,6 @@ type WalletDispatcher struct {
 	registry map[ChainType]wallet.WalletAdaptor
 }
 
-func (d *WalletDispatcher) ConvertAddress(ctx context.Context, request *wallet2.ConvertAddressRequest) (*wallet2.ConvertAddressResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (d *WalletDispatcher) ValidAddress(ctx context.Context, request *wallet2.ValidAddressRequest) (*wallet2.ValidAddressResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (d *WalletDispatcher) GetUtxoInsFromData(ctx context.Context, request *wallet2.UtxoInsFromDataRequest) (*wallet2.UtxoInsResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (d *WalletDispatcher) GetAccountTxFromData(ctx context.Context, request *wallet2.TxFromDataRequest) (*wallet2.AccountTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (d *WalletDispatcher) GetUtxoTxFromData(ctx context.Context, request *wallet2.TxFromDataRequest) (*wallet2.UtxoTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (d *WalletDispatcher) GetAccountTxFromSignedData(ctx context.Context, request *wallet2.TxFromSignedDataRequest) (*wallet2.AccountTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (d *WalletDispatcher) GetUtxoTxFromSignedData(ctx context.Context, request *wallet2.TxFromSignedDataRequest) (*wallet2.UtxoTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (d *WalletDispatcher) CreateAccountSignedTx(ctx context.Context, request *wallet2.CreateAccountSignedTxRequest) (*wallet2.CreateSignedTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (d *WalletDispatcher) CreateAccountTx(ctx context.Context, request *wallet2.CreateAccountTxRequest) (*wallet2.CreateAccountTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (d *WalletDispatcher) CreateUtxoSignedTx(ctx context.Context, request *wallet2.CreateUtxoSignedTxRequest) (*wallet2.CreateSignedTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (d *WalletDispatcher) CreateUtxoTx(ctx context.Context, request *wallet2.CreateUtxoTxRequest) (*wallet2.CreateUtxoTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (d *WalletDispatcher) VerifyAccountSignedTx(ctx context.Context, request *wallet2.VerifySignedTxRequest) (*wallet2.VerifySignedTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (d *WalletDispatcher) VerifyUtxoSignedTx(ctx context.Context, request *wallet2.VerifySignedTxRequest) (*wallet2.VerifySignedTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (d *WalletDispatcher) mustEmbedUnimplementedWalletServiceServer() {
-	//TODO implement me
-	panic("implement me")
-}
-
 func New(conf *config.Config) (*WalletDispatcher, error) {
 	dispatcher := WalletDispatcher{
 		registry: make(map[ChainType]wallet.WalletAdaptor),
@@ -176,8 +106,14 @@ func (d *WalletDispatcher) preHandler(req interface{}) (resp *CommonReply) {
 }
 
 func (d *WalletDispatcher) GetSupportCoins(ctx context.Context, request *wallet2.SupportCoinsRequest) (*wallet2.SupportCoinsResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.SupportCoinsResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  config.UnsupportedOperation,
+		}, nil
+	}
+	return d.registry[request.Chain].GetSupportCoins(request)
 }
 
 func (d *WalletDispatcher) GetNonce(ctx context.Context, request *wallet2.NonceRequest) (*wallet2.NonceResponse, error) {
@@ -285,4 +221,147 @@ func (d *WalletDispatcher) GetMinRent(ctx context.Context, request *wallet2.MinR
 		}, nil
 	}
 	return d.registry[request.Chain].GetMinRent(request)
+}
+
+func (d *WalletDispatcher) ConvertAddress(ctx context.Context, request *wallet2.ConvertAddressRequest) (*wallet2.ConvertAddressResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.ConvertAddressResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  config.UnsupportedChain,
+		}, nil
+	}
+	return d.registry[request.Chain].ConvertAddress(request)
+}
+
+func (d *WalletDispatcher) ValidAddress(ctx context.Context, request *wallet2.ValidAddressRequest) (*wallet2.ValidAddressResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.ValidAddressResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  config.UnsupportedChain,
+		}, nil
+	}
+	return d.registry[request.Chain].ValidAddress(request)
+}
+
+func (d *WalletDispatcher) GetUtxoInsFromData(ctx context.Context, request *wallet2.UtxoInsFromDataRequest) (*wallet2.UtxoInsResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.UtxoInsResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  config.UnsupportedChain,
+		}, nil
+	}
+	return d.registry[request.Chain].GetUtxoInsFromData(request)
+}
+
+func (d *WalletDispatcher) GetAccountTxFromData(ctx context.Context, request *wallet2.TxFromDataRequest) (*wallet2.AccountTxResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.AccountTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  config.UnsupportedChain,
+		}, nil
+	}
+	return d.registry[request.Chain].GetAccountTxFromData(request)
+}
+
+func (d *WalletDispatcher) GetUtxoTxFromData(ctx context.Context, request *wallet2.TxFromDataRequest) (*wallet2.UtxoTxResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.UtxoTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  config.UnsupportedChain,
+		}, nil
+	}
+	return d.registry[request.Chain].GetUtxoTxFromData(request)
+}
+
+func (d *WalletDispatcher) GetAccountTxFromSignedData(ctx context.Context, request *wallet2.TxFromSignedDataRequest) (*wallet2.AccountTxResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.AccountTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  config.UnsupportedChain,
+		}, nil
+	}
+	return d.registry[request.Chain].GetAccountTxFromSignedData(request)
+}
+
+func (d *WalletDispatcher) GetUtxoTxFromSignedData(ctx context.Context, request *wallet2.TxFromSignedDataRequest) (*wallet2.UtxoTxResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.UtxoTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  config.UnsupportedChain,
+		}, nil
+	}
+	return d.registry[request.Chain].GetUtxoTxFromSignedData(request)
+}
+
+func (d *WalletDispatcher) CreateAccountSignedTx(ctx context.Context, request *wallet2.CreateAccountSignedTxRequest) (*wallet2.CreateSignedTxResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.CreateSignedTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  config.UnsupportedChain,
+		}, nil
+	}
+	return d.registry[request.Chain].CreateAccountSignedTx(request)
+}
+
+func (d *WalletDispatcher) CreateAccountTx(ctx context.Context, request *wallet2.CreateAccountTxRequest) (*wallet2.CreateAccountTxResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.CreateAccountTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  config.UnsupportedChain,
+		}, nil
+	}
+	return d.registry[request.Chain].CreateAccountTx(request)
+}
+
+func (d *WalletDispatcher) CreateUtxoSignedTx(ctx context.Context, request *wallet2.CreateUtxoSignedTxRequest) (*wallet2.CreateSignedTxResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.CreateSignedTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  config.UnsupportedChain,
+		}, nil
+	}
+	return d.registry[request.Chain].CreateUtxoSignedTx(request)
+}
+
+func (d *WalletDispatcher) CreateUtxoTx(ctx context.Context, request *wallet2.CreateUtxoTxRequest) (*wallet2.CreateUtxoTxResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.CreateUtxoTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  config.UnsupportedChain,
+		}, nil
+	}
+	return d.registry[request.Chain].CreateUtxoTx(request)
+}
+
+func (d *WalletDispatcher) VerifyAccountSignedTx(ctx context.Context, request *wallet2.VerifySignedTxRequest) (*wallet2.VerifySignedTxResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.VerifySignedTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  config.UnsupportedChain,
+		}, nil
+	}
+	return d.registry[request.Chain].VerifyAccountSignedTx(request)
+}
+
+func (d *WalletDispatcher) VerifyUtxoSignedTx(ctx context.Context, request *wallet2.VerifySignedTxRequest) (*wallet2.VerifySignedTxResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.VerifySignedTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  config.UnsupportedChain,
+		}, nil
+	}
+	return d.registry[request.Chain].VerifyUtxoSignedTx(request)
 }
