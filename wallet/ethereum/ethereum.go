@@ -38,6 +38,71 @@ type WalletAdaptor struct {
 	etherscanCli *etherscan.Client
 }
 
+func (a *WalletAdaptor) ConvertAddress(req *wallet2.ConvertAddressRequest) (*wallet2.ConvertAddressResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) ValidAddress(req *wallet2.ValidAddressRequest) (*wallet2.ValidAddressResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetUtxoInsFromData(req *wallet2.UtxoInsFromDataRequest) (*wallet2.UtxoInsResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetAccountTxFromData(req *wallet2.TxFromDataRequest) (*wallet2.AccountTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetUtxoTxFromData(req *wallet2.TxFromDataRequest) (*wallet2.UtxoTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetAccountTxFromSignedData(req *wallet2.TxFromSignedDataRequest) (*wallet2.AccountTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetUtxoTxFromSignedData(req *wallet2.TxFromSignedDataRequest) (*wallet2.UtxoTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) CreateAccountSignedTx(req *wallet2.CreateAccountSignedTxRequest) (*wallet2.CreateSignedTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) CreateAccountTx(req *wallet2.CreateAccountTxRequest) (*wallet2.CreateAccountTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) CreateUtxoSignedTx(req *wallet2.CreateUtxoSignedTxRequest) (*wallet2.CreateSignedTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) CreateUtxoTx(req *wallet2.CreateUtxoTxRequest) (*wallet2.CreateUtxoTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) VerifyAccountSignedTx(req *wallet2.VerifySignedTxRequest) (*wallet2.VerifySignedTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) VerifyUtxoSignedTx(req *wallet2.VerifySignedTxRequest) (*wallet2.VerifySignedTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
 	clients, err := newEthClients(conf)
 	if err != nil {
@@ -132,10 +197,6 @@ func (wa *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2
 		from_addrs = append(from_addrs, &wallet2.Address{Address: ktx.From})
 		to_addrs = append(to_addrs, &wallet2.Address{Address: ktx.To})
 		value_list = append(value_list, &wallet2.Value{Value: ktx.Value.Int().String()})
-		ok := true
-		if ktx.TxReceiptStatus != "0" {
-			ok = false
-		}
 		bigIntGasUsed := int64(ktx.GasUsed)
 		bigIntGasPrice := big.NewInt(ktx.GasPrice.Int().Int64())
 		tx_fee := bigIntGasPrice.Int64() * bigIntGasUsed
@@ -150,7 +211,7 @@ func (wa *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2
 			To:              to_addrs,
 			Value:           value_list,
 			Fee:             strconv.FormatInt(tx_fee, 10),
-			Status:          ok,
+			Status:          wallet2.TxStatus_Success,
 			Type:            direction,
 			Height:          strconv.Itoa(ktx.BlockNumber),
 			ContractAddress: ktx.ContractAddress,
@@ -193,10 +254,6 @@ func (wa *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHas
 			Msg:  "Get transaction receipt error",
 		}, nil
 	}
-	ok := true
-	if receipt.Status != 0 {
-		ok = false
-	}
 	var from_addrs []*wallet2.Address
 	var to_addrs []*wallet2.Address
 	var value_list []*wallet2.Value
@@ -213,7 +270,7 @@ func (wa *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHas
 			To:              to_addrs,
 			Value:           value_list,
 			Fee:             tx.GasFeeCap().String(),
-			Status:          ok,
+			Status:          wallet2.TxStatus_Success,
 			Type:            0,
 			Height:          receipt.BlockNumber.String(),
 			ContractAddress: tx.To().String(),

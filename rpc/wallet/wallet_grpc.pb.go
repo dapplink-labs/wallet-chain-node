@@ -23,15 +23,28 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type WalletServiceClient interface {
 	GetSupportCoins(ctx context.Context, in *SupportCoinsRequest, opts ...grpc.CallOption) (*SupportCoinsResponse, error)
+	ConvertAddress(ctx context.Context, in *ConvertAddressRequest, opts ...grpc.CallOption) (*ConvertAddressResponse, error)
+	ValidAddress(ctx context.Context, in *ValidAddressRequest, opts ...grpc.CallOption) (*ValidAddressResponse, error)
 	GetNonce(ctx context.Context, in *NonceRequest, opts ...grpc.CallOption) (*NonceResponse, error)
 	GetGasPrice(ctx context.Context, in *GasPriceRequest, opts ...grpc.CallOption) (*GasPriceResponse, error)
-	SendTx(ctx context.Context, in *SendTxRequest, opts ...grpc.CallOption) (*SendTxResponse, error)
 	GetBalance(ctx context.Context, in *BalanceRequest, opts ...grpc.CallOption) (*BalanceResponse, error)
+	GetAccount(ctx context.Context, in *AccountRequest, opts ...grpc.CallOption) (*AccountResponse, error)
+	GetMinRent(ctx context.Context, in *MinRentRequest, opts ...grpc.CallOption) (*MinRentResponse, error)
+	SendTx(ctx context.Context, in *SendTxRequest, opts ...grpc.CallOption) (*SendTxResponse, error)
 	GetTxByAddress(ctx context.Context, in *TxAddressRequest, opts ...grpc.CallOption) (*TxAddressResponse, error)
 	GetTxByHash(ctx context.Context, in *TxHashRequest, opts ...grpc.CallOption) (*TxHashResponse, error)
-	GetAccount(ctx context.Context, in *AccountRequest, opts ...grpc.CallOption) (*AccountResponse, error)
 	GetUtxo(ctx context.Context, in *UtxoRequest, opts ...grpc.CallOption) (*UtxoResponse, error)
-	GetMinRent(ctx context.Context, in *MinRentRequest, opts ...grpc.CallOption) (*MinRentResponse, error)
+	GetUtxoInsFromData(ctx context.Context, in *UtxoInsFromDataRequest, opts ...grpc.CallOption) (*UtxoInsResponse, error)
+	GetAccountTxFromData(ctx context.Context, in *TxFromDataRequest, opts ...grpc.CallOption) (*AccountTxResponse, error)
+	GetUtxoTxFromData(ctx context.Context, in *TxFromDataRequest, opts ...grpc.CallOption) (*UtxoTxResponse, error)
+	GetAccountTxFromSignedData(ctx context.Context, in *TxFromSignedDataRequest, opts ...grpc.CallOption) (*AccountTxResponse, error)
+	GetUtxoTxFromSignedData(ctx context.Context, in *TxFromSignedDataRequest, opts ...grpc.CallOption) (*UtxoTxResponse, error)
+	CreateAccountSignedTx(ctx context.Context, in *CreateAccountSignedTxRequest, opts ...grpc.CallOption) (*CreateSignedTxResponse, error)
+	CreateAccountTx(ctx context.Context, in *CreateAccountTxRequest, opts ...grpc.CallOption) (*CreateAccountTxResponse, error)
+	CreateUtxoSignedTx(ctx context.Context, in *CreateUtxoSignedTxRequest, opts ...grpc.CallOption) (*CreateSignedTxResponse, error)
+	CreateUtxoTx(ctx context.Context, in *CreateUtxoTxRequest, opts ...grpc.CallOption) (*CreateUtxoTxResponse, error)
+	VerifyAccountSignedTx(ctx context.Context, in *VerifySignedTxRequest, opts ...grpc.CallOption) (*VerifySignedTxResponse, error)
+	VerifyUtxoSignedTx(ctx context.Context, in *VerifySignedTxRequest, opts ...grpc.CallOption) (*VerifySignedTxResponse, error)
 }
 
 type walletServiceClient struct {
@@ -45,6 +58,24 @@ func NewWalletServiceClient(cc grpc.ClientConnInterface) WalletServiceClient {
 func (c *walletServiceClient) GetSupportCoins(ctx context.Context, in *SupportCoinsRequest, opts ...grpc.CallOption) (*SupportCoinsResponse, error) {
 	out := new(SupportCoinsResponse)
 	err := c.cc.Invoke(ctx, "/savourrpc.wallet.WalletService/getSupportCoins", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) ConvertAddress(ctx context.Context, in *ConvertAddressRequest, opts ...grpc.CallOption) (*ConvertAddressResponse, error) {
+	out := new(ConvertAddressResponse)
+	err := c.cc.Invoke(ctx, "/savourrpc.wallet.WalletService/convertAddress", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) ValidAddress(ctx context.Context, in *ValidAddressRequest, opts ...grpc.CallOption) (*ValidAddressResponse, error) {
+	out := new(ValidAddressResponse)
+	err := c.cc.Invoke(ctx, "/savourrpc.wallet.WalletService/validAddress", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -69,18 +100,36 @@ func (c *walletServiceClient) GetGasPrice(ctx context.Context, in *GasPriceReque
 	return out, nil
 }
 
-func (c *walletServiceClient) SendTx(ctx context.Context, in *SendTxRequest, opts ...grpc.CallOption) (*SendTxResponse, error) {
-	out := new(SendTxResponse)
-	err := c.cc.Invoke(ctx, "/savourrpc.wallet.WalletService/SendTx", in, out, opts...)
+func (c *walletServiceClient) GetBalance(ctx context.Context, in *BalanceRequest, opts ...grpc.CallOption) (*BalanceResponse, error) {
+	out := new(BalanceResponse)
+	err := c.cc.Invoke(ctx, "/savourrpc.wallet.WalletService/getBalance", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *walletServiceClient) GetBalance(ctx context.Context, in *BalanceRequest, opts ...grpc.CallOption) (*BalanceResponse, error) {
-	out := new(BalanceResponse)
-	err := c.cc.Invoke(ctx, "/savourrpc.wallet.WalletService/getBalance", in, out, opts...)
+func (c *walletServiceClient) GetAccount(ctx context.Context, in *AccountRequest, opts ...grpc.CallOption) (*AccountResponse, error) {
+	out := new(AccountResponse)
+	err := c.cc.Invoke(ctx, "/savourrpc.wallet.WalletService/getAccount", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) GetMinRent(ctx context.Context, in *MinRentRequest, opts ...grpc.CallOption) (*MinRentResponse, error) {
+	out := new(MinRentResponse)
+	err := c.cc.Invoke(ctx, "/savourrpc.wallet.WalletService/getMinRent", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) SendTx(ctx context.Context, in *SendTxRequest, opts ...grpc.CallOption) (*SendTxResponse, error) {
+	out := new(SendTxResponse)
+	err := c.cc.Invoke(ctx, "/savourrpc.wallet.WalletService/SendTx", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -105,15 +154,6 @@ func (c *walletServiceClient) GetTxByHash(ctx context.Context, in *TxHashRequest
 	return out, nil
 }
 
-func (c *walletServiceClient) GetAccount(ctx context.Context, in *AccountRequest, opts ...grpc.CallOption) (*AccountResponse, error) {
-	out := new(AccountResponse)
-	err := c.cc.Invoke(ctx, "/savourrpc.wallet.WalletService/getAccount", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *walletServiceClient) GetUtxo(ctx context.Context, in *UtxoRequest, opts ...grpc.CallOption) (*UtxoResponse, error) {
 	out := new(UtxoResponse)
 	err := c.cc.Invoke(ctx, "/savourrpc.wallet.WalletService/getUtxo", in, out, opts...)
@@ -123,9 +163,99 @@ func (c *walletServiceClient) GetUtxo(ctx context.Context, in *UtxoRequest, opts
 	return out, nil
 }
 
-func (c *walletServiceClient) GetMinRent(ctx context.Context, in *MinRentRequest, opts ...grpc.CallOption) (*MinRentResponse, error) {
-	out := new(MinRentResponse)
-	err := c.cc.Invoke(ctx, "/savourrpc.wallet.WalletService/getMinRent", in, out, opts...)
+func (c *walletServiceClient) GetUtxoInsFromData(ctx context.Context, in *UtxoInsFromDataRequest, opts ...grpc.CallOption) (*UtxoInsResponse, error) {
+	out := new(UtxoInsResponse)
+	err := c.cc.Invoke(ctx, "/savourrpc.wallet.WalletService/getUtxoInsFromData", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) GetAccountTxFromData(ctx context.Context, in *TxFromDataRequest, opts ...grpc.CallOption) (*AccountTxResponse, error) {
+	out := new(AccountTxResponse)
+	err := c.cc.Invoke(ctx, "/savourrpc.wallet.WalletService/getAccountTxFromData", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) GetUtxoTxFromData(ctx context.Context, in *TxFromDataRequest, opts ...grpc.CallOption) (*UtxoTxResponse, error) {
+	out := new(UtxoTxResponse)
+	err := c.cc.Invoke(ctx, "/savourrpc.wallet.WalletService/getUtxoTxFromData", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) GetAccountTxFromSignedData(ctx context.Context, in *TxFromSignedDataRequest, opts ...grpc.CallOption) (*AccountTxResponse, error) {
+	out := new(AccountTxResponse)
+	err := c.cc.Invoke(ctx, "/savourrpc.wallet.WalletService/getAccountTxFromSignedData", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) GetUtxoTxFromSignedData(ctx context.Context, in *TxFromSignedDataRequest, opts ...grpc.CallOption) (*UtxoTxResponse, error) {
+	out := new(UtxoTxResponse)
+	err := c.cc.Invoke(ctx, "/savourrpc.wallet.WalletService/GetUtxoTxFromSignedData", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) CreateAccountSignedTx(ctx context.Context, in *CreateAccountSignedTxRequest, opts ...grpc.CallOption) (*CreateSignedTxResponse, error) {
+	out := new(CreateSignedTxResponse)
+	err := c.cc.Invoke(ctx, "/savourrpc.wallet.WalletService/createAccountSignedTx", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) CreateAccountTx(ctx context.Context, in *CreateAccountTxRequest, opts ...grpc.CallOption) (*CreateAccountTxResponse, error) {
+	out := new(CreateAccountTxResponse)
+	err := c.cc.Invoke(ctx, "/savourrpc.wallet.WalletService/createAccountTx", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) CreateUtxoSignedTx(ctx context.Context, in *CreateUtxoSignedTxRequest, opts ...grpc.CallOption) (*CreateSignedTxResponse, error) {
+	out := new(CreateSignedTxResponse)
+	err := c.cc.Invoke(ctx, "/savourrpc.wallet.WalletService/createUtxoSignedTx", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) CreateUtxoTx(ctx context.Context, in *CreateUtxoTxRequest, opts ...grpc.CallOption) (*CreateUtxoTxResponse, error) {
+	out := new(CreateUtxoTxResponse)
+	err := c.cc.Invoke(ctx, "/savourrpc.wallet.WalletService/createUtxoTx", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) VerifyAccountSignedTx(ctx context.Context, in *VerifySignedTxRequest, opts ...grpc.CallOption) (*VerifySignedTxResponse, error) {
+	out := new(VerifySignedTxResponse)
+	err := c.cc.Invoke(ctx, "/savourrpc.wallet.WalletService/verifyAccountSignedTx", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) VerifyUtxoSignedTx(ctx context.Context, in *VerifySignedTxRequest, opts ...grpc.CallOption) (*VerifySignedTxResponse, error) {
+	out := new(VerifySignedTxResponse)
+	err := c.cc.Invoke(ctx, "/savourrpc.wallet.WalletService/verifyUtxoSignedTx", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -137,15 +267,28 @@ func (c *walletServiceClient) GetMinRent(ctx context.Context, in *MinRentRequest
 // for forward compatibility
 type WalletServiceServer interface {
 	GetSupportCoins(context.Context, *SupportCoinsRequest) (*SupportCoinsResponse, error)
+	ConvertAddress(context.Context, *ConvertAddressRequest) (*ConvertAddressResponse, error)
+	ValidAddress(context.Context, *ValidAddressRequest) (*ValidAddressResponse, error)
 	GetNonce(context.Context, *NonceRequest) (*NonceResponse, error)
 	GetGasPrice(context.Context, *GasPriceRequest) (*GasPriceResponse, error)
-	SendTx(context.Context, *SendTxRequest) (*SendTxResponse, error)
 	GetBalance(context.Context, *BalanceRequest) (*BalanceResponse, error)
+	GetAccount(context.Context, *AccountRequest) (*AccountResponse, error)
+	GetMinRent(context.Context, *MinRentRequest) (*MinRentResponse, error)
+	SendTx(context.Context, *SendTxRequest) (*SendTxResponse, error)
 	GetTxByAddress(context.Context, *TxAddressRequest) (*TxAddressResponse, error)
 	GetTxByHash(context.Context, *TxHashRequest) (*TxHashResponse, error)
-	GetAccount(context.Context, *AccountRequest) (*AccountResponse, error)
 	GetUtxo(context.Context, *UtxoRequest) (*UtxoResponse, error)
-	GetMinRent(context.Context, *MinRentRequest) (*MinRentResponse, error)
+	GetUtxoInsFromData(context.Context, *UtxoInsFromDataRequest) (*UtxoInsResponse, error)
+	GetAccountTxFromData(context.Context, *TxFromDataRequest) (*AccountTxResponse, error)
+	GetUtxoTxFromData(context.Context, *TxFromDataRequest) (*UtxoTxResponse, error)
+	GetAccountTxFromSignedData(context.Context, *TxFromSignedDataRequest) (*AccountTxResponse, error)
+	GetUtxoTxFromSignedData(context.Context, *TxFromSignedDataRequest) (*UtxoTxResponse, error)
+	CreateAccountSignedTx(context.Context, *CreateAccountSignedTxRequest) (*CreateSignedTxResponse, error)
+	CreateAccountTx(context.Context, *CreateAccountTxRequest) (*CreateAccountTxResponse, error)
+	CreateUtxoSignedTx(context.Context, *CreateUtxoSignedTxRequest) (*CreateSignedTxResponse, error)
+	CreateUtxoTx(context.Context, *CreateUtxoTxRequest) (*CreateUtxoTxResponse, error)
+	VerifyAccountSignedTx(context.Context, *VerifySignedTxRequest) (*VerifySignedTxResponse, error)
+	VerifyUtxoSignedTx(context.Context, *VerifySignedTxRequest) (*VerifySignedTxResponse, error)
 }
 
 // UnimplementedWalletServiceServer must be embedded to have forward compatible implementations.
@@ -155,17 +298,29 @@ type UnimplementedWalletServiceServer struct {
 func (UnimplementedWalletServiceServer) GetSupportCoins(context.Context, *SupportCoinsRequest) (*SupportCoinsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSupportCoins not implemented")
 }
+func (UnimplementedWalletServiceServer) ConvertAddress(context.Context, *ConvertAddressRequest) (*ConvertAddressResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ConvertAddress not implemented")
+}
+func (UnimplementedWalletServiceServer) ValidAddress(context.Context, *ValidAddressRequest) (*ValidAddressResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidAddress not implemented")
+}
 func (UnimplementedWalletServiceServer) GetNonce(context.Context, *NonceRequest) (*NonceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetNonce not implemented")
 }
 func (UnimplementedWalletServiceServer) GetGasPrice(context.Context, *GasPriceRequest) (*GasPriceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetGasPrice not implemented")
 }
-func (UnimplementedWalletServiceServer) SendTx(context.Context, *SendTxRequest) (*SendTxResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendTx not implemented")
-}
 func (UnimplementedWalletServiceServer) GetBalance(context.Context, *BalanceRequest) (*BalanceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBalance not implemented")
+}
+func (UnimplementedWalletServiceServer) GetAccount(context.Context, *AccountRequest) (*AccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAccount not implemented")
+}
+func (UnimplementedWalletServiceServer) GetMinRent(context.Context, *MinRentRequest) (*MinRentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMinRent not implemented")
+}
+func (UnimplementedWalletServiceServer) SendTx(context.Context, *SendTxRequest) (*SendTxResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendTx not implemented")
 }
 func (UnimplementedWalletServiceServer) GetTxByAddress(context.Context, *TxAddressRequest) (*TxAddressResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTxByAddress not implemented")
@@ -173,14 +328,41 @@ func (UnimplementedWalletServiceServer) GetTxByAddress(context.Context, *TxAddre
 func (UnimplementedWalletServiceServer) GetTxByHash(context.Context, *TxHashRequest) (*TxHashResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTxByHash not implemented")
 }
-func (UnimplementedWalletServiceServer) GetAccount(context.Context, *AccountRequest) (*AccountResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAccount not implemented")
-}
 func (UnimplementedWalletServiceServer) GetUtxo(context.Context, *UtxoRequest) (*UtxoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUtxo not implemented")
 }
-func (UnimplementedWalletServiceServer) GetMinRent(context.Context, *MinRentRequest) (*MinRentResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetMinRent not implemented")
+func (UnimplementedWalletServiceServer) GetUtxoInsFromData(context.Context, *UtxoInsFromDataRequest) (*UtxoInsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUtxoInsFromData not implemented")
+}
+func (UnimplementedWalletServiceServer) GetAccountTxFromData(context.Context, *TxFromDataRequest) (*AccountTxResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAccountTxFromData not implemented")
+}
+func (UnimplementedWalletServiceServer) GetUtxoTxFromData(context.Context, *TxFromDataRequest) (*UtxoTxResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUtxoTxFromData not implemented")
+}
+func (UnimplementedWalletServiceServer) GetAccountTxFromSignedData(context.Context, *TxFromSignedDataRequest) (*AccountTxResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAccountTxFromSignedData not implemented")
+}
+func (UnimplementedWalletServiceServer) GetUtxoTxFromSignedData(context.Context, *TxFromSignedDataRequest) (*UtxoTxResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUtxoTxFromSignedData not implemented")
+}
+func (UnimplementedWalletServiceServer) CreateAccountSignedTx(context.Context, *CreateAccountSignedTxRequest) (*CreateSignedTxResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAccountSignedTx not implemented")
+}
+func (UnimplementedWalletServiceServer) CreateAccountTx(context.Context, *CreateAccountTxRequest) (*CreateAccountTxResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAccountTx not implemented")
+}
+func (UnimplementedWalletServiceServer) CreateUtxoSignedTx(context.Context, *CreateUtxoSignedTxRequest) (*CreateSignedTxResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateUtxoSignedTx not implemented")
+}
+func (UnimplementedWalletServiceServer) CreateUtxoTx(context.Context, *CreateUtxoTxRequest) (*CreateUtxoTxResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateUtxoTx not implemented")
+}
+func (UnimplementedWalletServiceServer) VerifyAccountSignedTx(context.Context, *VerifySignedTxRequest) (*VerifySignedTxResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VerifyAccountSignedTx not implemented")
+}
+func (UnimplementedWalletServiceServer) VerifyUtxoSignedTx(context.Context, *VerifySignedTxRequest) (*VerifySignedTxResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VerifyUtxoSignedTx not implemented")
 }
 func (UnimplementedWalletServiceServer) mustEmbedUnimplementedWalletServiceServer() {}
 
@@ -209,6 +391,42 @@ func _WalletService_GetSupportCoins_Handler(srv interface{}, ctx context.Context
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(WalletServiceServer).GetSupportCoins(ctx, req.(*SupportCoinsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_ConvertAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ConvertAddressRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).ConvertAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/savourrpc.wallet.WalletService/convertAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).ConvertAddress(ctx, req.(*ConvertAddressRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_ValidAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ValidAddressRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).ValidAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/savourrpc.wallet.WalletService/validAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).ValidAddress(ctx, req.(*ValidAddressRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -249,24 +467,6 @@ func _WalletService_GetGasPrice_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _WalletService_SendTx_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SendTxRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(WalletServiceServer).SendTx(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/savourrpc.wallet.WalletService/SendTx",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WalletServiceServer).SendTx(ctx, req.(*SendTxRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _WalletService_GetBalance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(BalanceRequest)
 	if err := dec(in); err != nil {
@@ -281,6 +481,60 @@ func _WalletService_GetBalance_Handler(srv interface{}, ctx context.Context, dec
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(WalletServiceServer).GetBalance(ctx, req.(*BalanceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_GetAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).GetAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/savourrpc.wallet.WalletService/getAccount",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).GetAccount(ctx, req.(*AccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_GetMinRent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MinRentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).GetMinRent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/savourrpc.wallet.WalletService/getMinRent",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).GetMinRent(ctx, req.(*MinRentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_SendTx_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendTxRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).SendTx(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/savourrpc.wallet.WalletService/SendTx",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).SendTx(ctx, req.(*SendTxRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -321,24 +575,6 @@ func _WalletService_GetTxByHash_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _WalletService_GetAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AccountRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(WalletServiceServer).GetAccount(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/savourrpc.wallet.WalletService/getAccount",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WalletServiceServer).GetAccount(ctx, req.(*AccountRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _WalletService_GetUtxo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UtxoRequest)
 	if err := dec(in); err != nil {
@@ -357,20 +593,200 @@ func _WalletService_GetUtxo_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _WalletService_GetMinRent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MinRentRequest)
+func _WalletService_GetUtxoInsFromData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UtxoInsFromDataRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(WalletServiceServer).GetMinRent(ctx, in)
+		return srv.(WalletServiceServer).GetUtxoInsFromData(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/savourrpc.wallet.WalletService/getMinRent",
+		FullMethod: "/savourrpc.wallet.WalletService/getUtxoInsFromData",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WalletServiceServer).GetMinRent(ctx, req.(*MinRentRequest))
+		return srv.(WalletServiceServer).GetUtxoInsFromData(ctx, req.(*UtxoInsFromDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_GetAccountTxFromData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TxFromDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).GetAccountTxFromData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/savourrpc.wallet.WalletService/getAccountTxFromData",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).GetAccountTxFromData(ctx, req.(*TxFromDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_GetUtxoTxFromData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TxFromDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).GetUtxoTxFromData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/savourrpc.wallet.WalletService/getUtxoTxFromData",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).GetUtxoTxFromData(ctx, req.(*TxFromDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_GetAccountTxFromSignedData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TxFromSignedDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).GetAccountTxFromSignedData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/savourrpc.wallet.WalletService/getAccountTxFromSignedData",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).GetAccountTxFromSignedData(ctx, req.(*TxFromSignedDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_GetUtxoTxFromSignedData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TxFromSignedDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).GetUtxoTxFromSignedData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/savourrpc.wallet.WalletService/GetUtxoTxFromSignedData",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).GetUtxoTxFromSignedData(ctx, req.(*TxFromSignedDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_CreateAccountSignedTx_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAccountSignedTxRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).CreateAccountSignedTx(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/savourrpc.wallet.WalletService/createAccountSignedTx",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).CreateAccountSignedTx(ctx, req.(*CreateAccountSignedTxRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_CreateAccountTx_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAccountTxRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).CreateAccountTx(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/savourrpc.wallet.WalletService/createAccountTx",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).CreateAccountTx(ctx, req.(*CreateAccountTxRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_CreateUtxoSignedTx_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateUtxoSignedTxRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).CreateUtxoSignedTx(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/savourrpc.wallet.WalletService/createUtxoSignedTx",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).CreateUtxoSignedTx(ctx, req.(*CreateUtxoSignedTxRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_CreateUtxoTx_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateUtxoTxRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).CreateUtxoTx(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/savourrpc.wallet.WalletService/createUtxoTx",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).CreateUtxoTx(ctx, req.(*CreateUtxoTxRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_VerifyAccountSignedTx_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifySignedTxRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).VerifyAccountSignedTx(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/savourrpc.wallet.WalletService/verifyAccountSignedTx",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).VerifyAccountSignedTx(ctx, req.(*VerifySignedTxRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_VerifyUtxoSignedTx_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifySignedTxRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).VerifyUtxoSignedTx(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/savourrpc.wallet.WalletService/verifyUtxoSignedTx",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).VerifyUtxoSignedTx(ctx, req.(*VerifySignedTxRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -387,6 +803,14 @@ var WalletService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _WalletService_GetSupportCoins_Handler,
 		},
 		{
+			MethodName: "convertAddress",
+			Handler:    _WalletService_ConvertAddress_Handler,
+		},
+		{
+			MethodName: "validAddress",
+			Handler:    _WalletService_ValidAddress_Handler,
+		},
+		{
 			MethodName: "getNonce",
 			Handler:    _WalletService_GetNonce_Handler,
 		},
@@ -395,12 +819,20 @@ var WalletService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _WalletService_GetGasPrice_Handler,
 		},
 		{
-			MethodName: "SendTx",
-			Handler:    _WalletService_SendTx_Handler,
-		},
-		{
 			MethodName: "getBalance",
 			Handler:    _WalletService_GetBalance_Handler,
+		},
+		{
+			MethodName: "getAccount",
+			Handler:    _WalletService_GetAccount_Handler,
+		},
+		{
+			MethodName: "getMinRent",
+			Handler:    _WalletService_GetMinRent_Handler,
+		},
+		{
+			MethodName: "SendTx",
+			Handler:    _WalletService_SendTx_Handler,
 		},
 		{
 			MethodName: "getTxByAddress",
@@ -411,16 +843,52 @@ var WalletService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _WalletService_GetTxByHash_Handler,
 		},
 		{
-			MethodName: "getAccount",
-			Handler:    _WalletService_GetAccount_Handler,
-		},
-		{
 			MethodName: "getUtxo",
 			Handler:    _WalletService_GetUtxo_Handler,
 		},
 		{
-			MethodName: "getMinRent",
-			Handler:    _WalletService_GetMinRent_Handler,
+			MethodName: "getUtxoInsFromData",
+			Handler:    _WalletService_GetUtxoInsFromData_Handler,
+		},
+		{
+			MethodName: "getAccountTxFromData",
+			Handler:    _WalletService_GetAccountTxFromData_Handler,
+		},
+		{
+			MethodName: "getUtxoTxFromData",
+			Handler:    _WalletService_GetUtxoTxFromData_Handler,
+		},
+		{
+			MethodName: "getAccountTxFromSignedData",
+			Handler:    _WalletService_GetAccountTxFromSignedData_Handler,
+		},
+		{
+			MethodName: "GetUtxoTxFromSignedData",
+			Handler:    _WalletService_GetUtxoTxFromSignedData_Handler,
+		},
+		{
+			MethodName: "createAccountSignedTx",
+			Handler:    _WalletService_CreateAccountSignedTx_Handler,
+		},
+		{
+			MethodName: "createAccountTx",
+			Handler:    _WalletService_CreateAccountTx_Handler,
+		},
+		{
+			MethodName: "createUtxoSignedTx",
+			Handler:    _WalletService_CreateUtxoSignedTx_Handler,
+		},
+		{
+			MethodName: "createUtxoTx",
+			Handler:    _WalletService_CreateUtxoTx_Handler,
+		},
+		{
+			MethodName: "verifyAccountSignedTx",
+			Handler:    _WalletService_VerifyAccountSignedTx_Handler,
+		},
+		{
+			MethodName: "verifyUtxoSignedTx",
+			Handler:    _WalletService_VerifyUtxoSignedTx_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

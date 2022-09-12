@@ -8,7 +8,7 @@ network: mainnet
 fullnode:
   btc:
     rpcs:
-      - rpc_url:
+      - rpc_url: 'https://electrum.blockstream.info'
         rpc_user:
         rpc_pass:
     confirmations: 1

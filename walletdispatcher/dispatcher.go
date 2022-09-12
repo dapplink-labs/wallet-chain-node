@@ -30,6 +30,71 @@ type WalletDispatcher struct {
 	registry map[ChainType]wallet.WalletAdaptor
 }
 
+func (d *WalletDispatcher) ConvertAddress(ctx context.Context, request *wallet2.ConvertAddressRequest) (*wallet2.ConvertAddressResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) ValidAddress(ctx context.Context, request *wallet2.ValidAddressRequest) (*wallet2.ValidAddressResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetUtxoInsFromData(ctx context.Context, request *wallet2.UtxoInsFromDataRequest) (*wallet2.UtxoInsResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetAccountTxFromData(ctx context.Context, request *wallet2.TxFromDataRequest) (*wallet2.AccountTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetUtxoTxFromData(ctx context.Context, request *wallet2.TxFromDataRequest) (*wallet2.UtxoTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetAccountTxFromSignedData(ctx context.Context, request *wallet2.TxFromSignedDataRequest) (*wallet2.AccountTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetUtxoTxFromSignedData(ctx context.Context, request *wallet2.TxFromSignedDataRequest) (*wallet2.UtxoTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) CreateAccountSignedTx(ctx context.Context, request *wallet2.CreateAccountSignedTxRequest) (*wallet2.CreateSignedTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) CreateAccountTx(ctx context.Context, request *wallet2.CreateAccountTxRequest) (*wallet2.CreateAccountTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) CreateUtxoSignedTx(ctx context.Context, request *wallet2.CreateUtxoSignedTxRequest) (*wallet2.CreateSignedTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) CreateUtxoTx(ctx context.Context, request *wallet2.CreateUtxoTxRequest) (*wallet2.CreateUtxoTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) VerifyAccountSignedTx(ctx context.Context, request *wallet2.VerifySignedTxRequest) (*wallet2.VerifySignedTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) VerifyUtxoSignedTx(ctx context.Context, request *wallet2.VerifySignedTxRequest) (*wallet2.VerifySignedTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (d *WalletDispatcher) mustEmbedUnimplementedWalletServiceServer() {
 	//TODO implement me
 	panic("implement me")
