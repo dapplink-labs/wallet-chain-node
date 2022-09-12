@@ -90,7 +90,6 @@ func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balanc
 				Msg:  "get balance fail",
 			}, err
 		}
-
 		if symbol != req.Chain {
 			err = fmt.Errorf("contract's symbol %v != symbol:%v", symbol, req.Coin)
 			return &wallet2.BalanceResponse{
@@ -253,21 +252,6 @@ func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHash
 			},
 		}, nil
 	}
-}
-
-func (a *WalletAdaptor) GetAccount(req *wallet2.AccountRequest) (*wallet2.AccountResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a *WalletAdaptor) GetUtxo(req *wallet2.UtxoRequest) (*wallet2.UtxoResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a *WalletAdaptor) GetMinRent(req *wallet2.MinRentRequest) (*wallet2.MinRentResponse, error) {
-	//TODO implement me
-	panic("implement me")
 }
 
 func (wa *WalletAdaptor) GetNonce(req *wallet2.NonceRequest) (*wallet2.NonceResponse, error) {
@@ -634,6 +618,27 @@ func (a *WalletAdaptor) CreateUtxoTx(req *wallet2.CreateUtxoTxRequest) (*wallet2
 
 func (a *WalletAdaptor) VerifyUtxoSignedTx(req *wallet2.VerifySignedTxRequest) (*wallet2.VerifySignedTxResponse, error) {
 	return &wallet2.VerifySignedTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "tron don't support this api",
+	}, nil
+}
+
+func (a *WalletAdaptor) GetMinRent(req *wallet2.MinRentRequest) (*wallet2.MinRentResponse, error) {
+	return &wallet2.MinRentResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "tron don't support this api",
+	}, nil
+}
+
+func (a *WalletAdaptor) GetAccount(req *wallet2.AccountRequest) (*wallet2.AccountResponse, error) {
+	return &wallet2.AccountResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "tron don't support this api",
+	}, nil
+}
+
+func (a *WalletAdaptor) GetUtxo(req *wallet2.UtxoRequest) (*wallet2.UtxoResponse, error) {
+	return &wallet2.UtxoResponse{
 		Code: common.ReturnCode_ERROR,
 		Msg:  "tron don't support this api",
 	}, nil

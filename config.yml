@@ -8,7 +8,7 @@ network: mainnet
 fullnode:
   btc:
     rpcs:
-      - rpc_url: 'https://electrum.blockstream.info'
+      - rpc_url: 'https://electrum.coineuskal.com:50002'
         rpc_user:
         rpc_pass:
     confirmations: 1
@@ -18,6 +18,12 @@ fullnode:
     confirmations: 4
     tp_api_url: 'https://api.etherscan.io/api?'
     tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+  trx:
+    rpcs:
+      - rpc_url: '34.237.210.82:50051'
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: ''
 
   solana:
     public_api: 'https://public-api.solscan.io'

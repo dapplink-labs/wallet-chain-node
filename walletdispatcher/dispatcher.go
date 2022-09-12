@@ -38,6 +38,7 @@ func New(conf *config.Config) (*WalletDispatcher, error) {
 		bitcoin.ChainName:  bitcoin.NewChainAdaptor,
 		ethereum.ChainName: ethereum.NewChainAdaptor,
 		solana.ChainName:   solana.NewChainAdaptor,
+		// tron.ChainName:     tron.NewWalletAdaptor,
 	}
 	supportedChains := []string{bitcoin.ChainName, ethereum.ChainName, solana.ChainName}
 	for _, c := range conf.Chains {
@@ -62,9 +63,10 @@ func NewLocal(network config.NetWorkType) *WalletDispatcher {
 	walletAdaptorFactoryMap := map[string]func(network config.NetWorkType) wallet.WalletAdaptor{
 		bitcoin.ChainName:  bitcoin.NewLocalChainAdaptor,
 		ethereum.ChainName: ethereum.NewLocalWalletAdaptor,
+		solana.ChainName:   solana.NewLocalWalletAdaptor,
+		// tron.ChainName:     tron.NewLocalWalletAdaptor,
 	}
-	supportedChains := []string{bitcoin.ChainName, ethereum.ChainName}
-
+	supportedChains := []string{bitcoin.ChainName, ethereum.ChainName, solana.ChainName}
 	for _, c := range supportedChains {
 		if factory, ok := walletAdaptorFactoryMap[c]; ok {
 			dispatcher.registry[c] = factory(network)
