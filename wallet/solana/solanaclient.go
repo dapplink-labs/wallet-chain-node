@@ -44,7 +44,6 @@ func newLocalSolanaClient(network config.NetWorkType) *solanaClient {
 		panic("unsupported network type")
 	}
 	rpcClient := rpc.NewRpcClient(endpoint)
-
 	return &solanaClient{
 		RpcClient: rpcClient,
 	}
@@ -313,7 +312,6 @@ func (sol *solanaClient) GetMinRent() (string, error) {
 	if err != nil {
 		log.Fatalf("failed to get GetMinimumBalanceForRentExemption , err: %v", err)
 		return "", err
-
 	}
 	return strconv.FormatUint(bal.Result, 10), nil
 }

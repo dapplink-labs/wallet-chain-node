@@ -18,6 +18,7 @@ import (
 	pb "github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/ptypes"
 	"math/big"
+	"strconv"
 	"strings"
 )
 
@@ -80,27 +81,31 @@ func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balanc
 		symbol, err := grpcClient.TRC20GetSymbol(req.ContractAddress)
 		if err != nil {
 			return &wallet2.BalanceResponse{
-				Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+				Code: common.ReturnCode_ERROR,
+				Msg:  "get balance fail",
 			}, err
 		}
 
 		if symbol != req.Chain {
 			err = fmt.Errorf("contract's symbol %v != symbol:%v", symbol, req.Coin)
 			return &wallet2.BalanceResponse{
-				Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+				Code: common.ReturnCode_ERROR,
+				Msg:  "get balance fail",
 			}, err
 		}
 		result, err = grpcClient.TRC20ContractBalance(req.Address, req.ContractAddress)
 		if err != nil {
 			return &wallet2.BalanceResponse{
-				Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+				Code: common.ReturnCode_ERROR,
+				Msg:  "get balance fail",
 			}, err
 		}
 	} else {
 		acc, err := grpcClient.GetAccount(req.Address)
 		if err != nil {
 			return &wallet2.BalanceResponse{
-				Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+				Code: common.ReturnCode_ERROR,
+				Msg:  "get balance fail",
 			}, err
 		}
 
@@ -118,7 +123,8 @@ func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balanc
 	}
 	balanceCache.Add(key, result)
 	return &wallet2.BalanceResponse{
-		Error:   &common.Error{Code: common.ReturnCode_SUCCESS},
+		Code:    common.ReturnCode_SUCCESS,
+		Msg:     "get balance success",
 		Balance: result.String(),
 	}, nil
 }
@@ -135,7 +141,8 @@ func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHash
 	tx, err := grpcClient.GetTransactionByID(req.Hash)
 	if err != nil {
 		return &wallet2.TxHashResponse{
-			Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+			Code: common.ReturnCode_ERROR,
+			Msg:  "get tx by hash fail",
 		}, err
 	}
 
@@ -143,14 +150,16 @@ func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHash
 	if len(r) != 1 {
 		err = fmt.Errorf("GetTxByHash, unsupport tx %v", req.Hash)
 		return &wallet2.TxHashResponse{
-			Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+			Code: common.ReturnCode_ERROR,
+			Msg:  "get tx by hash fail, unsupport tx",
 		}, err
 	}
 
 	txi, err := grpcClient.GetTransactionInfoByID(req.Hash)
 	if err != nil {
 		return &wallet2.TxHashResponse{
-			Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+			Code: common.ReturnCode_ERROR,
+			Msg:  err.Error(),
 		}, err
 	}
 
@@ -160,7 +169,8 @@ func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHash
 		depositList, err = decodeTransferContract(r[0], req.Hash)
 		if err != nil {
 			return &wallet2.TxHashResponse{
-				Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+				Code: common.ReturnCode_ERROR,
+				Msg:  err.Error(),
 			}, err
 		}
 
@@ -168,7 +178,8 @@ func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHash
 		depositList, err = decodeTransferAssetContract(r[0], req.Hash)
 		if err != nil {
 			return &wallet2.TxHashResponse{
-				Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+				Code: common.ReturnCode_ERROR,
+				Msg:  err.Error(),
 			}, err
 		}
 
@@ -176,14 +187,16 @@ func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHash
 		depositList, err = decodeTriggerSmartContract(r[0], txi, req.Hash)
 		if err != nil {
 			return &wallet2.TxHashResponse{
-				Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+				Code: common.ReturnCode_ERROR,
+				Msg:  err.Error(),
 			}, err
 		}
 	default:
 		err = fmt.Errorf("QueryTransaction, unsupport contract type %v, tx hash %v ", r[0].Type, req.Hash)
 		log.Info(err.Error())
 		return &wallet2.TxHashResponse{
-			Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+			Code: common.ReturnCode_ERROR,
+			Msg:  err.Error(),
 		}, err
 	}
 
@@ -193,7 +206,8 @@ func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHash
 		err = fmt.Errorf("QueryTransaction, more than 1 deposit list %v, tx hash %v ", len(depositList), req.Hash)
 		log.Info(err.Error())
 		return &wallet2.TxHashResponse{
-			Error: &common.Error{Code: common.ReturnCode_ERROR, Brief: config.UnsupportedOperation, Detail: config.UnsupportedChain, CanRetry: true},
+			Code: common.ReturnCode_ERROR,
+			Msg:  err.Error(),
 		}, err
 	}
 	var txStatus bool
@@ -203,32 +217,40 @@ func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHash
 	case core.TransactionInfo_FAILED:
 		txStatus = false
 	}
+	var from_addrs []*wallet2.Address
+	var to_addrs []*wallet2.Address
+	var value_list []*wallet2.Value
+	from_addrs = append(from_addrs, &wallet2.Address{Address: depositList[0].fromAddr})
+	to_addrs = append(to_addrs, &wallet2.Address{Address: depositList[0].toAddr})
+	value_list = append(value_list, &wallet2.Value{Value: depositList[0].amount})
 	if len(depositList) == 0 {
 		return &wallet2.TxHashResponse{
-			Error: &common.Error{Code: common.ReturnCode_SUCCESS},
+			Code: common.ReturnCode_SUCCESS,
+			Msg:  "get tx by hash successs",
 			Tx: &wallet2.TxMessage{
 				Hash:   req.Hash,
-				From:   depositList[0].fromAddr,
-				To:     depositList[0].toAddr,
+				From:   from_addrs,
+				To:     to_addrs,
 				Fee:    big.NewInt(txi.GetFee()).String(),
 				Status: txStatus,
-				Value:  depositList[0].amount,
+				Value:  value_list,
 				Type:   0,
-				Height: string(txi.BlockNumber),
+				Height: strconv.FormatInt(txi.BlockNumber, 10),
 			},
 		}, nil
 	} else {
 		return &wallet2.TxHashResponse{
-			Error: &common.Error{Code: common.ReturnCode_SUCCESS},
+			Code: common.ReturnCode_SUCCESS,
+			Msg:  "get tx by hash successs",
 			Tx: &wallet2.TxMessage{
 				Hash:            req.Hash,
-				From:            depositList[0].fromAddr,
-				To:              depositList[0].toAddr,
+				From:            from_addrs,
+				To:              to_addrs,
 				Fee:             big.NewInt(txi.GetFee()).String(),
 				Status:          txStatus,
-				Value:           depositList[0].amount,
+				Value:           value_list,
 				Type:            0,
-				Height:          string(txi.BlockNumber),
+				Height:          strconv.FormatInt(txi.BlockNumber, 10),
 				ContractAddress: depositList[0].contractAddr,
 			},
 		}, nil
@@ -253,7 +275,8 @@ func (a *WalletAdaptor) GetMinRent(req *wallet2.MinRentRequest) (*wallet2.MinRen
 func (wa *WalletAdaptor) GetNonce(req *wallet2.NonceRequest) (*wallet2.NonceResponse, error) {
 	log.Info("QueryNonce", "req", req)
 	return &wallet2.NonceResponse{
-		Error: &common.Error{Code: common.ReturnCode_SUCCESS},
+		Code:  common.ReturnCode_SUCCESS,
+		Msg:   "get nonce success",
 		Nonce: "0",
 	}, nil
 }
@@ -264,7 +287,8 @@ func (wa WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxRespo
 	err := pb.Unmarshal([]byte(req.RawTx), &tx)
 	if err != nil {
 		return &wallet2.SendTxResponse{
-			Error: &common.Error{Code: common.ReturnCode_ERROR},
+			Code: common.ReturnCode_ERROR,
+			Msg:  err.Error(),
 		}, nil
 	}
 
@@ -275,12 +299,14 @@ func (wa WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxRespo
 	if err != nil {
 		log.Error("broadcast tx failed", "hash", hex.EncodeToString(hash), "err", err)
 		return &wallet2.SendTxResponse{
-			Error: &common.Error{Code: common.ReturnCode_ERROR},
+			Code: common.ReturnCode_ERROR,
+			Msg:  err.Error(),
 		}, err
 	}
 	log.Info("broadcast tx success", "hash", hex.EncodeToString(hash))
 	return &wallet2.SendTxResponse{
-		Error:  &common.Error{Code: common.ReturnCode_SUCCESS},
+		Code:   common.ReturnCode_SUCCESS,
+		Msg:    "broadcast tx success",
 		TxHash: hex.EncodeToString(hash),
 	}, nil
 }
