@@ -19,7 +19,7 @@ parent:
   </a>
 </div>
 
-Savour Core 是 Savour 项目的钱包的后端服务，使用 golang 编写，提供 grpc 接口给上层服务访问
+Savour HD 是 Savour 项目的钱包的 HD. 后端服务，使用 golang 编写，提供 grpc 接口给上层服务访问
 
 **注意**: 需要 [Go 1.18+](https://golang.org/dl/)
 
