@@ -72,7 +72,7 @@ git push origin xxx
 
 ### 4.commit PR
 
-Have a pr on your github and submit it to the snow repository
+Have a pr on your github and submit it to the savour-hd repository
 
 ### 5.review 
 
