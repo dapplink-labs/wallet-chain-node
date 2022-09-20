@@ -76,4 +76,4 @@ Have a pr on your github and submit it to the snow repository
 
 ### 5.review 
 
-After the snow code maintainer has passed the review, the code will be merged into the snow library. At this point, your PR submission is complete
+After the savour-hd code maintainer has passed the review, the code will be merged into the savour-hd library. At this point, your PR submission is complete
