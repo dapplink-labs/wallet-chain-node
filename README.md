@@ -47,17 +47,17 @@ grpcui -plaintext 127.0.0.1:8089
 
 ## Contribute
 
-### 1：fork repo
+### 1.fork repo
 
 fork savour-hd to your github
 
-### 2：clone repo
+### 2.clone repo
 
 ```bash
 git@github.com:guoshijiang/savour-hd.git
 ```
 
-### 3：create new branch and commit code
+### 3. create new branch and commit code
 
 ```bash
 git branch -C xxx
@@ -70,11 +70,10 @@ git commit -m "xxx"
 git push origin xxx
 ```
 
-### 4：commit PR
+### 4.commit PR
 
-Have a pr on your github and submit it to the savour-hd repository
+Have a pr on your github and submit it to the snow repository
 
+### 5.review 
 
-### 5：review 
-
-After the savour-core code maintainer has passed the review, the code will be merged into the savour-core library. At this point, your PR submission is complete
+After the snow code maintainer has passed the review, the code will be merged into the snow library. At this point, your PR submission is complete
