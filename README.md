@@ -4,7 +4,7 @@ parent:
 -->
 
 <div align="center">
-  <h1> Savour Core repo </h1>
+  <h1> Savour Hd repo </h1>
 </div>
 
 <div align="center">
