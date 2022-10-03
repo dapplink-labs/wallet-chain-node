@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/btcsuite/btcd v0.22.0-beta
+	github.com/btcsuite/btcutil v1.0.3-0.20201208143702-a53e38424cce
 	github.com/ethereum/go-ethereum v1.10.20
 	github.com/fbsobreira/gotron-sdk v0.0.0-20211102183839-58a64f4da5f4
 	github.com/golang/protobuf v1.5.2
@@ -11,7 +12,7 @@ require (
 	github.com/mr-tron/base58 v1.2.0
 	github.com/nanmu42/etherscan-api v1.7.0
 	github.com/pkg/errors v0.9.1
-	github.com/portto/solana-go-sdk v1.18.0
+	github.com/portto/solana-go-sdk v1.22.0
 	github.com/shopspring/decimal v1.3.1
 	go.uber.org/atomic v1.9.0
 	google.golang.org/grpc v1.47.0
@@ -24,7 +25,6 @@ require (
 	github.com/StackExchange/wmi v0.0.0-20180116203802-5d049714c4a6 // indirect
 	github.com/btcsuite/btcd/btcec/v2 v2.2.0 // indirect
 	github.com/btcsuite/btclog v0.0.0-20170628155309-84c8d2346e9f // indirect
-	github.com/btcsuite/btcutil v1.0.3-0.20201208143702-a53e38424cce // indirect
 	github.com/btcsuite/go-socks v0.0.0-20170105172521-4720035b7bfd // indirect
 	github.com/btcsuite/websocket v0.0.0-20150119174127-31079b680792 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
