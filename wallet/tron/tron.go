@@ -28,8 +28,8 @@ import (
 const TrxDecimals = 6
 
 const (
-	ChainName               = "trx"
-	TronSymbol              = "trx"
+	ChainName               = "Tron"
+	TronSymbol              = "TRX"
 	MaxTimeUntillExpiration = 24*60*60*1000 - 120000 //23hour58min, MaxTimeUntillExpiration is 24 hours in Tron
 )
 
@@ -226,11 +226,11 @@ func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHash
 			Msg:  "get tx by hash successs",
 			Tx: &wallet2.TxMessage{
 				Hash:   req.Hash,
-				From:   from_addrs,
-				To:     to_addrs,
+				Froms:  from_addrs,
+				Tos:    to_addrs,
 				Fee:    big.NewInt(txi.GetFee()).String(),
 				Status: wallet2.TxStatus_Success,
-				Value:  value_list,
+				Values: value_list,
 				Type:   0,
 				Height: strconv.FormatInt(txi.BlockNumber, 10),
 			},
@@ -241,11 +241,11 @@ func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHash
 			Msg:  "get tx by hash successs",
 			Tx: &wallet2.TxMessage{
 				Hash:            req.Hash,
-				From:            from_addrs,
-				To:              to_addrs,
+				Froms:           from_addrs,
+				Tos:             to_addrs,
 				Fee:             big.NewInt(txi.GetFee()).String(),
 				Status:          wallet2.TxStatus_Success,
-				Value:           value_list,
+				Values:          value_list,
 				Type:            0,
 				Height:          strconv.FormatInt(txi.BlockNumber, 10),
 				ContractAddress: depositList[0].contractAddr,

@@ -27,8 +27,8 @@ import (
 )
 
 const (
-	ChainName = "eth"
-	Coin      = "eth"
+	ChainName = "Ethereum"
+	Coin      = "ETH"
 )
 
 var (
@@ -160,6 +160,7 @@ func (wa *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2
 		bigIntGasUsed := int64(ktx.GasUsed)
 		bigIntGasPrice := big.NewInt(ktx.GasPrice.Int().Int64())
 		tx_fee := bigIntGasPrice.Int64() * bigIntGasUsed
+		datetime := ktx.TimeStamp.Time().Format("2006-01-02 15:04:05")
 		if req.Address == ktx.From {
 			direction = 0 // 转出
 		} else {
@@ -167,14 +168,15 @@ func (wa *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2
 		}
 		tx := &wallet2.TxMessage{
 			Hash:            ktx.Hash,
-			From:            from_addrs,
-			To:              to_addrs,
-			Value:           value_list,
+			Froms:           from_addrs,
+			Tos:             to_addrs,
+			Values:          value_list,
 			Fee:             strconv.FormatInt(tx_fee, 10),
 			Status:          wallet2.TxStatus_Success,
 			Type:            direction,
 			Height:          strconv.Itoa(ktx.BlockNumber),
 			ContractAddress: ktx.ContractAddress,
+			Datetime:        datetime,
 		}
 		tx_list = append(tx_list, tx)
 	}
@@ -205,7 +207,6 @@ func (wa *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHas
 			Msg:  "Ethereum Tx NotFoun",
 		}, nil
 	}
-
 	receipt, err := wa.getClient().TransactionReceipt(context.TODO(), ethcommon.HexToHash(req.Hash))
 	if err != nil {
 		log.Error("get transaction receipt error", "err", err)
@@ -226,9 +227,9 @@ func (wa *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHas
 		Tx: &wallet2.TxMessage{
 			Hash:            tx.Hash().Hex(),
 			Index:           uint32(receipt.TransactionIndex),
-			From:            from_addrs,
-			To:              to_addrs,
-			Value:           value_list,
+			Froms:           from_addrs,
+			Tos:             to_addrs,
+			Values:          value_list,
 			Fee:             tx.GasFeeCap().String(),
 			Status:          wallet2.TxStatus_Success,
 			Type:            0,

@@ -11,9 +11,9 @@ import (
 )
 
 const (
-	ChainName = "sol"
-	Symbol    = "sol"
-	Coin      = "sol"
+	ChainName = "Solana"
+	Symbol    = "SOL"
+	Coin      = "SOL"
 )
 
 type WalletAdaptor struct {
@@ -110,11 +110,11 @@ func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.
 	for i := 0; i < len(txs); i++ {
 		list = append(list, &wallet2.TxMessage{
 			Hash:   txs[i].TxHash,
-			To:     []*wallet2.Address{{Address: txs[i].Dst}},
-			From:   []*wallet2.Address{{Address: txs[i].Src}},
+			Tos:    []*wallet2.Address{{Address: txs[i].Dst}},
+			Froms:  []*wallet2.Address{{Address: txs[i].Src}},
 			Fee:    txs[i].TxHash,
 			Status: wallet2.TxStatus_Success,
-			Value:  []*wallet2.Value{{Value: string(rune(txs[i].Lamport))}},
+			Values: []*wallet2.Value{{Value: string(rune(txs[i].Lamport))}},
 			Type:   1,
 			Height: string(rune(txs[i].Slot)),
 		})
@@ -148,11 +148,11 @@ func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHash
 	return &wallet2.TxHashResponse{
 		Tx: &wallet2.TxMessage{
 			Hash:   tx.Hash,
-			To:     []*wallet2.Address{{Address: tx.To}},
-			From:   []*wallet2.Address{{Address: tx.From}},
+			Tos:    []*wallet2.Address{{Address: tx.To}},
+			Froms:  []*wallet2.Address{{Address: tx.From}},
 			Fee:    tx.Fee,
 			Status: wallet2.TxStatus_Success,
-			Value:  []*wallet2.Value{{Value: tx.Value}},
+			Values: []*wallet2.Value{{Value: tx.Value}},
 			Type:   tx.Type,
 			Height: tx.Height,
 		},

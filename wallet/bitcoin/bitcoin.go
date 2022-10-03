@@ -31,8 +31,8 @@ const (
 	confirms     = 1
 	btcDecimals  = 8
 	btcFeeBlocks = 3
-	ChainName    = "btc"
-	Symbol       = "btc"
+	ChainName    = "Bitcoin"
+	Symbol       = "BTC"
 )
 
 type WalletAdaptor struct {
@@ -782,10 +782,10 @@ func (a *WalletAdaptor) assembleUtxoTransactionReplyForTxHash(tx *btcjson.TxRawR
 		Tx: &wallet2.TxMessage{
 			Hash:   tx.Hash,
 			Status: wallet2.TxStatus_Success,
-			From:   from_addrs,
-			To:     to_addrs,
+			Froms:  from_addrs,
+			Tos:    to_addrs,
 			Fee:    strconv.FormatInt(gasUsed, 10),
-			Value:  value_list,
+			Values: value_list,
 			Height: strconv.FormatInt(blockHeight, 10),
 			Type:   direction,
 		},

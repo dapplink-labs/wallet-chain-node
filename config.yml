@@ -30,5 +30,5 @@ fullnode:
     NonceAccountAddr: DJyNpXgggw1WGgjTVzFsNjb3fuQZVMqhoakvSBfX9LYx
     FeeAccountPriKey: 4TMFNY9ntAn3CHzguSAvDNLPRoQTaK3sWbQQXdDXaE6KWRBLufGL6PJdsD2koiEe3gGmMdRK3aAw7sikGNksHJrN
 
-chains: [btc, eth, sol, trx]
+chains: [Bitcoin, Ethereum, Solana, Tron]
 
