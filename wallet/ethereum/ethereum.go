@@ -198,13 +198,13 @@ func (wa *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHas
 		if err == ethereum.NotFound {
 			return &wallet2.TxHashResponse{
 				Code: common.ReturnCode_ERROR,
-				Msg:  "Ethereum Tx NotFoun",
+				Msg:  "Ethereum Tx NotFound",
 			}, nil
 		}
 		log.Error("get transaction error", "err", err)
 		return &wallet2.TxHashResponse{
 			Code: common.ReturnCode_ERROR,
-			Msg:  "Ethereum Tx NotFoun",
+			Msg:  "Ethereum Tx NotFound",
 		}, nil
 	}
 	receipt, err := wa.getClient().TransactionReceipt(context.TODO(), ethcommon.HexToHash(req.Hash))
