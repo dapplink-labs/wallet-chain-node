@@ -4,7 +4,7 @@ parent:
 -->
 
 <div align="center">
-  <h1> Savour Core 项目 </h1>
+  <h1> Savour Hd repo </h1>
 </div>
 
 <div align="center">
@@ -19,60 +19,61 @@ parent:
   </a>
 </div>
 
-Savour HD 是 Savour 项目的钱包的 HD. 后端服务，使用 golang 编写，提供 grpc 接口给上层服务访问
+Savour HD is the HD of the wallet of the Savour project. The back-end service, written in golang, provides grpc interface for upper-layer service access
 
-**注意**: 需要 [Go 1.18+](https://golang.org/dl/)
+**Tips**: need [Go 1.18+](https://golang.org/dl/)
 
-## 安装
+## Install
 
-### 安装依赖
+### Install dependencies
 ```bash
 go mod tidy
 ```
-### 构建程序
+### build
 ```bash
-go build 或者 go install savour-hd
+go build or go install savour-hd
 ```
 
-### 启动程序
+### start 
 ```bash
 ./savour-hd -c ./config.yml
 ```
 
-### 启动 RPC 接口测试界面
+### Start the RPC interface test interface
 
 ```bash
 grpcui -plaintext 127.0.0.1:8089
 ```
 
-## 贡献代码
+## Contribute
 
-### 第一步： fork 仓库
+### 1.fork repo
 
-将 savour-core fork 到您自己的代码仓库
+fork savour-hd to your github
 
-### 第二步： clone 您自己仓库的代码
+### 2.clone repo
 
 ```bash
 git@github.com:guoshijiang/savour-hd.git
 ```
 
-### 第三步：建立分支编写提交代码
+### 3. create new branch and commit code
 
 ```bash
 git branch -C xxx
 git checkout xxx
-编写您的代码
+
+coding
+
 git add .
 git commit -m "xxx"
 git push origin xxx
 ```
 
-### 第四步：提交 PR
+### 4.commit PR
 
-到你的 github 上面有一个 pr, 提交到 savour-core 代码库
+Have a pr on your github and submit it to the savour-hd repository
 
+### 5.review 
 
-### 第五步：review 完成
-
-待 savour-core 代码维护者 review 通过之后代码会合并到 savour-core 库中，至此，您的 PR 就提交完成了 
+After the savour-hd code maintainer has passed the review, the code will be merged into the savour-hd library. At this point, your PR submission is complete
