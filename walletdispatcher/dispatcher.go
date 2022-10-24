@@ -4,14 +4,16 @@ import (
 	"context"
 	"github.com/SavourDao/savour-hd/rpc/common"
 	"github.com/SavourDao/savour-hd/wallet"
+	"github.com/SavourDao/savour-hd/wallet/ethereum"
 	"github.com/SavourDao/savour-hd/wallet/solana"
 	"runtime/debug"
 	"strings"
 
 	"github.com/SavourDao/savour-hd/config"
 	wallet2 "github.com/SavourDao/savour-hd/rpc/wallet"
+	"github.com/SavourDao/savour-hd/wallet/arbitrum"
 	"github.com/SavourDao/savour-hd/wallet/bitcoin"
-	"github.com/SavourDao/savour-hd/wallet/ethereum"
+
 	"github.com/ethereum/go-ethereum/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -38,9 +40,9 @@ func New(conf *config.Config) (*WalletDispatcher, error) {
 		bitcoin.ChainName:  bitcoin.NewChainAdaptor,
 		ethereum.ChainName: ethereum.NewChainAdaptor,
 		solana.ChainName:   solana.NewChainAdaptor,
-		// tron.ChainName:     tron.NewWalletAdaptor,
+		arbitrum.ChainName: arbitrum.NewChainAdaptor,
 	}
-	supportedChains := []string{bitcoin.ChainName, ethereum.ChainName, solana.ChainName}
+	supportedChains := []string{bitcoin.ChainName, ethereum.ChainName, solana.ChainName, arbitrum.ChainName}
 	for _, c := range conf.Chains {
 		if factory, ok := walletAdaptorFactoryMap[c]; ok {
 			adaptor, err := factory(conf)
@@ -64,9 +66,9 @@ func NewLocal(network config.NetWorkType) *WalletDispatcher {
 		bitcoin.ChainName:  bitcoin.NewLocalChainAdaptor,
 		ethereum.ChainName: ethereum.NewLocalWalletAdaptor,
 		solana.ChainName:   solana.NewLocalWalletAdaptor,
-		// tron.ChainName:     tron.NewLocalWalletAdaptor,
+		arbitrum.ChainName: arbitrum.NewLocalWalletAdaptor,
 	}
-	supportedChains := []string{bitcoin.ChainName, ethereum.ChainName, solana.ChainName}
+	supportedChains := []string{bitcoin.ChainName, ethereum.ChainName, solana.ChainName, arbitrum.ChainName}
 	for _, c := range supportedChains {
 		if factory, ok := walletAdaptorFactoryMap[c]; ok {
 			dispatcher.registry[c] = factory(network)

@@ -36,10 +36,11 @@ type SolanaNode struct {
 
 // Fullnode define
 type Fullnode struct {
-	Btc Node       `yaml:"btc"`
-	Eth Node       `yaml:"eth"`
-	Trx Node       `yaml:"trx"`
-	Sol SolanaNode `yaml:"solana"`
+	Btc  Node       `yaml:"btc"`
+	Eth  Node       `yaml:"eth"`
+	Arbi Node       `yaml:"arbi"`
+	Trx  Node       `yaml:"trx"`
+	Sol  SolanaNode `yaml:"solana"`
 }
 
 // Config instance define
