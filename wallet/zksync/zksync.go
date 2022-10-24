@@ -1,4 +1,4 @@
-package arbitrum
+package zksync
 
 import (
 	"context"
@@ -27,7 +27,7 @@ import (
 )
 
 const (
-	ChainName = "Arbitrum"
+	ChainName = "Zksync"
 	Coin      = "ETH"
 )
 
@@ -43,7 +43,7 @@ type WalletAdaptor struct {
 }
 
 func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
-	clients, err := newArbiClients(conf)
+	clients, err := newZksyncClients(conf)
 	if err != nil {
 		return nil, err
 	}
@@ -53,22 +53,22 @@ func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
 	}
 	return &WalletAdaptor{
 		clients:      multiclient.New(clis),
-		etherscanCli: NewEtherscanClient(conf.Fullnode.Arbi.TpApiUrl, conf.Fullnode.Arbi.TpApiKey),
+		etherscanCli: NewEtherscanClient(conf.Fullnode.Zksync.TpApiUrl, conf.Fullnode.Zksync.TpApiKey),
 	}, nil
 }
 
 func NewLocalWalletAdaptor(network config.NetWorkType) wallet.WalletAdaptor {
-	return newWalletAdaptor(newLocalArbiClient(network))
+	return newWalletAdaptor(newLocalZksyncClient(network))
 }
 
-func newWalletAdaptor(client *arbiClient) wallet.WalletAdaptor {
+func newWalletAdaptor(client *zksyncClient) wallet.WalletAdaptor {
 	return &WalletAdaptor{
 		clients: multiclient.New([]multiclient.Client{client}),
 	}
 }
 
-func (a *WalletAdaptor) getClient() *arbiClient {
-	return a.clients.BestClient().(*arbiClient)
+func (a *WalletAdaptor) getClient() *zksyncClient {
+	return a.clients.BestClient().(*zksyncClient)
 }
 
 func stringToInt(amount string) *big.Int {

@@ -4,8 +4,15 @@ import (
 	"context"
 	"github.com/SavourDao/savour-hd/rpc/common"
 	"github.com/SavourDao/savour-hd/wallet"
+	"github.com/SavourDao/savour-hd/wallet/avalanche"
+	"github.com/SavourDao/savour-hd/wallet/binance"
 	"github.com/SavourDao/savour-hd/wallet/ethereum"
+	"github.com/SavourDao/savour-hd/wallet/evmos"
+	"github.com/SavourDao/savour-hd/wallet/heco"
+	"github.com/SavourDao/savour-hd/wallet/optimism"
+	"github.com/SavourDao/savour-hd/wallet/polygon"
 	"github.com/SavourDao/savour-hd/wallet/solana"
+	"github.com/SavourDao/savour-hd/wallet/zksync"
 	"runtime/debug"
 	"strings"
 
@@ -37,12 +44,23 @@ func New(conf *config.Config) (*WalletDispatcher, error) {
 		registry: make(map[ChainType]wallet.WalletAdaptor),
 	}
 	walletAdaptorFactoryMap := map[string]func(conf *config.Config) (wallet.WalletAdaptor, error){
-		bitcoin.ChainName:  bitcoin.NewChainAdaptor,
-		ethereum.ChainName: ethereum.NewChainAdaptor,
-		solana.ChainName:   solana.NewChainAdaptor,
-		arbitrum.ChainName: arbitrum.NewChainAdaptor,
+		bitcoin.ChainName:   bitcoin.NewChainAdaptor,
+		ethereum.ChainName:  ethereum.NewChainAdaptor,
+		solana.ChainName:    solana.NewChainAdaptor,
+		arbitrum.ChainName:  arbitrum.NewChainAdaptor,
+		zksync.ChainName:    zksync.NewChainAdaptor,
+		optimism.ChainName:  optimism.NewChainAdaptor,
+		polygon.ChainName:   polygon.NewChainAdaptor,
+		binance.ChainName:   binance.NewChainAdaptor,
+		heco.ChainName:      heco.NewChainAdaptor,
+		avalanche.ChainName: avalanche.NewChainAdaptor,
+		evmos.ChainName:     evmos.NewChainAdaptor,
 	}
-	supportedChains := []string{bitcoin.ChainName, ethereum.ChainName, solana.ChainName, arbitrum.ChainName}
+	supportedChains := []string{
+		bitcoin.ChainName, ethereum.ChainName, solana.ChainName, arbitrum.ChainName,
+		zksync.ChainName, optimism.ChainName, polygon.ChainName, binance.ChainName,
+		heco.ChainName, avalanche.ChainName, evmos.ChainName,
+	}
 	for _, c := range conf.Chains {
 		if factory, ok := walletAdaptorFactoryMap[c]; ok {
 			adaptor, err := factory(conf)
@@ -63,12 +81,23 @@ func NewLocal(network config.NetWorkType) *WalletDispatcher {
 	}
 
 	walletAdaptorFactoryMap := map[string]func(network config.NetWorkType) wallet.WalletAdaptor{
-		bitcoin.ChainName:  bitcoin.NewLocalChainAdaptor,
-		ethereum.ChainName: ethereum.NewLocalWalletAdaptor,
-		solana.ChainName:   solana.NewLocalWalletAdaptor,
-		arbitrum.ChainName: arbitrum.NewLocalWalletAdaptor,
+		bitcoin.ChainName:   bitcoin.NewLocalChainAdaptor,
+		ethereum.ChainName:  ethereum.NewLocalWalletAdaptor,
+		solana.ChainName:    solana.NewLocalWalletAdaptor,
+		arbitrum.ChainName:  arbitrum.NewLocalWalletAdaptor,
+		zksync.ChainName:    zksync.NewLocalWalletAdaptor,
+		optimism.ChainName:  optimism.NewLocalWalletAdaptor,
+		polygon.ChainName:   polygon.NewLocalWalletAdaptor,
+		binance.ChainName:   binance.NewLocalWalletAdaptor,
+		heco.ChainName:      heco.NewLocalWalletAdaptor,
+		avalanche.ChainName: avalanche.NewLocalWalletAdaptor,
+		evmos.ChainName:     evmos.NewLocalWalletAdaptor,
 	}
-	supportedChains := []string{bitcoin.ChainName, ethereum.ChainName, solana.ChainName, arbitrum.ChainName}
+	supportedChains := []string{
+		bitcoin.ChainName, ethereum.ChainName, solana.ChainName, arbitrum.ChainName,
+		zksync.ChainName, optimism.ChainName, polygon.ChainName, binance.ChainName,
+		heco.ChainName, avalanche.ChainName, evmos.ChainName,
+	}
 	for _, c := range supportedChains {
 		if factory, ok := walletAdaptorFactoryMap[c]; ok {
 			dispatcher.registry[c] = factory(network)

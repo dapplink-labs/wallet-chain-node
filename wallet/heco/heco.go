@@ -1,4 +1,4 @@
-package arbitrum
+package heco
 
 import (
 	"context"
@@ -27,8 +27,8 @@ import (
 )
 
 const (
-	ChainName = "Arbitrum"
-	Coin      = "ETH"
+	ChainName = "Heco"
+	Coin      = "HT"
 )
 
 var (
@@ -43,7 +43,7 @@ type WalletAdaptor struct {
 }
 
 func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
-	clients, err := newArbiClients(conf)
+	clients, err := newHecoClients(conf)
 	if err != nil {
 		return nil, err
 	}
@@ -53,22 +53,22 @@ func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
 	}
 	return &WalletAdaptor{
 		clients:      multiclient.New(clis),
-		etherscanCli: NewEtherscanClient(conf.Fullnode.Arbi.TpApiUrl, conf.Fullnode.Arbi.TpApiKey),
+		etherscanCli: NewEtherscanClient(conf.Fullnode.Heco.TpApiUrl, conf.Fullnode.Heco.TpApiKey),
 	}, nil
 }
 
 func NewLocalWalletAdaptor(network config.NetWorkType) wallet.WalletAdaptor {
-	return newWalletAdaptor(newLocalArbiClient(network))
+	return newWalletAdaptor(newLocalHecoClient(network))
 }
 
-func newWalletAdaptor(client *arbiClient) wallet.WalletAdaptor {
+func newWalletAdaptor(client *hecoClient) wallet.WalletAdaptor {
 	return &WalletAdaptor{
 		clients: multiclient.New([]multiclient.Client{client}),
 	}
 }
 
-func (a *WalletAdaptor) getClient() *arbiClient {
-	return a.clients.BestClient().(*arbiClient)
+func (a *WalletAdaptor) getClient() *hecoClient {
+	return a.clients.BestClient().(*hecoClient)
 }
 
 func stringToInt(amount string) *big.Int {
