@@ -40,6 +40,7 @@ type Fullnode struct {
 	Eth  Node       `yaml:"eth"`
 	Arbi Node       `yaml:"arbi"`
 	Trx  Node       `yaml:"trx"`
+	Near Node       `yaml:"near"`
 	Sol  SolanaNode `yaml:"solana"`
 }
 
