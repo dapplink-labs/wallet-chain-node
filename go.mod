@@ -14,7 +14,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/portto/solana-go-sdk v1.22.1
 	github.com/shopspring/decimal v1.3.1
-	go.uber.org/atomic v1.9.0
+	go.uber.org/atomic v1.10.0
 	google.golang.org/grpc v1.50.1
 	google.golang.org/protobuf v1.28.0
 	gopkg.in/yaml.v2 v2.4.0
