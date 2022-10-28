@@ -4,8 +4,8 @@ go 1.18
 
 require (
 	github.com/btcsuite/btcd v0.23.1
-	github.com/btcsuite/btcd/chaincfg/chainhash v1.0.1
-	github.com/ethereum/go-ethereum v1.10.20
+	github.com/btcsuite/btcutil v1.0.3-0.20201208143702-a53e38424cce
+	github.com/ethereum/go-ethereum v1.10.25
 	github.com/fbsobreira/gotron-sdk v0.0.0-20211102183839-58a64f4da5f4
 	github.com/golang/protobuf v1.5.2
 	github.com/hashicorp/golang-lru v0.5.5-0.20210104140557-80c98217689d
@@ -14,7 +14,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/portto/solana-go-sdk v1.22.1
 	github.com/shopspring/decimal v1.3.1
-	go.uber.org/atomic v1.9.0
+	go.uber.org/atomic v1.10.0
 	google.golang.org/grpc v1.50.1
 	google.golang.org/protobuf v1.28.1
 	gopkg.in/yaml.v2 v2.4.0
