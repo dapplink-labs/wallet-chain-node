@@ -8,16 +8,75 @@ network: mainnet
 fullnode:
   btc:
     rpcs:
-      - rpc_url:
+      - rpc_url: 'https://electrum.coineuskal.com:50002'
         rpc_user:
         rpc_pass:
     confirmations: 1
   eth:
     rpcs:
-      - rpc_url: 'https://mainnet.infura.io/v3/b48b6387e66d4f3497245873747f6e4d'
+      - rpc_url: 'https://eth-mainnet.nodereal.io/v1/1659dfb40aa24bbb8153a677b98064d7'
     confirmations: 4
+    tp_api_url: 'https://api.etherscan.io/api?'
+    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+  arbi:
+    rpcs:
+      - rpc_url: 'https://rpc.ankr.com/arbitrum'
+    confirmations: 4
+    tp_api_url: 'https://api.arbiscan.io/api?'
+    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+  op:
+    rpcs:
+      - rpc_url: ''
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+  zksync:
+    rpcs:
+      - rpc_url: ''
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+  bsc:
+    rpcs:
+      - rpc_url: ''
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+  heco:
+    rpcs:
+      - rpc_url: ''
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+  avax:
+    rpcs:
+      - rpc_url: ''
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+  evmos:
+    rpcs:
+      - rpc_url: ''
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+  polygon:
+    rpcs:
+      - rpc_url: ''
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+  trx:
+    rpcs:
+      - rpc_url: '34.237.210.82:50051'
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: ''
+
   solana:
     public_api: 'https://public-api.solscan.io'
+    NonceAccountAddr: DJyNpXgggw1WGgjTVzFsNjb3fuQZVMqhoakvSBfX9LYx
+    FeeAccountPriKey: 4TMFNY9ntAn3CHzguSAvDNLPRoQTaK3sWbQQXdDXaE6KWRBLufGL6PJdsD2koiEe3gGmMdRK3aAw7sikGNksHJrN
 
-chains: [btc, eth, solana, trx]
+chains: [Bitcoin, Ethereum, Solana, Tron, Arbitrum, Optimism, Zksync, BscChain, Heco, Avalanche, Evmos, Polygon]
 

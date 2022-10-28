@@ -22,20 +22,33 @@ type RPC struct {
 
 type Node struct {
 	RPCs          []*RPC `yaml:"rpcs"`
+	TpApiUrl      string `yaml:"tp_api_url"`
+	TpApiKey      string `yaml:"tp-api-key"`
 	Confirmations uint64 `yaml:"confirmations"`
 }
 
 type SolanaNode struct {
-	PublicUrl string `yaml:"public_url"`
-	NetWork   string `yaml:"network"`
+	PublicUrl        string `yaml:"public_url"`
+	NetWork          string `yaml:"network"`
+	NonceAccountAddr string `yaml:"NonceAccountAddr"`
+	FeeAccountPriKey string `yaml:"FeeAccountPriKey"`
 }
 
 // Fullnode define
 type Fullnode struct {
-	Btc Node       `yaml:"btc"`
-	Eth Node       `yaml:"eth"`
-	Trx Node       `yaml:"trx"`
-	Sol SolanaNode `yaml:"solana"`
+	Btc     Node       `yaml:"btc"`
+	Eth     Node       `yaml:"eth"`
+	Arbi    Node       `yaml:"arbi"`
+	Op      Node       `yaml:"op"`
+	Zksync  Node       `yaml:"zksync"`
+	Bsc     Node       `yaml:"bsc"`
+	Heco    Node       `yaml:"heco"`
+	Avax    Node       `yaml:"avax"`
+	Evmos   Node       `yaml:"evmos"`
+	Polygon Node       `yaml:"polygon"`
+	Trx     Node       `yaml:"trx"`
+	Near    Node       `yaml:"near"`
+	Sol     SolanaNode `yaml:"solana"`
 }
 
 // Config instance define

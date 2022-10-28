@@ -7,7 +7,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/SavourDao/savour-core/config"
+	"github.com/SavourDao/savour-hd/config"
 	"github.com/ethereum/go-ethereum/log"
 	tclient "github.com/fbsobreira/gotron-sdk/pkg/client"
 )

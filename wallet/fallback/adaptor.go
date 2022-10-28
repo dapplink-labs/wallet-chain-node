@@ -1,8 +1,8 @@
 package fallback
 
 import (
-	"github.com/SavourDao/savour-core/rpc/common"
-	"github.com/SavourDao/savour-core/rpc/wallet"
+	"github.com/SavourDao/savour-hd/rpc/common"
+	"github.com/SavourDao/savour-hd/rpc/wallet"
 )
 
 type WalletAdaptor struct{}
@@ -13,7 +13,7 @@ func (w *WalletAdaptor) GetSupportCoins(request *wallet.SupportCoinsRequest) (*w
 
 func (w *WalletAdaptor) GetNonce(request *wallet.NonceRequest) (*wallet.NonceResponse, error) {
 	return &wallet.NonceResponse{
-		Error: &common.Error{Code: 404},
+		Code:  common.ReturnCode_ERROR,
 		Nonce: "",
 	}, nil
 }
