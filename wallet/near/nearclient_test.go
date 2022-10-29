@@ -47,7 +47,7 @@ func TestGetBalance(t *testing.T) {
 
 func TestGetAccount(t *testing.T) {
 	client := newTestClient()
-	pri, address := client.GetAccount()
+	pri, address, _ := client.GetAccount()
 	fmt.Println(pri)
 	fmt.Println(address)
 }
