@@ -10,7 +10,7 @@ require (
 	github.com/golang-module/dongle v0.1.1
 	github.com/golang/protobuf v1.5.2
 	github.com/hashicorp/golang-lru v0.5.5-0.20210104140557-80c98217689d
-	github.com/lib/pq v1.10.2
+	github.com/lib/pq v1.10.7
 	github.com/mr-tron/base58 v1.2.0
 	github.com/nanmu42/etherscan-api v1.9.0
 	github.com/near/borsh-go v0.3.2-0.20220516180422-1ff87d108454
