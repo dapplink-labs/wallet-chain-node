@@ -72,7 +72,7 @@ func (a *Account) SignAndSendTransaction(
 	accessKey types.GetAccessKeyResponse,
 	hash string,
 	actions ...transaction.Action,
-) (*SendTxResult, error) {
+) (*types.SendTxResult, error) {
 	txHash, signedTransaction, err := a.SignTransaction(ctx, receiverID, accessKey, hash, actions...)
 	fmt.Println(txHash)
 	if err != nil {
@@ -82,7 +82,7 @@ func (a *Account) SignAndSendTransaction(
 	if err != nil {
 		return nil, err
 	}
-	var res SendTxResult
+	var res types.SendTxResult
 	parms := base64.StdEncoding.EncodeToString(bytes)
 	types.DoRpcRequest("broadcast_tx_commit", [1]string{parms}, &res)
 
