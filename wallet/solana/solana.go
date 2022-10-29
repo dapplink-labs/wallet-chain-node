@@ -233,15 +233,25 @@ func NewLocalWalletAdaptor(network config.NetWorkType) wallet.WalletAdaptor {
 }
 
 func (w *WalletAdaptor) GetSupportCoins(req *wallet2.SupportCoinsRequest) (*wallet2.SupportCoinsResponse, error) {
-	return nil, nil
+	return &wallet2.SupportCoinsResponse{
+		Code:    common.ReturnCode_ERROR,
+		Msg:     "do not support",
+		Support: false,
+	}, nil
 }
 
 func (w *WalletAdaptor) GetGasPrice(req *wallet2.GasPriceRequest) (*wallet2.GasPriceResponse, error) {
-	return nil, nil
+	return &wallet2.GasPriceResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "do not support",
+	}, nil
 }
 
 func (a *WalletAdaptor) GetUtxo(req *wallet2.UtxoRequest) (*wallet2.UtxoResponse, error) {
-	return nil, nil
+	return &wallet2.UtxoResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "do not support",
+	}, nil
 }
 
 func (w *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxResponse, error) {

@@ -9,6 +9,7 @@ import (
 	"github.com/SavourDao/savour-hd/wallet/ethereum"
 	"github.com/SavourDao/savour-hd/wallet/evmos"
 	"github.com/SavourDao/savour-hd/wallet/heco"
+	"github.com/SavourDao/savour-hd/wallet/near"
 	"github.com/SavourDao/savour-hd/wallet/optimism"
 	"github.com/SavourDao/savour-hd/wallet/polygon"
 	"github.com/SavourDao/savour-hd/wallet/solana"
@@ -55,11 +56,12 @@ func New(conf *config.Config) (*WalletDispatcher, error) {
 		heco.ChainName:      heco.NewChainAdaptor,
 		avalanche.ChainName: avalanche.NewChainAdaptor,
 		evmos.ChainName:     evmos.NewChainAdaptor,
+		near.ChainName:      near.NewChainAdaptor,
 	}
 	supportedChains := []string{
 		bitcoin.ChainName, ethereum.ChainName, solana.ChainName, arbitrum.ChainName,
 		zksync.ChainName, optimism.ChainName, polygon.ChainName, binance.ChainName,
-		heco.ChainName, avalanche.ChainName, evmos.ChainName,
+		heco.ChainName, avalanche.ChainName, evmos.ChainName, near.ChainName,
 	}
 	for _, c := range conf.Chains {
 		if factory, ok := walletAdaptorFactoryMap[c]; ok {

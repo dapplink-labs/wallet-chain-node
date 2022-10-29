@@ -72,6 +72,12 @@ fullnode:
     confirmations: 4
     tp_api_url: ''
     tp_api_key: ''
+  near:
+    rpcs:
+      - rpc_url: 'https://rpc.mainnet.near.org'
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: ''
 
   solana:
     public_api: 'https://public-api.solscan.io'

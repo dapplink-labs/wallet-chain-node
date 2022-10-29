@@ -38,22 +38,6 @@ type NearClient struct {
 	local            bool
 }
 
-//func newLocalClient(network config.NetWorkType) *NearClient {
-//	var endpoint string
-//	switch network {
-//	case config.MainNet:
-//		endpoint = rpc.MainnetRPCEndpoint
-//	case config.TestNet:
-//		endpoint = rpc.TestnetRPCEndpoint
-//	default:
-//		panic("unsupported network type")
-//	}
-//	rpcClient := rpc.DialContext(endpoint)
-//	return &NearClient{
-//		RpcClient: rpcClient,
-//	}
-//}
-
 func (c *NearClient) GetBlock() (types.GetBlockResult, error) {
 	jsonStr := []byte(`{"jsonrpc": "2.0", "method": "block", "params": {"finality": "final"},"id": 1}`)
 	url := c.nodeConfig.RPCs[0].RPCURL
@@ -71,12 +55,12 @@ func (c *NearClient) GetBlock() (types.GetBlockResult, error) {
 	return res, nil
 }
 
-func (c *NearClient) GetLatestBlockHeight() (int, error) {
+func (c *NearClient) GetLatestBlockHeight() (int64, error) {
 	res, e := c.GetBlock()
 	if e != nil {
 		return 0, nil
 	}
-	return res.Result.Header.Height, nil
+	return int64(res.Result.Header.Height), nil
 }
 
 func (c *NearClient) GetBalance(address string) (string, error) {
@@ -109,7 +93,7 @@ func (c *NearClient) GetBalance(address string) (string, error) {
 	return d2.String(), nil
 }
 
-func (c *NearClient) GetTx(address string, page int, size int) (any, error) {
+func (c *NearClient) GetTx(address string, page int, size int) ([]Transaction, error) {
 
 	var txs = make([]Transaction, 5)
 	sqlStr := "select * from transactions where receiver_account_id = $1 order by block_timestamp desc limit $2 offset $3"
@@ -135,17 +119,17 @@ func (c *NearClient) GetTx(address string, page int, size int) (any, error) {
 	return nil, nil
 }
 
-func (c *NearClient) GetAccount() (string, string) {
+func (c *NearClient) GetAccount() (string, string, error) {
 	publicKey, priv, err := ed25519.GenerateKey(nil)
 	if err != nil {
-		return "", ""
+		return "", "", err
 	}
 	pri := dongle.Encode.FromBytes(priv).ByBase58().ToString()
 	address := hex.EncodeToString(publicKey)
-	return pri, address
+	return pri, address, nil
 }
 
-func (c *NearClient) GetTxByHash(hash string) (error, error) {
+func (c *NearClient) GetTxByHash(hash string) (*Transaction, error) {
 	sqlStr := "select * from transactions where transaction_hash = $1 limit 1"
 	rows, err := db.Query(sqlStr, hash)
 	if err != nil {
@@ -166,7 +150,7 @@ func (c *NearClient) GetTxByHash(hash string) (error, error) {
 		fmt.Printf("student=%+v\n", tx)
 	}
 	fmt.Println(tx)
-	return nil, nil
+	return &tx, nil
 
 }
 
