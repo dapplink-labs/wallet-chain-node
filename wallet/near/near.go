@@ -69,14 +69,15 @@ func (w *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.
 	list := make([]*wallet2.TxMessage, 0, len(txs))
 	for i := 0; i < len(txs); i++ {
 		list = append(list, &wallet2.TxMessage{
-			Hash:   txs[i].TransactionHash,
-			Tos:    []*wallet2.Address{{Address: txs[i].ReceiverAccountId}},
-			Froms:  []*wallet2.Address{{Address: txs[i].SignerAccountId}},
-			Fee:    "0",
-			Status: wallet2.TxStatus_Success,
-			Values: []*wallet2.Value{{Value: string(txs[i].Amount)}},
-			Type:   1,
-			Height: txs[i].BlockHeight,
+			Hash:     txs[i].TransactionHash,
+			Tos:      []*wallet2.Address{{Address: txs[i].ReceiverAccountId}},
+			Froms:    []*wallet2.Address{{Address: txs[i].SignerAccountId}},
+			Fee:      "0",
+			Status:   wallet2.TxStatus_Success,
+			Values:   []*wallet2.Value{{Value: string(txs[i].Amount)}},
+			Type:     1,
+			Height:   txs[i].BlockHeight,
+			Datetime: txs[i].BlockTimestamp,
 		})
 	}
 	return &wallet2.TxAddressResponse{
@@ -97,14 +98,15 @@ func (w *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHash
 	}
 	return &wallet2.TxHashResponse{
 		Tx: &wallet2.TxMessage{
-			Hash:   tx.TransactionHash,
-			Tos:    []*wallet2.Address{{Address: tx.ReceiverAccountId}},
-			Froms:  []*wallet2.Address{{Address: tx.SignerAccountId}},
-			Fee:    "",
-			Status: wallet2.TxStatus_Success,
-			Values: []*wallet2.Value{{Value: tx.ReceiptConversionTokensBurnt}},
-			Type:   1,
-			Height: tx.BlockTimestamp,
+			Hash:     tx.TransactionHash,
+			Tos:      []*wallet2.Address{{Address: tx.ReceiverAccountId}},
+			Froms:    []*wallet2.Address{{Address: tx.SignerAccountId}},
+			Fee:      "",
+			Status:   wallet2.TxStatus_Success,
+			Values:   []*wallet2.Value{{Value: tx.Amount}},
+			Type:     1,
+			Height:   tx.BlockHeight,
+			Datetime: tx.BlockTimestamp,
 		},
 	}, nil
 }

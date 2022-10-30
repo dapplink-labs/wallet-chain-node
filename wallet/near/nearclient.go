@@ -102,16 +102,17 @@ func (c *NearClient) ToNearUnit(amountStr string) string {
 func (c *NearClient) GetTx(address string, page int, size int) ([]BlockTransaction, error) {
 
 	var txs = make([]BlockTransaction, 0)
-	sqlStr := "select * from transactions where receiver_account_id = $1 order by block_timestamp desc limit $2 offset $3"
-	rows, err := db.Query(sqlStr, address, page, size)
+	sqlStr := "select * from transactions  where receiver_account_id = $1 or signer_account_id = $2  limit $3 offset $4"
+	//sqlStr := "select t1.* from transactions t1 inner join transaction_actions t2 ON t1.transaction_hash=t2.transaction_hash where  t1.receiver_account_id = $1 and t2.action_kind = 'TRANSFER' limit $2 offset $3"
+	rows, err := db.Query(sqlStr, address, address, size, size*(page-1))
 	if err != nil {
 		fmt.Printf("query failed, err:%v\n", err)
 		return nil, err
 	}
 	defer rows.Close()
 
-	var hashList []string
-	var blockHashList []string
+	var hashList = make([]string, 0)
+	var blockHashList = make([]string, 0)
 	for rows.Next() {
 		var tx BlockTransaction
 		err := rows.Scan(
@@ -146,7 +147,7 @@ func (c *NearClient) GetTx(address string, page int, size int) ([]BlockTransacti
 			a := action.(TransactionAction)
 			var args = &TransactionActionArgs{}
 			json.Unmarshal([]byte(a.Args), args)
-			txs[i].Amount = args.Deposit
+			txs[i].Amount = c.ToNearUnit(args.Deposit)
 		}
 		block := blockMap[txs[i].IncludedInBlockHash]
 		if block != nil {
@@ -221,7 +222,7 @@ func (c *NearClient) GetTxByHash(hash string) (*BlockTransaction, error) {
 	if len(actions) > 0 {
 		var args = &TransactionActionArgs{}
 		json.Unmarshal([]byte(actions[0].Args), args)
-		tx.Amount = args.Deposit
+		tx.Amount = c.ToNearUnit(args.Deposit)
 	}
 	return &tx, nil
 
@@ -230,7 +231,7 @@ func (c *NearClient) GetTxByHash(hash string) (*BlockTransaction, error) {
 func (c *NearClient) GetBlockListByHash(hashList []string) ([]Block, error) {
 	var blocks = make([]Block, 0)
 
-	sqlStr := `select * from blocks where block_hash in ('` + strings.Join(hashList, `","`) + `')`
+	sqlStr := `select * from blocks where block_hash in ('` + strings.Join(hashList, `','`) + `')`
 	fmt.Printf(sqlStr)
 	rows, err := db.Query(sqlStr)
 	if err != nil {
@@ -258,7 +259,7 @@ func (c *NearClient) GetBlockListByHash(hashList []string) ([]Block, error) {
 func (c *NearClient) GetActionByHash(hashList []string) ([]TransactionAction, error) {
 	var actions = make([]TransactionAction, 0)
 
-	sqlStr := `select * from transaction_actions where action_kind = 'TRANSFER' AND transaction_hash in ('` + strings.Join(hashList, `","`) + `')`
+	sqlStr := `select * from transaction_actions where action_kind = 'TRANSFER' AND transaction_hash in ('` + strings.Join(hashList, `','`) + `')`
 	fmt.Printf(sqlStr)
 	rows, err := db.Query(sqlStr)
 	if err != nil {

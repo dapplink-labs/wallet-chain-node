@@ -29,7 +29,7 @@ func TestGetLatestBlockHeight(t *testing.T) {
 
 func TestGetTx(t *testing.T) {
 	client := newTestClient()
-	height, _ := client.GetTx("dadman.near", 1, 5)
+	height, _ := client.GetTx("9872cefe5ba026ba4806bd0ab9e4ebe77790febd31f09813eb9c798a19634e45", 1, 5)
 	fmt.Println(height)
 }
 
