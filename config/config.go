@@ -36,11 +36,19 @@ type SolanaNode struct {
 
 // Fullnode define
 type Fullnode struct {
-	Btc  Node       `yaml:"btc"`
-	Eth  Node       `yaml:"eth"`
-	Trx  Node       `yaml:"trx"`
-	Near Node       `yaml:"near"`
-	Sol  SolanaNode `yaml:"solana"`
+	Btc     Node       `yaml:"btc"`
+	Eth     Node       `yaml:"eth"`
+	Arbi    Node       `yaml:"arbi"`
+	Op      Node       `yaml:"op"`
+	Zksync  Node       `yaml:"zksync"`
+	Bsc     Node       `yaml:"bsc"`
+	Heco    Node       `yaml:"heco"`
+	Avax    Node       `yaml:"avax"`
+	Evmos   Node       `yaml:"evmos"`
+	Polygon Node       `yaml:"polygon"`
+	Trx     Node       `yaml:"trx"`
+	Near    Node       `yaml:"near"`
+	Sol     SolanaNode `yaml:"solana"`
 }
 
 // Config instance define
