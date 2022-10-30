@@ -1,13 +1,8 @@
 package types
 
 import (
-	"bytes"
-	"encoding/json"
-	"fmt"
 	"github.com/SavourDao/savour-hd/wallet/near/keys"
 	"github.com/ethereum/go-ethereum/rpc"
-	"io/ioutil"
-	"net/http"
 )
 
 type RpcRequest struct {
@@ -204,29 +199,6 @@ type GetBalanceParam struct {
 	Finality    string `json:"finality"`
 	RequestType string `json:"request_type"`
 	AccountID   string `json:"account_id"`
-}
-
-func DoRpcRequest(method string, params any, result interface{}) error {
-	reqParams := RpcRequest{
-		Jsonrpc: "2.0",
-		Method:  method,
-		Params:  params,
-		ID:      1,
-	}
-	jsonStr, _ := json.Marshal(reqParams)
-	url := "https://rpc.mainnet.near.org"
-	req, e := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
-	req.Header.Set("Content-Type", "application/json")
-	httpClient := &http.Client{}
-	resp, e := httpClient.Do(req)
-	if e != nil {
-		return e
-	}
-	defer resp.Body.Close()
-	body, _ := ioutil.ReadAll(resp.Body)
-	_ = json.Unmarshal(body, &result)
-	fmt.Println(string(body))
-	return nil
 }
 
 type Config struct {
