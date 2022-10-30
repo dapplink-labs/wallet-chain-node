@@ -74,9 +74,9 @@ func (w *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.
 			Froms:  []*wallet2.Address{{Address: txs[i].SignerAccountId}},
 			Fee:    "0",
 			Status: wallet2.TxStatus_Success,
-			Values: []*wallet2.Value{{Value: string(txs[i].ReceiptConversionTokensBurnt)}},
+			Values: []*wallet2.Value{{Value: string(txs[i].Amount)}},
 			Type:   1,
-			Height: string(txs[i].BlockTimestamp),
+			Height: txs[i].BlockHeight,
 		})
 	}
 	return &wallet2.TxAddressResponse{
@@ -112,7 +112,7 @@ func (w *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHash
 func (w *WalletAdaptor) GetAccount(req *wallet2.AccountRequest) (*wallet2.AccountResponse, error) {
 	_, add, err := w.getClient().GetAccount()
 	if err != nil {
-		log.Error("get GetNonce error", "err", err)
+		log.Error("get GetAccount error", "err", err)
 		return &wallet2.AccountResponse{
 			Code: common.ReturnCode_ERROR,
 			Msg:  "send tx fail",
@@ -126,6 +126,23 @@ func (w *WalletAdaptor) GetAccount(req *wallet2.AccountRequest) (*wallet2.Accoun
 
 }
 
+func (w *WalletAdaptor) GetNonce(req *wallet2.NonceRequest) (*wallet2.NonceResponse, error) {
+	// TODO public key
+	nonce, e := w.getClient().GetNonce("", req.Address)
+	if e != nil {
+		log.Error("get GetNonce error", "err", err)
+		return &wallet2.NonceResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "send tx fail",
+		}, err
+	}
+	return &wallet2.NonceResponse{
+		Code:  common.ReturnCode_SUCCESS,
+		Msg:   "success",
+		Nonce: nonce,
+	}, nil
+}
+
 func (w *WalletAdaptor) GetSupportCoins(req *wallet2.SupportCoinsRequest) (*wallet2.SupportCoinsResponse, error) {
 	return &wallet2.SupportCoinsResponse{
 		Code:    common.ReturnCode_ERROR,
@@ -137,7 +154,7 @@ func (w *WalletAdaptor) GetSupportCoins(req *wallet2.SupportCoinsRequest) (*wall
 func (w *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxResponse, error) {
 	value, err := w.getClient().SendSignedTx(req.RawTx)
 	if err != nil {
-		log.Error("get GetNonce error", "err", err)
+		log.Error("get SendTx error", "err", err)
 		return &wallet2.SendTxResponse{
 			Code:   common.ReturnCode_ERROR,
 			Msg:    "send tx fail",
