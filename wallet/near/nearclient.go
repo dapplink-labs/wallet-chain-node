@@ -10,12 +10,11 @@ import (
 	"github.com/SavourDao/savour-hd/config"
 	"github.com/SavourDao/savour-hd/wallet/near/account"
 	"github.com/SavourDao/savour-hd/wallet/near/keys"
+	nearrpc "github.com/SavourDao/savour-hd/wallet/near/rpc"
 	"github.com/SavourDao/savour-hd/wallet/near/transaction"
 	"github.com/SavourDao/savour-hd/wallet/near/types"
 	"github.com/ethereum/go-ethereum/params"
-	"github.com/ethereum/go-ethereum/rpc"
 	"github.com/golang-module/dongle"
-	"github.com/portto/solana-go-sdk/client"
 	"reflect"
 	"strings"
 
@@ -29,8 +28,7 @@ import (
 )
 
 type NearClient struct {
-	RpcClient        *rpc.Client
-	Client           client.Client
+	RpcClient        nearrpc.RpcClient
 	nodeConfig       config.Node
 	chainConfig      *params.ChainConfig
 	cacheBlockNumber *big.Int
@@ -40,7 +38,7 @@ type NearClient struct {
 	local            bool
 }
 
-func (c *NearClient) GetBlock() (types.GetBlockResult, error) {
+func (c *NearClient) GetBlock() (*types.GetBlockResult, error) {
 	jsonStr := []byte(`{"jsonrpc": "2.0", "method": "block", "params": {"finality": "final"},"id": 1}`)
 	url := c.nodeConfig.RPCs[0].RPCURL
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
@@ -48,13 +46,13 @@ func (c *NearClient) GetBlock() (types.GetBlockResult, error) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		// handle error
+		return nil, err
 	}
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
 	res := types.GetBlockResult{}
 	_ = json.Unmarshal(body, &res)
-	return res, nil
+	return &res, nil
 }
 
 func (c *NearClient) GetLatestBlockHeight() (int64, error) {
@@ -83,7 +81,7 @@ func (c *NearClient) GetBalance(address string) (string, error) {
 	httpClient := &http.Client{}
 	resp, err := httpClient.Do(req)
 	if err != nil {
-		// handle error
+		return "", nil
 	}
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
@@ -284,29 +282,6 @@ func (c *NearClient) GetActionByHash(hashList []string) ([]TransactionAction, er
 	return actions, nil
 }
 
-func (c *NearClient) RpcRequest(method string, params any, result interface{}) error {
-	reqParams := types.RPCRequest{
-		Jsonrpc: "2.0",
-		Method:  method,
-		Params:  params,
-		ID:      1,
-	}
-	jsonStr, _ := json.Marshal(reqParams)
-	url := c.nodeConfig.RPCs[0].RPCURL
-	req, e := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
-	req.Header.Set("Content-Type", "application/json")
-	httpClient := &http.Client{}
-	resp, e := httpClient.Do(req)
-	if e != nil {
-		return e
-	}
-	defer resp.Body.Close()
-	body, _ := ioutil.ReadAll(resp.Body)
-	_ = json.Unmarshal(body, &result)
-	fmt.Println(string(body))
-	return nil
-}
-
 func (c *NearClient) getAccessKey(pub string, from string, res *types.GetAccessKeyResponse) error {
 	param := types.GetAccessKeyRequest{
 		Finality:    "final",
@@ -314,7 +289,7 @@ func (c *NearClient) getAccessKey(pub string, from string, res *types.GetAccessK
 		AccountID:   from,
 		PublicKey:   pub,
 	}
-	c.RpcRequest("query", param, &res)
+	c.RpcClient.DoRpcRequest("query", param, &res)
 	return nil
 }
 
@@ -341,7 +316,7 @@ func (c *NearClient) SignAndSendTx(pri string, from string, to string, amount st
 	}, from)
 	amt, _ := (&big.Int{}).SetString(amount, 10)
 	sendAction := transaction.TransferAction(*amt)
-	sendTransactionResult, err := acc.SignAndSendTransaction(context.Background(), to, accessKeyResponse, block.Result.Header.Hash, sendAction)
+	sendTransactionResult, err := acc.SignAndSendTransaction(context.Background(), c.RpcClient, to, accessKeyResponse, block.Result.Header.Hash, sendAction)
 	fmt.Println(sendTransactionResult)
 	if err != nil {
 		return "", err
@@ -360,7 +335,7 @@ func (c *NearClient) GetNonce(pub string, from string) (string, error) {
 
 func (c *NearClient) SendSignedTx(signedTx string) (string, error) {
 	var res types.SendTxResult
-	e := types.DoRpcRequest("broadcast_tx_commit", [1]string{signedTx}, &res)
+	e := c.RpcClient.DoRpcRequest("broadcast_tx_commit", [1]string{signedTx}, &res)
 	if e != nil {
 		return "", e
 	}
@@ -372,13 +347,13 @@ func (c *NearClient) SendSignedTx(signedTx string) (string, error) {
 
 func newNearClients(conf *config.Config) ([]*NearClient, error) {
 	var clients []*NearClient
-	rpcClient, e := rpc.DialContext(context.Background(), "https://rpc.testnet.near.org")
-	if e != nil {
-		return nil, e
+	for _, rpc := range conf.Fullnode.Eth.RPCs {
+		clients = append(clients, &NearClient{
+			RpcClient: nearrpc.RpcClient{
+				URL: rpc.RPCURL,
+			},
+			nodeConfig: conf.Fullnode.Near,
+		})
 	}
-	clients = append(clients, &NearClient{
-		RpcClient:  rpcClient,
-		nodeConfig: conf.Fullnode.Near,
-	})
 	return clients, nil
 }
