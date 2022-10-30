@@ -78,5 +78,12 @@ fullnode:
     NonceAccountAddr: DJyNpXgggw1WGgjTVzFsNjb3fuQZVMqhoakvSBfX9LYx
     FeeAccountPriKey: 4TMFNY9ntAn3CHzguSAvDNLPRoQTaK3sWbQQXdDXaE6KWRBLufGL6PJdsD2koiEe3gGmMdRK3aAw7sikGNksHJrN
 
+  cosmos:
+    rpcs:
+      - rpc_url: ''
+        rpc_user:
+        rpc_pass:
+    confirmations: 1
+
 chains: [Bitcoin, Ethereum, Solana, Tron, Arbitrum, Optimism, Zksync, BscChain, Heco, Avalanche, Evmos, Polygon]
 
