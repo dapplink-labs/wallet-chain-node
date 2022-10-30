@@ -35,7 +35,7 @@ func TestGetTx(t *testing.T) {
 
 func TestGetTxByHash(t *testing.T) {
 	client := newTestClient()
-	tx, _ := client.GetTxByHash("3QrSMQN7VYV6HtM8czwKJ4sA2AENN8xSMGwqTAWvrpWN")
+	tx, _ := client.GetTxByHash("ZpsS5Ahkvq2AybQUDHe4YnZmmXKtd5BCV48CxZXGvaK")
 	fmt.Println(tx)
 }
 
