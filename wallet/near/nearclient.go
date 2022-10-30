@@ -188,7 +188,7 @@ func (c *NearClient) getAccessKey(pub string, from string, res *types.GetAccessK
 	return nil
 }
 
-func (c *NearClient) SendTx(pri string, from string, to string, amount string) (string, error) {
+func (c *NearClient) SignAndSendTx(pri string, from string, to string, amount string) (string, error) {
 
 	signer, err := keys.NewKeyPairFromString("ed25519:" + pri)
 	if err != nil {
