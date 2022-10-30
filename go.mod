@@ -3,6 +3,7 @@ module github.com/SavourDao/savour-hd
 go 1.18
 
 require (
+	github.com/algorand/go-algorand-sdk v0.0.0-00010101000000-000000000000
 	github.com/btcsuite/btcd v0.22.0-beta
 	github.com/btcsuite/btcutil v1.0.3-0.20201208143702-a53e38424cce
 	github.com/ethereum/go-ethereum v1.10.25
@@ -31,6 +32,7 @@ require (
 	filippo.io/edwards25519 v1.0.0-rc.1 // indirect
 	github.com/BurntSushi/toml v0.4.1 // indirect
 	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d // indirect
+	github.com/algorand/go-codec/codec v1.1.9 // indirect
 	github.com/aliyun/aliyun-log-go-sdk v0.1.22 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/btcsuite/btcd/btcec/v2 v2.2.0 // indirect
@@ -53,6 +55,7 @@ require (
 	github.com/go-resty/resty/v2 v2.7.0 // indirect
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
+	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
@@ -106,3 +109,5 @@ require (
 	gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace github.com/algorand/go-algorand-sdk => ../go-algorand-sdk
