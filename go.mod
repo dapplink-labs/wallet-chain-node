@@ -18,7 +18,7 @@ require (
 	github.com/portto/solana-go-sdk v1.22.1
 	github.com/shopspring/decimal v1.3.1
 	github.com/smartystreets/goconvey v1.7.2
-	github.com/tidwall/gjson v1.10.2
+	github.com/tidwall/gjson v1.14.3
 	github.com/weblazy/easy v1.1.5-0.20221023072935-da19c6121d86
 	go.uber.org/atomic v1.10.0
 	go.uber.org/zap v1.23.0
