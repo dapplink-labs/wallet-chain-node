@@ -29,14 +29,20 @@ func TestGetLatestBlockHeight(t *testing.T) {
 
 func TestGetTx(t *testing.T) {
 	client := newTestClient()
-	height, _ := client.GetTx("app.nearcrowd.near", 1, 5)
+	height, _ := client.GetTx("9872cefe5ba026ba4806bd0ab9e4ebe77790febd31f09813eb9c798a19634e45", 1, 5)
 	fmt.Println(height)
 }
 
 func TestGetTxByHash(t *testing.T) {
 	client := newTestClient()
-	height, _ := client.GetTxByHash("FP44wHZVYqL4gAkC9PAaQNKyy7sGsmn9mga7uqWufXRf")
-	fmt.Println(height)
+	tx, _ := client.GetTxByHash("ZpsS5Ahkvq2AybQUDHe4YnZmmXKtd5BCV48CxZXGvaK")
+	fmt.Println(tx)
+}
+
+func TestGetActionByHash(t *testing.T) {
+	client := newTestClient()
+	tx, _ := client.GetActionByHash([]string{"3QrSMQN7VYV6HtM8czwKJ4sA2AENN8xSMGwqTAWvrpWN"})
+	fmt.Println(tx)
 }
 
 func TestGetBalance(t *testing.T) {
@@ -59,4 +65,10 @@ func TestSendTx(t *testing.T) {
 	to := "2d4e63523b106f42b08dc16b59e0914273d8136af37f4474258a5c90ed08c453"
 	hash, _ := client.SignAndSendTx(pri, from, to, "1000000000000000000000")
 	fmt.Println(hash)
+}
+
+func TestGetBlockListByHash(t *testing.T) {
+	client := newTestClient()
+	blocks, _ := client.GetBlockListByHash([]string{"2FPDwfy7ib42xtLwFRAzivdLx2D7ce8H4unHNvsYmgPp"})
+	fmt.Println(len(blocks))
 }
