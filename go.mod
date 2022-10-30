@@ -21,7 +21,7 @@ require (
 	github.com/tidwall/gjson v1.10.2
 	github.com/weblazy/easy v1.1.5-0.20221023072935-da19c6121d86
 	go.uber.org/atomic v1.10.0
-	go.uber.org/zap v1.21.0
+	go.uber.org/zap v1.23.0
 	google.golang.org/grpc v1.50.1
 	google.golang.org/protobuf v1.28.1
 	gopkg.in/yaml.v2 v2.4.0
