@@ -95,7 +95,7 @@ func (c *NearClient) GetBalance(address string) (string, error) {
 
 func (c *NearClient) GetTx(address string, page int, size int) ([]Transaction, error) {
 
-	var txs = make([]Transaction, 5)
+	var txs = make([]Transaction, size)
 	sqlStr := "select * from transactions where receiver_account_id = $1 order by block_timestamp desc limit $2 offset $3"
 	rows, err := db.Query(sqlStr, address, page, size)
 	if err != nil {
@@ -188,7 +188,7 @@ func (c *NearClient) getAccessKey(pub string, from string, res *types.GetAccessK
 	return nil
 }
 
-func (c *NearClient) SendTx(pri string, from string, to string, amount string) (string, error) {
+func (c *NearClient) SignAndSendTx(pri string, from string, to string, amount string) (string, error) {
 
 	signer, err := keys.NewKeyPairFromString("ed25519:" + pri)
 	if err != nil {
@@ -217,6 +217,18 @@ func (c *NearClient) SendTx(pri string, from string, to string, amount string) (
 		return "", err
 	}
 	return sendTransactionResult.Result.Transaction.Hash, nil
+}
+
+func (c *NearClient) SendSignedTx(signedTx string) (string, error) {
+	var res types.SendTxResult
+	e := types.DoRpcRequest("broadcast_tx_commit", [1]string{signedTx}, &res)
+	if e != nil {
+		return "", e
+	}
+	if res.Error != nil {
+		return "", fmt.Errorf("SendSignedTx error")
+	}
+	return res.Result.Transaction.Hash, nil
 }
 
 func newNearClients(conf *config.Config) ([]*NearClient, error) {

@@ -57,6 +57,6 @@ func TestSendTx(t *testing.T) {
 	pri := ""
 	from := "9872cefe5ba026ba4806bd0ab9e4ebe77790febd31f09813eb9c798a19634e45"
 	to := "2d4e63523b106f42b08dc16b59e0914273d8136af37f4474258a5c90ed08c453"
-	hash, _ := client.SendTx(pri, from, to, "1000000000000000000000")
+	hash, _ := client.SignAndSendTx(pri, from, to, "1000000000000000000000")
 	fmt.Println(hash)
 }
