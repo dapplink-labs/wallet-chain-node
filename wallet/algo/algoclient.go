@@ -1,10 +1,16 @@
 package algo
 
 import (
+	"context"
 	"errors"
 	"github.com/SavourDao/savour-hd/config"
 	"github.com/algorand/go-algorand-sdk/client/v2/algod"
+	"github.com/algorand/go-algorand-sdk/client/v2/common"
+	altype "github.com/algorand/go-algorand-sdk/types"
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/log"
+	"math/big"
 	"net"
 	"strings"
 )
@@ -12,6 +18,12 @@ import (
 type algoClient struct {
 	Client        *algod.Client
 	confirmations uint64
+}
+
+type Client interface {
+	bind.ContractBackend
+
+	BlockByNumber(context.Context, *big.Int) (*types.Block, error)
 }
 
 func newAlgoClients(conf *config.Config) ([]*algoClient, error) {
@@ -60,4 +72,14 @@ func (a algoClient) GetLatestBlockHeight() (int64, error) {
 
 func (a algoClient) GetAccountBalance(address string) *algod.AccountInformation {
 	return a.Client.AccountInformation(address)
+}
+
+func (a algoClient) GetTransactionParams(ctx context.Context) (altype.SuggestedParams, error) {
+	h := common.Header{}
+	return a.Client.SuggestedParams().Do(ctx, &h)
+}
+
+func (a algoClient) Send_transaction(rawtxn []byte) *algod.SendRawTransaction {
+	return a.Client.SendRawTransaction(rawtxn)
+
 }

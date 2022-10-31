@@ -31,6 +31,7 @@ func NewAlgoScanClient(conf *config.Config) *AlgoClient {
 }
 
 func (c *AlgoClient) GetAccount() error {
+
 	return nil
 }
 
