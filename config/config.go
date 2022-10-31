@@ -48,6 +48,7 @@ type Fullnode struct {
 	Polygon Node       `yaml:"polygon"`
 	Trx     Node       `yaml:"trx"`
 	Near    Node       `yaml:"near"`
+	Xrp     Node       `yaml:"xrp"`
 	Sol     SolanaNode `yaml:"solana"`
 }
 
