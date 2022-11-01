@@ -8,6 +8,7 @@ import (
 	authv1beta1 "cosmossdk.io/api/cosmos/auth/v1beta1"
 	"github.com/armon/go-metrics"
 	"github.com/cosmos/cosmos-sdk/codec"
+	ed255192 "github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/tx"
@@ -151,4 +152,17 @@ func (c *Client) SendTx(ctx context.Context, fromAddr, toAddr, coin string, amou
 	}()
 
 	return &banktypes.MsgSendResponse{}, nil
+}
+
+func (c *Client) GetAddressFromPubKey(key []byte) string {
+	// todo check
+	pub := ed255192.PubKey{Key: key}
+	return pub.Address().String()
+}
+
+func (c *Client) BroadcastTx(ctx context.Context, txByte []byte) (*tx.BroadcastTxResponse, error) {
+	return c.txServiceClient.BroadcastTx(ctx, &tx.BroadcastTxRequest{
+		TxBytes: txByte,
+		Mode:    tx.BroadcastMode_BROADCAST_MODE_SYNC,
+	})
 }

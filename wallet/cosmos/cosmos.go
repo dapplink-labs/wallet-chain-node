@@ -23,7 +23,7 @@ type WalletAdaptor struct {
 
 func NewChainAdaptor(conf *config.Config) (wallet2.WalletAdaptor, error) {
 	// todo 多个client，按高度来选取
-	client, err := NewClient("127.0.0.1:9090")
+	client, err := NewClient(conf.Fullnode.Cosmos.RPCs[0].RPCURL) // "127.0.0.1:9090"
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +40,11 @@ func (a *WalletAdaptor) Close() error {
 func (a *WalletAdaptor) GetBalance(req *wallet.BalanceRequest) (*wallet.BalanceResponse, error) {
 	ret, err := a.client.GetBalance(context.Background(), req.Coin, req.Address)
 	if err != nil {
-		return nil, err
+		return &wallet.BalanceResponse{
+			Code:    common.ReturnCode_ERROR,
+			Msg:     "get balance fail",
+			Balance: "0",
+		}, err
 	}
 
 	return &wallet.BalanceResponse{
@@ -49,14 +53,17 @@ func (a *WalletAdaptor) GetBalance(req *wallet.BalanceRequest) (*wallet.BalanceR
 }
 
 func (a *WalletAdaptor) GetTxByAddress(req *wallet.TxAddressRequest) (*wallet.TxAddressResponse, error) {
-	// todo
+	// todo 接第三方平台接口？支持的第三方机构
 	return nil, nil
 }
 
 func (a *WalletAdaptor) GetTxByHash(req *wallet.TxHashRequest) (*wallet.TxHashResponse, error) {
 	ret, err := a.client.GetTxByHash(context.Background(), req.Hash)
 	if err != nil {
-		return nil, err
+		return &wallet.TxHashResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "get tx by hash fail",
+		}, err
 	}
 
 	var resp []*Tx
@@ -116,12 +123,18 @@ func (a *WalletAdaptor) GetSupportCoins(req *wallet.SupportCoinsRequest) (*walle
 func (a *WalletAdaptor) GetNonce(req *wallet.NonceRequest) (*wallet.NonceResponse, error) {
 	ret, err := a.client.GetAccount(context.Background(), req.Address)
 	if err != nil {
-		return nil, err
+		return &wallet.NonceResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "get nonce fail",
+		}, err
 	}
 
 	account := new(authv1beta1.BaseAccount)
 	if err := ptypes.UnmarshalAny(ret.Account, account); err != nil {
-		return nil, err
+		return &wallet.NonceResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "get nonce fail",
+		}, err
 	}
 
 	return &wallet.NonceResponse{
@@ -130,18 +143,33 @@ func (a *WalletAdaptor) GetNonce(req *wallet.NonceRequest) (*wallet.NonceRespons
 }
 
 func (a *WalletAdaptor) GetGasPrice(req *wallet.GasPriceRequest) (*wallet.GasPriceResponse, error) {
-	// todo 怎么预估gasfee
-	return nil, nil
+	return &wallet.GasPriceResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Do not support this interface",
+	}, nil
 }
 
 func (a *WalletAdaptor) SendTx(req *wallet.SendTxRequest) (*wallet.SendTxResponse, error) {
-	// a.client.SendTx(context.Background(), req.RawTx)
+	// todo test mod
+	ret, err := a.client.BroadcastTx(context.Background(), []byte(req.RawTx))
+	if err != nil {
+		return &wallet.SendTxResponse{
+			Code:   common.ReturnCode_ERROR,
+			Msg:    "BroadcastTx fail",
+			TxHash: ret.TxResponse.TxHash,
+		}, err
+	}
 	return nil, nil
 }
 
 func (a *WalletAdaptor) ConvertAddress(req *wallet.ConvertAddressRequest) (*wallet.ConvertAddressResponse, error) {
-	// todo
-	return nil, nil
+	addr := a.client.GetAddressFromPubKey(req.PublicKey)
+
+	return &wallet.ConvertAddressResponse{
+		Code:    common.ReturnCode_SUCCESS,
+		Msg:     "success",
+		Address: addr,
+	}, nil
 }
 
 func (a *WalletAdaptor) ValidAddress(req *wallet.ValidAddressRequest) (*wallet.ValidAddressResponse, error) {
@@ -151,7 +179,7 @@ func (a *WalletAdaptor) ValidAddress(req *wallet.ValidAddressRequest) (*wallet.V
 			Code:  common.ReturnCode_ERROR,
 			Msg:   err.Error(),
 			Valid: false,
-		}, nil
+		}, err
 	}
 
 	return &wallet.ValidAddressResponse{
@@ -160,58 +188,80 @@ func (a *WalletAdaptor) ValidAddress(req *wallet.ValidAddressRequest) (*wallet.V
 }
 
 func (a *WalletAdaptor) GetAccountTxFromData(req *wallet.TxFromDataRequest) (*wallet.AccountTxResponse, error) {
-	// todo
-	return nil, nil
+	return &wallet.AccountTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Do not support this interface",
+	}, nil
 }
 
 func (a *WalletAdaptor) GetAccountTxFromSignedData(req *wallet.TxFromSignedDataRequest) (*wallet.AccountTxResponse, error) {
-	// todo
-	return nil, nil
+	return &wallet.AccountTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Do not support this interface",
+	}, nil
 }
 
 func (a *WalletAdaptor) CreateAccountSignedTx(req *wallet.CreateAccountSignedTxRequest) (*wallet.CreateSignedTxResponse, error) {
-	// todo
-	return nil, nil
+	return &wallet.CreateSignedTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Do not support this interface",
+	}, nil
 }
 
 func (a *WalletAdaptor) CreateAccountTx(req *wallet.CreateAccountTxRequest) (*wallet.CreateAccountTxResponse, error) {
-	// todo
-	return nil, nil
+	return &wallet.CreateAccountTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Do not support this interface",
+	}, nil
 }
 
 func (a *WalletAdaptor) VerifyAccountSignedTx(req *wallet.VerifySignedTxRequest) (*wallet.VerifySignedTxResponse, error) {
-	// todo
-	return nil, nil
+	return &wallet.VerifySignedTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Do not support this interface",
+	}, nil
 }
 
 func (a *WalletAdaptor) GetUtxoInsFromData(req *wallet.UtxoInsFromDataRequest) (*wallet.UtxoInsResponse, error) {
-	// todo
-	return nil, nil
+	return &wallet.UtxoInsResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Do not support this interface",
+	}, nil
 }
 
 func (a *WalletAdaptor) GetUtxoTxFromData(req *wallet.TxFromDataRequest) (*wallet.UtxoTxResponse, error) {
-	// todo
-	return nil, nil
+	return &wallet.UtxoTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Do not support this interface",
+	}, nil
 }
 
 func (a *WalletAdaptor) GetUtxoTxFromSignedData(req *wallet.TxFromSignedDataRequest) (*wallet.UtxoTxResponse, error) {
-	// todo
-	return nil, nil
+	return &wallet.UtxoTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Do not support this interface",
+	}, nil
 }
 
 func (a *WalletAdaptor) CreateUtxoSignedTx(req *wallet.CreateUtxoSignedTxRequest) (*wallet.CreateSignedTxResponse, error) {
-	// todo
-	return nil, nil
+	return &wallet.CreateSignedTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Do not support this interface",
+	}, nil
 }
 
 func (a *WalletAdaptor) CreateUtxoTx(req *wallet.CreateUtxoTxRequest) (*wallet.CreateUtxoTxResponse, error) {
-	// todo
-	return nil, nil
+	return &wallet.CreateUtxoTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Do not support this interface",
+	}, nil
 }
 
 func (a *WalletAdaptor) VerifyUtxoSignedTx(req *wallet.VerifySignedTxRequest) (*wallet.VerifySignedTxResponse, error) {
-	// todo
-	return nil, nil
+	return &wallet.VerifySignedTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Do not support this interface",
+	}, nil
 }
 
 func (a *WalletAdaptor) GetAccount(req *wallet.AccountRequest) (*wallet.AccountResponse, error) {
@@ -232,11 +282,15 @@ func (a *WalletAdaptor) GetAccount(req *wallet.AccountRequest) (*wallet.AccountR
 }
 
 func (a *WalletAdaptor) GetUtxo(req *wallet.UtxoRequest) (*wallet.UtxoResponse, error) {
-	// todo
-	return nil, nil
+	return &wallet.UtxoResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Do not support this interface",
+	}, nil
 }
 
 func (a *WalletAdaptor) GetMinRent(req *wallet.MinRentRequest) (*wallet.MinRentResponse, error) {
-	// todo
-	return nil, nil
+	return &wallet.MinRentResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Do not support this interface",
+	}, nil
 }
