@@ -2,6 +2,7 @@ package xrp
 
 import (
 	"github.com/SavourDao/savour-hd/config"
+	"github.com/SavourDao/savour-hd/rpc/common"
 	wallet2 "github.com/SavourDao/savour-hd/rpc/wallet"
 	"github.com/SavourDao/savour-hd/wallet"
 	"github.com/SavourDao/savour-hd/wallet/fallback"
@@ -19,27 +20,106 @@ type WalletAdaptor struct {
 	clients *multiclient.MultiClient
 }
 
+func (w *WalletAdaptor) getClient() *Client {
+	return w.clients.BestClient().(*Client)
+}
+
+func (w *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.BalanceResponse, error) {
+	balance, err := w.getClient().GetBalance(req.Address)
+	if err != nil {
+		log.Error("get balance error", "err", err)
+		return &wallet2.BalanceResponse{
+			Code:    common.ReturnCode_ERROR,
+			Msg:     "get balance error",
+			Balance: "0",
+		}, err
+	}
+	return &wallet2.BalanceResponse{
+		Code:    common.ReturnCode_SUCCESS,
+		Msg:     "get balance success",
+		Balance: balance,
+	}, nil
+}
+
+func (w *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
+	txs, err := w.getClient().GetTxsByAddress(req.Address)
+
+	if err != nil {
+		log.Error("get GetTxByAddress error", "err", err)
+		return &wallet2.TxAddressResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "send tx fail",
+		}, err
+	}
+
+	list := make([]*wallet2.TxMessage, 0, len(txs))
+	for i := 0; i < len(txs); i++ {
+		list = append(list, &wallet2.TxMessage{
+			Hash:     txs[i].Hash,
+			Tos:      []*wallet2.Address{{Address: txs[i].To}},
+			Froms:    []*wallet2.Address{{Address: txs[i].From}},
+			Fee:      txs[i].Fee,
+			Status:   wallet2.TxStatus_Success,
+			Values:   []*wallet2.Value{{Value: txs[i].Amount}},
+			Type:     1,
+			Height:   txs[i].BlockHeight,
+			Datetime: "",
+		})
+	}
+	return &wallet2.TxAddressResponse{
+		Code: common.ReturnCode_SUCCESS,
+		Msg:  "success",
+		Tx:   list,
+	}, nil
+}
+
+func (w *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {
+	tx, err := w.getClient().GetTxByHash(req.Hash)
+	if err != nil {
+		return &wallet2.TxHashResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  err.Error(),
+			Tx:   nil,
+		}, err
+	}
+	return &wallet2.TxHashResponse{
+		Tx: &wallet2.TxMessage{
+			Hash:     tx.Hash,
+			Tos:      []*wallet2.Address{{Address: tx.To}},
+			Froms:    []*wallet2.Address{{Address: tx.From}},
+			Fee:      tx.Fee,
+			Status:   wallet2.TxStatus_Success,
+			Values:   []*wallet2.Value{{Value: tx.Amount}},
+			Type:     1,
+			Height:   tx.BlockHeight,
+			Datetime: "",
+		},
+	}, nil
+}
+
+func (w *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxResponse, error) {
+	value, err := w.getClient().SendTx(req.RawTx)
+	if err != nil {
+		log.Error("get SendTx error", "err", err)
+		return &wallet2.SendTxResponse{
+			Code:   common.ReturnCode_ERROR,
+			Msg:    "send tx fail",
+			TxHash: "",
+		}, err
+	}
+	return &wallet2.SendTxResponse{
+		Code:   common.ReturnCode_SUCCESS,
+		Msg:    "send tx success",
+		TxHash: value,
+	}, nil
+}
+
 func (w *WalletAdaptor) ConvertAddress(req *wallet2.ConvertAddressRequest) (*wallet2.ConvertAddressResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
 func (w *WalletAdaptor) ValidAddress(req *wallet2.ValidAddressRequest) (*wallet2.ValidAddressResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (w *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.BalanceResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (w *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (w *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
