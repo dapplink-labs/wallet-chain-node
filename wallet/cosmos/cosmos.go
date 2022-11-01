@@ -85,10 +85,15 @@ func (a *WalletAdaptor) GetTxByHash(req *wallet.TxHashRequest) (*wallet.TxHashRe
 		}
 	}
 
+	index := 0
+	if resp[0] != nil {
+		index = resp[0].MsgIndex
+	}
+
 	return &wallet.TxHashResponse{
 		Tx: &wallet.TxMessage{
 			Hash:            req.Hash,
-			Index:           uint32(resp[0].MsgIndex),
+			Index:           uint32(index),
 			Froms:           []*wallet.Address{{Address: fromAddr}},
 			Tos:             []*wallet.Address{{Address: toAddr}},
 			Values:          nil,
