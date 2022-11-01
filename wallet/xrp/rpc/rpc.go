@@ -3,6 +3,7 @@ package nearrpc
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"github.com/SavourDao/savour-hd/wallet/near/types"
 	"io/ioutil"
 	"net/http"
@@ -44,6 +45,8 @@ func (r RpcClient) RpcRequest(method string, params any, result interface{}) err
 }
 
 func (r RpcClient) Request(params string, result interface{}) error {
+	fmt.Println(params)
+	fmt.Println(r.URL)
 	req, e := http.NewRequest("POST", r.URL, bytes.NewBuffer([]byte(params)))
 	req.Header.Set("Content-Type", "application/json")
 	httpClient := &http.Client{}
