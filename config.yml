@@ -26,7 +26,7 @@ fullnode:
     tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
   op:
     rpcs:
-      - rpc_url: ''
+      - rpc_url: 'https://mainnet.optimism.io'
     confirmations: 4
     tp_api_url: ''
     tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
@@ -38,13 +38,13 @@ fullnode:
     tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
   bsc:
     rpcs:
-      - rpc_url: ''
+      - rpc_url: 'https://bsc.mytokenpocket.vip'
     confirmations: 4
     tp_api_url: ''
     tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
   heco:
     rpcs:
-      - rpc_url: ''
+      - rpc_url: 'https://http-mainnet.hecochain.com'
     confirmations: 4
     tp_api_url: ''
     tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
@@ -62,13 +62,19 @@ fullnode:
     tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
   polygon:
     rpcs:
-      - rpc_url: ''
+      - rpc_url: 'https://polygon-bor.publicnode.com'
     confirmations: 4
     tp_api_url: ''
     tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
   trx:
     rpcs:
       - rpc_url: '34.237.210.82:50051'
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: ''
+  near:
+    rpcs:
+      - rpc_url: 'https://rpc.mainnet.near.org'
     confirmations: 4
     tp_api_url: ''
     tp_api_key: ''
@@ -85,5 +91,5 @@ fullnode:
         rpc_pass:
     confirmations: 1
 
-chains: [Bitcoin, Ethereum, Solana, Tron, Arbitrum, Optimism, Zksync, BscChain, Heco, Avalanche, Evmos, Polygon]
+chains: [Bitcoin, Ethereum, Solana, Tron, Arbitrum, Optimism, BscChain, Heco, Polygon, NEAR, XRP]
 
