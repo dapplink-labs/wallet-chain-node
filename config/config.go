@@ -50,6 +50,7 @@ type Fullnode struct {
 	Near    Node       `yaml:"near"`
 	Xrp     Node       `yaml:"xrp"`
 	Sol     SolanaNode `yaml:"solana"`
+	Cosmos  Node       `yaml:"cosmos"`
 }
 
 // Config instance define
