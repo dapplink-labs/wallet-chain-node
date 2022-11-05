@@ -53,6 +53,7 @@ type Fullnode struct {
 	Xrp     Node       `yaml:"xrp"`
 	Sol     SolanaNode `yaml:"solana"`
 	Cosmos  Node       `yaml:"cosmos"`
+	Dot     Node       `yaml:"dot"`
 }
 
 // Config instance define

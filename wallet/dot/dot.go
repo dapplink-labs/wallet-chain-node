@@ -1,179 +1,138 @@
 package dot
 
 import (
-	"context"
-	"fmt"
-
-	"github.com/tidwall/gjson"
+	"github.com/SavourDao/savour-hd/config"
+	wallet2 "github.com/SavourDao/savour-hd/rpc/wallet"
+	"github.com/SavourDao/savour-hd/wallet"
+	"github.com/SavourDao/savour-hd/wallet/fallback"
+	"github.com/SavourDao/savour-hd/wallet/multiclient"
 )
 
-type Error struct {
-	Code    int64
-	Message string
+const (
+	ChainName = "Dot"
+	Coin      = "Dot"
+)
+
+type WalletAdaptor struct {
+	fallback.WalletAdaptor
+	clients *multiclient.MultiClient
 }
 
-func (e *Error) Error() string {
-	return fmt.Sprintf("code:%d,msg:%s", e.Code, e.Message)
-}
-
-// 组装参数
-func GetParams(method string, params interface{}) interface{} {
-	req := map[string]interface{}{
-		"jsonrpc": "2.0",
-		"method":  method,
-		"id":      1,
-	}
-	if params != nil {
-		req["params"] = params
-	}
-	return req
-}
-
-type QueryStorageResponse struct {
-}
-
-// 根据地址获取账户余额
-func QueryStorage(storageKey string, blockHash string) (*QueryStorageResponse, error) {
-	ctx := context.Background()
-	respByte, err := DotRequest(ctx, GetParams("state_queryStorage", map[string]interface{}{
-		"keys": storageKey,
-		"at":   blockHash,
-	}))
+func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
+	clients, err := NewDotClient(conf)
 	if err != nil {
 		return nil, err
 	}
-	jsonObj := gjson.ParseBytes(respByte)
-	if jsonObj.Get("error.code").Int() != 0 {
-		return nil, &Error{
-			Code:    jsonObj.Get("error.code").Int(),
-			Message: jsonObj.Get("error.message").String(),
-		}
+	clis := make([]multiclient.Client, len(clients))
+	for i, client := range clients {
+		clis[i] = client
 	}
-	return nil, nil
-}
-
-type GetAccountNonceResponse struct {
-	Nonce float64
-}
-
-// 获取 Account Nonce
-func GetAccountNonce(params []string) (*GetAccountNonceResponse, error) {
-	ctx := context.Background()
-	respByte, err := DotRequest(ctx, GetParams("account_nextIndex", params))
-	if err != nil {
-		return nil, err
-	}
-	jsonObj := gjson.ParseBytes(respByte)
-	if jsonObj.Get("error.code").Int() != 0 {
-		return nil, &Error{
-			Code:    jsonObj.Get("error.code").Int(),
-			Message: jsonObj.Get("error.message").String(),
-		}
-	}
-	return &GetAccountNonceResponse{
-		Nonce: jsonObj.Get("result").Float(),
+	return &WalletAdaptor{
+		clients: multiclient.New(clis),
 	}, nil
 }
 
-type GetBlockResponse struct {
-	Number    string `json:"number"`    //最新区块高度
-	StateRoot string `json:"stateRoot"` //最新区块Hash
+func newWalletAdaptor(client *dotClient) wallet.WalletAdaptor {
+	return &WalletAdaptor{
+		clients: multiclient.New([]multiclient.Client{client}),
+	}
 }
 
-// 获取最新 blockNumber 和 blockHash
-func GetBlock() (*GetBlockResponse, error) {
-	ctx := context.Background()
-	respByte, err := DotRequest(ctx, GetParams("chain_getBlock", nil))
-	if err != nil {
-		return nil, err
-	}
-	jsonObj := gjson.ParseBytes(respByte)
-	if jsonObj.Get("error.code").Int() != 0 {
-		return nil, &Error{
-			Code:    jsonObj.Get("error.code").Int(),
-			Message: jsonObj.Get("error.message").String(),
-		}
-	}
-	return &GetBlockResponse{
-		Number:    jsonObj.Get("result.block.header.number").String(),
-		StateRoot: jsonObj.Get("result.block.header.stateRoot").String(),
-	}, nil
+func (a *WalletAdaptor) getClient() *dotClient {
+	return a.clients.BestClient().(*dotClient)
 }
 
-type GetRuntimeVersionResponse struct {
-	SpecName           string  `json:"specName"`           //链名称
-	SpecVersion        float64 `json:"specVersion"`        //版本
-	TransactionVersion float64 `json:"transactionVersion"` //事物版本
+func (a *WalletAdaptor) ConvertAddress(req *wallet2.ConvertAddressRequest) (*wallet2.ConvertAddressResponse, error) {
+	//TODO implement me
+	panic("implement me")
 }
 
-// 获取specName，specVersion， transactionVersion 等参数
-func GetRuntimeVersion() (*GetRuntimeVersionResponse, error) {
-	ctx := context.Background()
-	respByte, err := DotRequest(ctx, GetParams("state_getRuntimeVersion", nil))
-	if err != nil {
-		return nil, err
-	}
-	jsonObj := gjson.ParseBytes(respByte)
-	if jsonObj.Get("error.code").Int() != 0 {
-		return nil, &Error{
-			Code:    jsonObj.Get("error.code").Int(),
-			Message: jsonObj.Get("error.message").String(),
-		}
-	}
-	return &GetRuntimeVersionResponse{
-		SpecName:           jsonObj.Get("result.specName").String(),
-		SpecVersion:        jsonObj.Get("result.specVersion").Float(),
-		TransactionVersion: jsonObj.Get("result.transactionVersion").Float(),
-	}, nil
+func (a *WalletAdaptor) ValidAddress(req *wallet2.ValidAddressRequest) (*wallet2.ValidAddressResponse, error) {
+	//TODO implement me
+	panic("implement me")
 }
 
-type SubmitExtrinsicResponse struct {
+func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.BalanceResponse, error) {
+	//TODO implement me
+	panic("implement me")
 }
 
-type SubmitExtrinsicRequest struct {
-	Extrinsic map[string]interface{} `json:"extrinsic"`
+func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
+	//TODO implement me
+	panic("implement me")
 }
 
-// 广播交易
-func SubmitExtrinsic(req *SubmitExtrinsicRequest) (*SubmitExtrinsicResponse, error) {
-	ctx := context.Background()
-	respByte, err := DotRequest(ctx, GetParams("author_submitExtrinsic", req.Extrinsic))
-	if err != nil {
-		return nil, err
-	}
-	jsonObj := gjson.ParseBytes(respByte)
-	if jsonObj.Get("error.code").Int() != 0 {
-		return nil, &Error{
-			Code:    jsonObj.Get("error.code").Int(),
-			Message: jsonObj.Get("error.message").String(),
-		}
-	}
-	return &SubmitExtrinsicResponse{}, nil
+func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {
+	//TODO implement me
+	panic("implement me")
 }
 
-type GetTxResponse struct {
-	SpecName           string  `json:"specName"`           //链名称
-	SpecVersion        float64 `json:"specVersion"`        //版本
-	TransactionVersion float64 `json:"transactionVersion"` //事物版本
+func (a *WalletAdaptor) GetAccount(req *wallet2.AccountRequest) (*wallet2.AccountResponse, error) {
+	//TODO implement me
+	panic("implement me")
 }
 
-// 根据地址获取交易记录
-func GetTx() (*GetRuntimeVersionResponse, error) {
-	ctx := context.Background()
-	respByte, err := DotRequest(ctx, GetParams("state_getRuntimeVersion", []string{"16ZL8yLyXv3V3L3z9ofR1ovFLziyXaN1DPq4yffMAZ9czzBD"}))
-	if err != nil {
-		return nil, err
-	}
-	jsonObj := gjson.ParseBytes(respByte)
-	if jsonObj.Get("error.code").Int() != 0 {
-		return nil, &Error{
-			Code:    jsonObj.Get("error.code").Int(),
-			Message: jsonObj.Get("error.message").String(),
-		}
-	}
-	return &GetRuntimeVersionResponse{
-		SpecName:           jsonObj.Get("result.specName").String(),
-		SpecVersion:        jsonObj.Get("result.specVersion").Float(),
-		TransactionVersion: jsonObj.Get("result.transactionVersion").Float(),
-	}, nil
+func (a *WalletAdaptor) GetUtxo(req *wallet2.UtxoRequest) (*wallet2.UtxoResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetMinRent(req *wallet2.MinRentRequest) (*wallet2.MinRentResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetUtxoInsFromData(req *wallet2.UtxoInsFromDataRequest) (*wallet2.UtxoInsResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetAccountTxFromData(req *wallet2.TxFromDataRequest) (*wallet2.AccountTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetUtxoTxFromData(req *wallet2.TxFromDataRequest) (*wallet2.UtxoTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetAccountTxFromSignedData(req *wallet2.TxFromSignedDataRequest) (*wallet2.AccountTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetUtxoTxFromSignedData(req *wallet2.TxFromSignedDataRequest) (*wallet2.UtxoTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) CreateAccountSignedTx(req *wallet2.CreateAccountSignedTxRequest) (*wallet2.CreateSignedTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) CreateAccountTx(req *wallet2.CreateAccountTxRequest) (*wallet2.CreateAccountTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) CreateUtxoSignedTx(req *wallet2.CreateUtxoSignedTxRequest) (*wallet2.CreateSignedTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) CreateUtxoTx(req *wallet2.CreateUtxoTxRequest) (*wallet2.CreateUtxoTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) VerifyAccountSignedTx(req *wallet2.VerifySignedTxRequest) (*wallet2.VerifySignedTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) VerifyUtxoSignedTx(req *wallet2.VerifySignedTxRequest) (*wallet2.VerifySignedTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
 }
