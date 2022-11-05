@@ -92,6 +92,14 @@ fullnode:
     NonceAccountAddr: DJyNpXgggw1WGgjTVzFsNjb3fuQZVMqhoakvSBfX9LYx
     FeeAccountPriKey: 4TMFNY9ntAn3CHzguSAvDNLPRoQTaK3sWbQQXdDXaE6KWRBLufGL6PJdsD2koiEe3gGmMdRK3aAw7sikGNksHJrN
 
+  dot:
+    rpcs:
+      - rpc_url: 'https://mainnet-api.algonode.cloud'
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: ''
+    apiToken: 1
+
   cosmos:
     rpcs:
       - rpc_url: ''
