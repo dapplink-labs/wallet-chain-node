@@ -57,32 +57,34 @@ func (w *WalletAdaptor) getClient() *NearClient {
 
 func (w *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
 	txs, err := w.getClient().GetTx(req.Address, int(req.Page), int(req.Pagesize))
-	list := make([]*wallet2.TxMessage, 0, len(txs))
-	for i := 0; i < len(txs); i++ {
-		list = append(list, &wallet2.TxMessage{
-			Hash:   txs[i].TransactionHash,
-			Tos:    []*wallet2.Address{{Address: txs[i].ReceiverAccountId}},
-			Froms:  []*wallet2.Address{{Address: txs[i].SignerAccountId}},
-			Fee:    "0",
-			Status: wallet2.TxStatus_Success,
-			Values: []*wallet2.Value{{Value: string(txs[i].ReceiptConversionTokensBurnt)}},
-			Type:   1,
-			Height: string(txs[i].BlockTimestamp),
-		})
-	}
+
 	if err != nil {
 		log.Error("get GetTxByAddress error", "err", err)
 		return &wallet2.TxAddressResponse{
 			Code: common.ReturnCode_ERROR,
 			Msg:  "send tx fail",
 		}, err
-	} else {
-		return &wallet2.TxAddressResponse{
-			Code: common.ReturnCode_SUCCESS,
-			Msg:  "success",
-			Tx:   list,
-		}, nil
 	}
+
+	list := make([]*wallet2.TxMessage, 0, len(txs))
+	for i := 0; i < len(txs); i++ {
+		list = append(list, &wallet2.TxMessage{
+			Hash:     txs[i].TransactionHash,
+			Tos:      []*wallet2.Address{{Address: txs[i].ReceiverAccountId}},
+			Froms:    []*wallet2.Address{{Address: txs[i].SignerAccountId}},
+			Fee:      "0",
+			Status:   wallet2.TxStatus_Success,
+			Values:   []*wallet2.Value{{Value: string(txs[i].Amount)}},
+			Type:     1,
+			Height:   txs[i].BlockHeight,
+			Datetime: txs[i].BlockTimestamp,
+		})
+	}
+	return &wallet2.TxAddressResponse{
+		Code: common.ReturnCode_SUCCESS,
+		Msg:  "success",
+		Tx:   list,
+	}, nil
 }
 
 func (w *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {
@@ -96,14 +98,15 @@ func (w *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHash
 	}
 	return &wallet2.TxHashResponse{
 		Tx: &wallet2.TxMessage{
-			Hash:   tx.TransactionHash,
-			Tos:    []*wallet2.Address{{Address: tx.ReceiverAccountId}},
-			Froms:  []*wallet2.Address{{Address: tx.SignerAccountId}},
-			Fee:    "",
-			Status: wallet2.TxStatus_Success,
-			Values: []*wallet2.Value{{Value: tx.ReceiptConversionTokensBurnt}},
-			Type:   1,
-			Height: tx.BlockTimestamp,
+			Hash:     tx.TransactionHash,
+			Tos:      []*wallet2.Address{{Address: tx.ReceiverAccountId}},
+			Froms:    []*wallet2.Address{{Address: tx.SignerAccountId}},
+			Fee:      "",
+			Status:   wallet2.TxStatus_Success,
+			Values:   []*wallet2.Value{{Value: tx.Amount}},
+			Type:     1,
+			Height:   tx.BlockHeight,
+			Datetime: tx.BlockTimestamp,
 		},
 	}, nil
 }
@@ -111,19 +114,35 @@ func (w *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHash
 func (w *WalletAdaptor) GetAccount(req *wallet2.AccountRequest) (*wallet2.AccountResponse, error) {
 	_, add, err := w.getClient().GetAccount()
 	if err != nil {
-		log.Error("get GetNonce error", "err", err)
+		log.Error("get GetAccount error", "err", err)
 		return &wallet2.AccountResponse{
 			Code: common.ReturnCode_ERROR,
 			Msg:  "send tx fail",
 		}, err
-	} else {
-		return &wallet2.AccountResponse{
-			Code:          common.ReturnCode_SUCCESS,
-			Msg:           "success",
-			AccountNumber: add,
-		}, nil
 	}
+	return &wallet2.AccountResponse{
+		Code:          common.ReturnCode_SUCCESS,
+		Msg:           "success",
+		AccountNumber: add,
+	}, nil
 
+}
+
+func (w *WalletAdaptor) GetNonce(req *wallet2.NonceRequest) (*wallet2.NonceResponse, error) {
+	// TODO public key
+	nonce, e := w.getClient().GetNonce("", req.Address)
+	if e != nil {
+		log.Error("get GetNonce error", "err", err)
+		return &wallet2.NonceResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "send tx fail",
+		}, err
+	}
+	return &wallet2.NonceResponse{
+		Code:  common.ReturnCode_SUCCESS,
+		Msg:   "success",
+		Nonce: nonce,
+	}, nil
 }
 
 func (w *WalletAdaptor) GetSupportCoins(req *wallet2.SupportCoinsRequest) (*wallet2.SupportCoinsResponse, error) {
@@ -135,21 +154,20 @@ func (w *WalletAdaptor) GetSupportCoins(req *wallet2.SupportCoinsRequest) (*wall
 }
 
 func (w *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxResponse, error) {
-	value, err := w.getClient().SendTx("", "", "", "")
+	value, err := w.getClient().SendSignedTx(req.RawTx)
 	if err != nil {
-		log.Error("get GetNonce error", "err", err)
+		log.Error("get SendTx error", "err", err)
 		return &wallet2.SendTxResponse{
 			Code:   common.ReturnCode_ERROR,
 			Msg:    "send tx fail",
 			TxHash: "",
 		}, err
-	} else {
-		return &wallet2.SendTxResponse{
-			Code:   common.ReturnCode_SUCCESS,
-			Msg:    "send tx success",
-			TxHash: value,
-		}, nil
 	}
+	return &wallet2.SendTxResponse{
+		Code:   common.ReturnCode_SUCCESS,
+		Msg:    "send tx success",
+		TxHash: value,
+	}, nil
 }
 
 func (w *WalletAdaptor) GetGasPrice(req *wallet2.GasPriceRequest) (*wallet2.GasPriceResponse, error) {
@@ -167,8 +185,10 @@ func (w *WalletAdaptor) GetUtxo(req *wallet2.UtxoRequest) (*wallet2.UtxoResponse
 }
 
 func (w *WalletAdaptor) GetMinRent(req *wallet2.MinRentRequest) (*wallet2.MinRentResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	return &wallet2.MinRentResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "do not support",
+	}, nil
 }
 
 func (w *WalletAdaptor) ConvertAddress(req *wallet2.ConvertAddressRequest) (*wallet2.ConvertAddressResponse, error) {
@@ -179,61 +199,85 @@ func (w *WalletAdaptor) ConvertAddress(req *wallet2.ConvertAddressRequest) (*wal
 }
 
 func (w *WalletAdaptor) ValidAddress(req *wallet2.ValidAddressRequest) (*wallet2.ValidAddressResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	return &wallet2.ValidAddressResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "do not support",
+	}, nil
 }
 
 func (w *WalletAdaptor) GetUtxoInsFromData(req *wallet2.UtxoInsFromDataRequest) (*wallet2.UtxoInsResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	return &wallet2.UtxoInsResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "do not support",
+	}, nil
 }
 
 func (w *WalletAdaptor) GetAccountTxFromData(req *wallet2.TxFromDataRequest) (*wallet2.AccountTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	return &wallet2.AccountTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "do not support",
+	}, nil
 }
 
 func (w *WalletAdaptor) GetUtxoTxFromData(req *wallet2.TxFromDataRequest) (*wallet2.UtxoTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	return &wallet2.UtxoTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "do not support",
+	}, nil
 }
 
 func (w *WalletAdaptor) GetAccountTxFromSignedData(req *wallet2.TxFromSignedDataRequest) (*wallet2.AccountTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	return &wallet2.AccountTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "do not support",
+	}, nil
 }
 
 func (w *WalletAdaptor) GetUtxoTxFromSignedData(req *wallet2.TxFromSignedDataRequest) (*wallet2.UtxoTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	return &wallet2.UtxoTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "do not support",
+	}, nil
 }
 
 func (w *WalletAdaptor) CreateAccountSignedTx(req *wallet2.CreateAccountSignedTxRequest) (*wallet2.CreateSignedTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	return &wallet2.CreateSignedTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "do not support",
+	}, nil
 }
 
 func (w *WalletAdaptor) CreateAccountTx(req *wallet2.CreateAccountTxRequest) (*wallet2.CreateAccountTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	return &wallet2.CreateAccountTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "do not support",
+	}, nil
 }
 
 func (w *WalletAdaptor) CreateUtxoSignedTx(req *wallet2.CreateUtxoSignedTxRequest) (*wallet2.CreateSignedTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	return &wallet2.CreateSignedTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "do not support",
+	}, nil
 }
 
 func (w *WalletAdaptor) CreateUtxoTx(req *wallet2.CreateUtxoTxRequest) (*wallet2.CreateUtxoTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	return &wallet2.CreateUtxoTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "do not support",
+	}, nil
 }
 
 func (w *WalletAdaptor) VerifyAccountSignedTx(req *wallet2.VerifySignedTxRequest) (*wallet2.VerifySignedTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	return &wallet2.VerifySignedTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "do not support",
+	}, nil
 }
 
 func (w *WalletAdaptor) VerifyUtxoSignedTx(req *wallet2.VerifySignedTxRequest) (*wallet2.VerifySignedTxResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	return &wallet2.VerifySignedTxResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "do not support",
+	}, nil
 }

@@ -1,13 +1,8 @@
 package types
 
 import (
-	"bytes"
-	"encoding/json"
-	"fmt"
 	"github.com/SavourDao/savour-hd/wallet/near/keys"
 	"github.com/ethereum/go-ethereum/rpc"
-	"io/ioutil"
-	"net/http"
 )
 
 type RpcRequest struct {
@@ -111,6 +106,73 @@ type GetBlockResult struct {
 	} `json:"result"`
 	ID int `json:"id"`
 }
+type SendTxResult struct {
+	Jsonrpc string `json:"jsonrpc"`
+	Result  struct {
+		ReceiptsOutcome []struct {
+			BlockHash string `json:"block_hash"`
+			Id        string `json:"id"`
+			Outcome   struct {
+				ExecutorId string        `json:"executor_id"`
+				GasBurnt   int64         `json:"gas_burnt"`
+				Logs       []interface{} `json:"logs"`
+				Metadata   struct {
+					GasProfile []interface{} `json:"gas_profile"`
+					Version    int           `json:"version"`
+				} `json:"metadata"`
+				ReceiptIds []string `json:"receipt_ids"`
+				Status     struct {
+					SuccessValue string `json:"SuccessValue"`
+				} `json:"status"`
+				TokensBurnt string `json:"tokens_burnt"`
+			} `json:"outcome"`
+			Proof []struct {
+				Direction string `json:"direction"`
+				Hash      string `json:"hash"`
+			} `json:"proof"`
+		} `json:"receipts_outcome"`
+		Status struct {
+			SuccessValue string `json:"SuccessValue"`
+		} `json:"status"`
+		Transaction struct {
+			Actions []struct {
+				Transfer struct {
+					Deposit string `json:"deposit"`
+				} `json:"Transfer"`
+			} `json:"actions"`
+			Hash       string `json:"hash"`
+			Nonce      int64  `json:"nonce"`
+			PublicKey  string `json:"public_key"`
+			ReceiverId string `json:"receiver_id"`
+			Signature  string `json:"signature"`
+			SignerId   string `json:"signer_id"`
+		} `json:"transaction"`
+		TransactionOutcome struct {
+			BlockHash string `json:"block_hash"`
+			Id        string `json:"id"`
+			Outcome   struct {
+				ExecutorId string        `json:"executor_id"`
+				GasBurnt   int64         `json:"gas_burnt"`
+				Logs       []interface{} `json:"logs"`
+				Metadata   struct {
+					GasProfile interface{} `json:"gas_profile"`
+					Version    int         `json:"version"`
+				} `json:"metadata"`
+				ReceiptIds []string `json:"receipt_ids"`
+				Status     struct {
+					SuccessReceiptId string `json:"SuccessReceiptId"`
+				} `json:"status"`
+				TokensBurnt string `json:"tokens_burnt"`
+			} `json:"outcome"`
+			Proof []struct {
+				Direction string `json:"direction"`
+				Hash      string `json:"hash"`
+			} `json:"proof"`
+		} `json:"transaction_outcome"`
+	} `json:"result"`
+	Id    int `json:"id"`
+	Error any `json:"error"`
+}
 
 type GetBalanceRes struct {
 	Jsonrpc string `json:"jsonrpc"`
@@ -137,29 +199,6 @@ type GetBalanceParam struct {
 	Finality    string `json:"finality"`
 	RequestType string `json:"request_type"`
 	AccountID   string `json:"account_id"`
-}
-
-func DoRpcRequest(method string, params any, result interface{}) error {
-	reqParams := RpcRequest{
-		Jsonrpc: "2.0",
-		Method:  method,
-		Params:  params,
-		ID:      1,
-	}
-	jsonStr, _ := json.Marshal(reqParams)
-	url := "https://rpc.mainnet.near.org"
-	req, e := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
-	req.Header.Set("Content-Type", "application/json")
-	httpClient := &http.Client{}
-	resp, e := httpClient.Do(req)
-	if e != nil {
-		return e
-	}
-	defer resp.Body.Close()
-	body, _ := ioutil.ReadAll(resp.Body)
-	_ = json.Unmarshal(body, &result)
-	fmt.Println(string(body))
-	return nil
 }
 
 type Config struct {

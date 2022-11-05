@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
+	nearrpc "github.com/SavourDao/savour-hd/wallet/near/rpc"
 	"github.com/SavourDao/savour-hd/wallet/near/transaction"
 	"github.com/SavourDao/savour-hd/wallet/near/types"
 	"github.com/mr-tron/base58/base58"
@@ -68,11 +69,12 @@ func (a *Account) SignTransaction(
 // SignAndSendTransaction creates, signs and sends a tranaction for the supplied actions.
 func (a *Account) SignAndSendTransaction(
 	ctx context.Context,
+	client nearrpc.RpcClient,
 	receiverID string,
 	accessKey types.GetAccessKeyResponse,
 	hash string,
 	actions ...transaction.Action,
-) (*SendTxResult, error) {
+) (*types.SendTxResult, error) {
 	txHash, signedTransaction, err := a.SignTransaction(ctx, receiverID, accessKey, hash, actions...)
 	fmt.Println(txHash)
 	if err != nil {
@@ -82,9 +84,10 @@ func (a *Account) SignAndSendTransaction(
 	if err != nil {
 		return nil, err
 	}
-	var res SendTxResult
+	var res types.SendTxResult
 	parms := base64.StdEncoding.EncodeToString(bytes)
-	types.DoRpcRequest("broadcast_tx_commit", [1]string{parms}, &res)
+
+	client.DoRpcRequest("broadcast_tx_commit", [1]string{parms}, &res)
 
 	return &res, nil
 }

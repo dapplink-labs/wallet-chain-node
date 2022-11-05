@@ -10,7 +10,6 @@ import (
 )
 
 type Transaction struct {
-	//gorm.Model
 	TransactionHash              string `json:"transaction_hash" db:"transaction_hash"`
 	IncludedInBlockHash          string `json:"included_in_block_hash" db:"included_in_block_hash"`
 	IncludedInChunkHash          string `json:"included_in_chunk_hash" db:"included_in_chunk_hash"`
@@ -25,6 +24,36 @@ type Transaction struct {
 	ConvertedIntoReceiptId       string `json:"converted_into_receipt_id" db:"converted_into_receipt_id"`
 	ReceiptConversionGasBurnt    string `json:"receipt_conversion_gas_burnt" db:"receipt_conversion_gas_burnt"`
 	ReceiptConversionTokensBurnt string `json:"receipt_conversion_tokens_burnt" db:"receipt_conversion_tokens_burnt"`
+}
+
+type BlockTransaction struct {
+	Transaction
+	BlockHeight string `json:"block_height"`
+	Amount      string `json:"amount"`
+}
+
+type TransactionActionArgs struct {
+	Gas        int64  `json:"gas"`
+	Deposit    string `json:"deposit"`
+	ArgsBase64 string `json:"args_base64"`
+	MethodName string `json:"method_name"`
+}
+
+type TransactionAction struct {
+	TransactionHash    string `json:"transaction_hash" db:"transaction_hash"`
+	ActionKind         string `json:"action_kind" db:"action_kind"`
+	IndexInTransaction int64  `json:"index_in_transaction" db:"index_in_transaction"`
+	Args               string `json:"args" db:"args"`
+}
+
+type Block struct {
+	BlockHeight     string `json:"block_height" db:"block_height"`
+	BlockHash       string `json:"block_hash" db:"block_hash"`
+	PrevBlockHash   string `json:"prev_block_hash" db:"prev_block_hash"`
+	BlockTimestamp  string `json:"block_timestamp" db:"block_timestamp"`
+	TotalSupply     string `json:"total_supply" db:"total_supply"`
+	GasPrice        string `json:"gas_price" db:"gas_price"`
+	AuthorAccountId string `json:"author_account_id" db:"author_account_id"`
 }
 
 // var db *sqlx.DB
@@ -58,7 +87,7 @@ func init() {
 	}
 	db.SetMaxOpenConns(20)
 	db.SetMaxIdleConns(10)
-
+	//db.SetConnMaxLifetime(10)
 	//sql.Register("postgres", sqlhooks.Wrap(&pq.Driver{}, &Hooks{}))
 	//db, err = gorm.Open(postgres.Open(
 	//	"postgres://public_readonly:nearprotocol@mainnet.db.explorer.indexer.near.dev/mainnet_explorer?binary_parameters=yes",
