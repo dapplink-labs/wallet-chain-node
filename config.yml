@@ -79,6 +79,14 @@ fullnode:
     tp_api_url: ''
     tp_api_key: ''
 
+  alog:
+    rpcs:
+      - rpc_url: 'https://mainnet-api.algonode.cloud'
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: ''
+    apiToken: 1
+
   solana:
     public_api: 'https://public-api.solscan.io'
     NonceAccountAddr: DJyNpXgggw1WGgjTVzFsNjb3fuQZVMqhoakvSBfX9LYx
@@ -92,4 +100,5 @@ fullnode:
     confirmations: 1
 
 chains: [Bitcoin, Ethereum, Solana, Tron, Arbitrum, Optimism, BscChain, Heco, Polygon, NEAR, XRP]
+
 
