@@ -25,6 +25,7 @@ type Node struct {
 	TpApiUrl      string `yaml:"tp_api_url"`
 	TpApiKey      string `yaml:"tp-api-key"`
 	Confirmations uint64 `yaml:"confirmations"`
+	ApiToken      string `yaml:"apiToken"`
 }
 
 type SolanaNode struct {
@@ -48,6 +49,7 @@ type Fullnode struct {
 	Polygon Node       `yaml:"polygon"`
 	Trx     Node       `yaml:"trx"`
 	Near    Node       `yaml:"near"`
+	Algo    Node       `yaml:"alog"`
 	Xrp     Node       `yaml:"xrp"`
 	Sol     SolanaNode `yaml:"solana"`
 	Cosmos  Node       `yaml:"cosmos"`

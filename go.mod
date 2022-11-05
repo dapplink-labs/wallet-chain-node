@@ -3,9 +3,10 @@ module github.com/SavourDao/savour-hd
 go 1.18
 
 require (
+	github.com/algorand/go-algorand-sdk v0.0.0-00010101000000-000000000000
+	github.com/btcsuite/btcd v0.22.0-beta
 	cosmossdk.io/api v0.2.4
 	github.com/armon/go-metrics v0.4.1
-	github.com/btcsuite/btcd v0.22.2
 	github.com/btcsuite/btcd/chaincfg/chainhash v1.0.1
 	github.com/btcsuite/btcutil v1.0.3-0.20201208143702-a53e38424cce
 	github.com/cosmos/cosmos-sdk v0.40.0
@@ -39,6 +40,7 @@ require (
 	github.com/BurntSushi/toml v1.2.0 // indirect
 	github.com/ChainSafe/go-schnorrkel v0.0.0-20200405005733-88cbf1b4c40d // indirect
 	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d // indirect
+	github.com/algorand/go-codec/codec v1.1.9 // indirect
 	github.com/aliyun/aliyun-log-go-sdk v0.1.22 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bgentry/speakeasy v0.1.0 // indirect
@@ -80,6 +82,7 @@ require (
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/godbus/dbus v0.0.0-20190726142602-4481cbc300e2 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
+	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/golang/glog v1.0.0 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/btree v1.1.2 // indirect
@@ -163,3 +166,5 @@ require (
 	gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace github.com/algorand/go-algorand-sdk => ../go-algorand-sdk
