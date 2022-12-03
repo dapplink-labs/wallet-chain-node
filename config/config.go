@@ -37,23 +37,24 @@ type SolanaNode struct {
 
 // Fullnode define
 type Fullnode struct {
-	Btc     Node       `yaml:"btc"`
-	Eth     Node       `yaml:"eth"`
-	Arbi    Node       `yaml:"arbi"`
-	Op      Node       `yaml:"op"`
-	Zksync  Node       `yaml:"zksync"`
-	Bsc     Node       `yaml:"bsc"`
-	Heco    Node       `yaml:"heco"`
-	Avax    Node       `yaml:"avax"`
-	Evmos   Node       `yaml:"evmos"`
-	Polygon Node       `yaml:"polygon"`
-	Trx     Node       `yaml:"trx"`
-	Near    Node       `yaml:"near"`
-	Algo    Node       `yaml:"alog"`
-	Xrp     Node       `yaml:"xrp"`
-	Sol     SolanaNode `yaml:"solana"`
-	Cosmos  Node       `yaml:"cosmos"`
-	Dot     Node       `yaml:"dot"`
+	Btc      Node       `yaml:"btc"`
+	Eth      Node       `yaml:"eth"`
+	Arbi     Node       `yaml:"arbi"`
+	Op       Node       `yaml:"op"`
+	Zksync   Node       `yaml:"zksync"`
+	Bsc      Node       `yaml:"bsc"`
+	Heco     Node       `yaml:"heco"`
+	Avax     Node       `yaml:"avax"`
+	Evmos    Node       `yaml:"evmos"`
+	Polygon  Node       `yaml:"polygon"`
+	Trx      Node       `yaml:"trx"`
+	Near     Node       `yaml:"near"`
+	Algo     Node       `yaml:"alog"`
+	Xrp      Node       `yaml:"xrp"`
+	Sol      SolanaNode `yaml:"solana"`
+	Cosmos   Node       `yaml:"cosmos"`
+	FileCoin Node       `yaml:"filecoin"`
+	Dot      Node       `yaml:"dot"`
 }
 
 // Config instance define
