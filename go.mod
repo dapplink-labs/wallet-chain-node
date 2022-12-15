@@ -11,7 +11,6 @@ require (
 	github.com/btcsuite/btcutil v1.0.3-0.20201208143702-a53e38424cce
 	github.com/cosmos/cosmos-sdk v0.40.0
 	github.com/ethereum/go-ethereum v1.10.26
-	github.com/fbsobreira/gotron-sdk v0.0.0-20221101181131-c4daceb828f0
 	github.com/filecoin-project/go-jsonrpc v0.1.9
 	github.com/filecoin-project/lotus v1.18.1
 	github.com/go-resty/resty/v2 v2.7.0
@@ -23,7 +22,7 @@ require (
 	github.com/nanmu42/etherscan-api v1.9.0
 	github.com/near/borsh-go v0.3.2-0.20220516180422-1ff87d108454
 	github.com/pkg/errors v0.9.1
-	github.com/portto/solana-go-sdk v1.22.1
+	github.com/portto/solana-go-sdk v1.23.0
 	github.com/shopspring/decimal v1.3.1
 	github.com/stretchr/testify v1.8.1
 	github.com/syndtr/goleveldb v1.0.1-0.20220614013038-64ee5596c38a

@@ -1402,6 +1402,8 @@ github.com/polydawn/refmt v0.0.0-20201211092308-30ac6d18308e h1:ZOcivgkkFRnjfoTc
 github.com/polydawn/refmt v0.0.0-20201211092308-30ac6d18308e/go.mod h1:uIp+gprXxxrWSjjklXD+mN4wed/tMfjMMmN/9+JsA9o=
 github.com/portto/solana-go-sdk v1.22.1 h1:ALG4WmF7d/9SclI12Ad1vAV2AbOFU5LIQOYpN/respU=
 github.com/portto/solana-go-sdk v1.22.1/go.mod h1:CZfIfBqsf50c3wZi78YwlAjsbL7MsLXIarGYhC6hmhQ=
+github.com/portto/solana-go-sdk v1.23.0 h1:ZpS+9cokB+u+30RCR38m8ECNodqYq5CPb62s2hUNMHs=
+github.com/portto/solana-go-sdk v1.23.0/go.mod h1:CZfIfBqsf50c3wZi78YwlAjsbL7MsLXIarGYhC6hmhQ=
 github.com/posener/complete v1.1.1/go.mod h1:em0nMJCgc9GFtwrmVmEMR/ZL6WyhyjMBndrE9hABlRI=
 github.com/prometheus/client_golang v0.8.0/go.mod h1:7SWBe2y4D6OKWSNQJUaRYU/AaXPKyh/dDVn+NZz0KFw=
 github.com/prometheus/client_golang v0.9.1/go.mod h1:7SWBe2y4D6OKWSNQJUaRYU/AaXPKyh/dDVn+NZz0KFw=
