@@ -77,3 +77,7 @@ Have a pr on your github and submit it to the savour-hd repository
 ### 5.review 
 
 After the savour-hd code maintainer has passed the review, the code will be merged into the savour-hd library. At this point, your PR submission is complete
+
+### 6.Disclaimer
+
+This code has not yet been audited, and should not be used in any production systems.
