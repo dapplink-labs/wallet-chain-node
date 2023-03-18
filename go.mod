@@ -12,6 +12,7 @@ require (
 	github.com/cosmos/cosmos-sdk v0.40.0
 	github.com/ethereum/go-ethereum v1.10.26
 	github.com/fbsobreira/gotron-sdk v0.0.0-20221101181131-c4daceb828f0
+	github.com/filecoin-project/go-address v1.0.0
 	github.com/filecoin-project/go-jsonrpc v0.1.9
 	github.com/filecoin-project/lotus v1.18.1
 	github.com/go-resty/resty/v2 v2.7.0
@@ -75,7 +76,6 @@ require (
 	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/dvsekhvalnov/jose2go v1.5.0 // indirect
 	github.com/enigmampc/btcutil v1.0.3-0.20200723161021-e2fb6adb2a25 // indirect
-	github.com/filecoin-project/go-address v1.0.0 // indirect
 	github.com/filecoin-project/go-amt-ipld/v2 v2.1.0 // indirect
 	github.com/filecoin-project/go-amt-ipld/v3 v3.1.0 // indirect
 	github.com/filecoin-project/go-amt-ipld/v4 v4.0.0 // indirect

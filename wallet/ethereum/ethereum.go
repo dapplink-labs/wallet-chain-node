@@ -114,7 +114,15 @@ func (wa *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balan
 	var result *big.Int
 	var err error
 	if len(req.ContractAddress) > 0 {
-		result, err = wa.getClient().Erc20BalanceOf(req.ContractAddress, req.Address, nil)
+		erc20Balance, err := wa.etherscanCli.TokenBalance(req.ContractAddress, req.Address)
+		if err != nil {
+			return &wallet2.BalanceResponse{
+				Code:    common.ReturnCode_ERROR,
+				Msg:     "get erc20 balance fail",
+				Balance: "0",
+			}, err
+		}
+		result = (*big.Int)(erc20Balance)
 	} else {
 		result, err = wa.getClient().BalanceAt(context.TODO(), ethcommon.HexToAddress(req.Address), nil)
 	}
