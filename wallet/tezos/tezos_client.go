@@ -13,6 +13,7 @@ type TezosClient interface {
 	getAccountBalance(address string) (*types.AccountBalance, error)
 	getAccountCounter(address string) (*types.AccountCounter, error)
 	getManagerKey(address string) (*types.AccountManagerKey, error)
+	sendRawTransaction(rawTx string) (*types.Transaction, error)
 }
 
 type Client struct {
@@ -94,4 +95,21 @@ func (c *Client) getManagerKey(address string) (*types.AccountManagerKey, error)
 		ManagerKey: managerkeyTemp,
 	}
 	return managerkey, nil
+}
+
+func (c *Client) sendRawTransaction(rawTx string) (*types.Transaction, error) {
+	var transactionHash string
+	response, err := c.client.R().
+		SetBody(map[string]interface{}{"": rawTx}).
+		SetResult(&transactionHash).
+		Post("injection/operation?async=true&chain=main")
+	if err != nil {
+		return nil, fmt.Errorf("Can not send raw transaction: %w", err, "code", response.StatusCode())
+	}
+	tx := &types.Transaction{
+		Chain:  "tezos",
+		Coin:   "xtz",
+		TxHash: transactionHash,
+	}
+	return tx, nil
 }

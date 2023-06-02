@@ -20,3 +20,9 @@ type AccountManagerKey struct {
 	Addres     string `json:"addres"`
 	ManagerKey string `json:"manager_key"`
 }
+
+type Transaction struct {
+	Chain  string `json:"chain"`
+	Coin   string `json:"name"`
+	TxHash string `json:"tx_hash"`
+}
