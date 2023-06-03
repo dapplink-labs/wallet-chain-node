@@ -1,11 +1,11 @@
 ## 1.document
 
-official document：https://docs.oasis.dev/general
-official website：https://oasisprotocol.org/
-Paratime explorer：https://explorer.emerald.oasis.dev
-Paratime explorer：https://testnet.explorer.emerald.oasis.dev/
-Oasis explorer：https://www.oasisscan.com/
-Rosetta api: https://www.rosetta-api.org/docs/AccountApi.html
+- official document：https://docs.oasis.dev/general
+- official website：https://oasisprotocol.org/
+- Paratime explorer：https://explorer.emerald.oasis.dev
+- Paratime explorer：https://testnet.explorer.emerald.oasis.dev/
+- Oasis explorer：https://www.oasisscan.com/
+- Rosetta api: https://www.rosetta-api.org/docs/AccountApi.html
 
 ## 2. transaction fee rule
 
@@ -82,12 +82,14 @@ rosetta api
 oasis api
 oasis-core.Consensus/GetChainContext
 rosetta api
+```azure
 curl --location --request POST 'https://rosetta.oasis.dev/network/list' \
 --header 'Content-Type: application/json' \
 --header 'Cookie: __cflb=02DiuDkfxbUyQCDbAMscAxT996N9Xw8YZHJhXe8Qi2J6g' \
 --data-raw '{
-"metadata": {}
+    "metadata": {}
 }'
+```
 chainid 
 
 ### 3.5. send raw transaction
