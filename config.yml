@@ -114,6 +114,13 @@ fullnode:
         rpc_pass:
     confirmations: 1
 
-chains: [Bitcoin, Ethereum, Solana, Tron, Arbitrum, Optimism, BscChain, Heco, Polygon, NEAR, XRP]
+  eos:
+    rpcs:
+      - rpc_url: 'https://eos.greymass.com:443'
+        rpc_user:
+        rpc_pass:
+    confirmations: 1
+
+chains: [Bitcoin, Ethereum, Solana, Tron, Arbitrum, Optimism, BscChain, Heco, Polygon, NEAR, XRP, EOS]
 
 
