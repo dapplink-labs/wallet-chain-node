@@ -23,7 +23,6 @@ explorer api
 GetTransactionByID
 GetLastTransactionID
 
-
 ### 3.6. abi_json_to_bin and abi_bin_to_json
 v1/chain/abi_json_to_bin
 v1/chain/abi_bin_to_json
