@@ -7,13 +7,13 @@ import (
 	"github.com/pkg/errors"
 )
 
-var errEigenHTTPError = errors.New("Tezos chain http error")
+var errTezosHTTPError = errors.New("Tezos chain http error")
 
 type TezosClient interface {
-	getAccountBalance(address string) (*types.AccountBalance, error)
-	getAccountCounter(address string) (*types.AccountCounter, error)
-	getManagerKey(address string) (*types.AccountManagerKey, error)
-	sendRawTransaction(rawTx string) (*types.Transaction, error)
+	GetAccountBalance(address string) (*types.AccountBalance, error)
+	GetAccountCounter(address string) (*types.AccountCounter, error)
+	GetManagerKey(address string) (*types.AccountManagerKey, error)
+	SendRawTransaction(rawTx string) (*types.Transaction, error)
 }
 
 type Client struct {
@@ -28,7 +28,7 @@ func NewTezosClient(url string) *Client {
 		if statusCode >= 400 {
 			method := r.Request.Method
 			url := r.Request.URL
-			return fmt.Errorf("%d cannot %s %s: %w", statusCode, method, url, errEigenHTTPError)
+			return fmt.Errorf("%d cannot %s %s: %w", statusCode, method, url, errTezosHTTPError)
 		}
 		return nil
 	})
@@ -37,7 +37,7 @@ func NewTezosClient(url string) *Client {
 	}
 }
 
-func (c *Client) getAccountBalance(address string) (balance *types.AccountBalance, err error) {
+func (c *Client) GetAccountBalance(address string) (balance *types.AccountBalance, err error) {
 	var balanceTmp string
 	response, err := c.client.R().
 		SetResult(&balanceTmp).
@@ -51,13 +51,13 @@ func (c *Client) getAccountBalance(address string) (balance *types.AccountBalanc
 	accountBalance := &types.AccountBalance{
 		Chain:   "tezos",
 		Coin:    "xtz",
-		Addres:  address,
+		Address: address,
 		Balance: balanceTmp,
 	}
 	return accountBalance, nil
 }
 
-func (c *Client) getAccountCounter(address string) (*types.AccountCounter, error) {
+func (c *Client) GetAccountCounter(address string) (*types.AccountCounter, error) {
 	var counterTemp string
 	response, err := c.client.R().
 		SetResult(&counterTemp).
@@ -71,13 +71,13 @@ func (c *Client) getAccountCounter(address string) (*types.AccountCounter, error
 	accountCounter := &types.AccountCounter{
 		Chain:   "tezos",
 		Coin:    "xtz",
-		Addres:  address,
+		Address: address,
 		Counter: counterTemp,
 	}
 	return accountCounter, nil
 }
 
-func (c *Client) getManagerKey(address string) (*types.AccountManagerKey, error) {
+func (c *Client) GetManagerKey(address string) (*types.AccountManagerKey, error) {
 	var managerkeyTemp string
 	response, err := c.client.R().
 		SetResult(&managerkeyTemp).
@@ -91,13 +91,13 @@ func (c *Client) getManagerKey(address string) (*types.AccountManagerKey, error)
 	managerkey := &types.AccountManagerKey{
 		Chain:      "tezos",
 		Coin:       "xtz",
-		Addres:     address,
+		Address:    address,
 		ManagerKey: managerkeyTemp,
 	}
 	return managerkey, nil
 }
 
-func (c *Client) sendRawTransaction(rawTx string) (*types.Transaction, error) {
+func (c *Client) SendRawTransaction(rawTx string) (*types.Transaction, error) {
 	var transactionHash string
 	response, err := c.client.R().
 		SetBody(map[string]interface{}{"": rawTx}).

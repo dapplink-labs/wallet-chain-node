@@ -11,7 +11,7 @@ const (
 )
 
 func TestClient_GetAccountBalance(t *testing.T) {
-	ret, err := NewTezosClient(testBaseUrl).getAccountBalance(testAddress)
+	ret, err := NewTezosClient(testBaseUrl).GetAccountBalance(testAddress)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -19,7 +19,7 @@ func TestClient_GetAccountBalance(t *testing.T) {
 }
 
 func TestClient_GetAccountCounter(t *testing.T) {
-	ret, err := NewTezosClient(testBaseUrl).getAccountCounter(testAddress)
+	ret, err := NewTezosClient(testBaseUrl).GetAccountCounter(testAddress)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -27,7 +27,7 @@ func TestClient_GetAccountCounter(t *testing.T) {
 }
 
 func TestClient_GetManageKey(t *testing.T) {
-	ret, err := NewTezosClient(testBaseUrl).getManagerKey(testAddress)
+	ret, err := NewTezosClient(testBaseUrl).GetManagerKey(testAddress)
 	if err != nil {
 		fmt.Println(err)
 	}
