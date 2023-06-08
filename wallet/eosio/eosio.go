@@ -2,6 +2,7 @@ package eosio
 
 import (
 	"github.com/SavourDao/savour-hd/config"
+	"github.com/SavourDao/savour-hd/rpc/common"
 	wallet2 "github.com/SavourDao/savour-hd/rpc/wallet"
 	"github.com/SavourDao/savour-hd/wallet"
 	"github.com/SavourDao/savour-hd/wallet/fallback"
@@ -20,7 +21,7 @@ var (
 
 type WalletAdaptor struct {
 	fallback.WalletAdaptor
-	client *Client
+	client *EosClient
 }
 
 func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
@@ -34,13 +35,26 @@ func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
 	}, nil
 }
 
-func (w *WalletAdaptor) getClient() *Client {
+func (w *WalletAdaptor) getClient() *EosClient {
 	return w.client
 }
 
 func (w *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.BalanceResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	balance, err := w.getClient().GetAccount(req.Address)
+	if err != nil {
+		log.Error("get balance error", "err", err)
+		return &wallet2.BalanceResponse{
+			Code:    common.ReturnCode_ERROR,
+			Msg:     "get balance error",
+			Balance: "0",
+		}, err
+	}
+	return &wallet2.BalanceResponse{
+		Code:    common.ReturnCode_SUCCESS,
+		Msg:     "get balance success",
+		Balance: balance,
+	}, nil
+
 }
 
 func (w *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
