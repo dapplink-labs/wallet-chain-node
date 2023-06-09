@@ -22,7 +22,8 @@ v1/chain/get_info
 
 ### 3.2. query account info
 /v1/chain/get_account
-getBalance
+=> getBalance 
+=> done
 
 ### 3.3. send raw transaction
 /v1/chain/push_transaction
@@ -30,7 +31,7 @@ SendTx
 
 ### 3.4. query transaction recordlist
 v1/history/get_actions
-GetTxByAddress
+=> GetTxByAddress
 
 ### 3.5. query transaction detail
 /v1/history/get_transaction
