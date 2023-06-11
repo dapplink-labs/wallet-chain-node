@@ -2,7 +2,6 @@ package eosio
 
 import (
 	"context"
-	"fmt"
 	"strings"
 
 	eos "github.com/eoscanada/eos-go"
@@ -58,7 +57,7 @@ func (e *EosClient) GetTransaction(id string) (*eos.TransactionResp, error) {
 }
 
 func (e *EosClient) GetActions(accountName string, pos int64, offset int64) (*eos.ActionsResp, error) {
-	infoResp, err := e.client.GetActions(context.Background(), eos.GetActionsRequest{
+	res, err := e.client.GetActions(context.Background(), eos.GetActionsRequest{
 		AccountName: eos.AccountName(accountName),
 		Pos:         eos.Int64(pos),
 		Offset:      eos.Int64(offset),
@@ -66,11 +65,11 @@ func (e *EosClient) GetActions(accountName string, pos int64, offset int64) (*eo
 	if err != nil {
 		return nil, err
 	}
-	return infoResp, nil
+	return res, nil
 }
 
 func (e *EosClient) PushTransaction(consumerToken string, rawTx string) (*eos.PushTransactionFullResp, error) {
-	infoResp, err := e.client.PushTransaction(context.Background(), &eos.PackedTransaction{
+	res, err := e.client.PushTransaction(context.Background(), &eos.PackedTransaction{
 		Signatures: []ecc.Signature{
 			ecc.MustNewSignature(consumerToken),
 		},
@@ -80,25 +79,23 @@ func (e *EosClient) PushTransaction(consumerToken string, rawTx string) (*eos.Pu
 	if err != nil {
 		return nil, err
 	}
-	return infoResp, nil
+	return res, nil
 }
 
 func (e *EosClient) GetAccount(accountName string) (string, error) {
-	infoResp, err := e.client.GetAccount(context.Background(), eos.AccountName(accountName))
+	res, err := e.client.GetAccount(context.Background(), eos.AccountName(accountName))
 	if err != nil {
 		return "", err
 	}
-	balanceWithSymbol := infoResp.CoreLiquidBalance.String()
+	balanceWithSymbol := res.CoreLiquidBalance.String()
 	balanceWithSymbolList := strings.Split(balanceWithSymbol, " ")
 	return balanceWithSymbolList[0], nil
 }
 
-func (e *EosClient) GetInfo() {
-	fmt.Println("GetInfo start")
-	infoResp, err := e.client.GetInfo(context.Background())
+func (e *EosClient) GetInfo() (*eos.InfoResp, error) {
+	res, err := e.client.GetInfo(context.Background())
 	if err != nil {
-		fmt.Println("GetInfo error")
-		return
+		return nil, err
 	}
-	fmt.Println("GetInfo res", infoResp)
+	return res, nil
 }
