@@ -99,8 +99,22 @@ func (w *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.
 }
 
 func (w *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	res, err := w.getClient().GetTransaction(req.Hash)
+	if err != nil {
+		log.Error("GetTxByHash error", "err", err)
+		return &wallet2.TxHashResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "GetTxByHash error",
+		}, err
+	}
+	return &wallet2.TxHashResponse{
+		Code: common.ReturnCode_SUCCESS,
+		Msg:  "GetTxByHash success",
+		Tx: &wallet2.TxMessage{
+			Hash:   string(res.ID),
+			Status: wallet2.TxStatus(res.Receipt.Status),
+		},
+	}, nil
 }
 
 func (w *WalletAdaptor) ConvertAddress(req *wallet2.ConvertAddressRequest) (*wallet2.ConvertAddressResponse, error) {

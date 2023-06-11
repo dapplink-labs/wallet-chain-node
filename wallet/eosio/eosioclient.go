@@ -46,14 +46,12 @@ func (e *EosClient) ABIJSONToBin(id string) {
 	fmt.Println("ABIJSONToBin res", infoResp)
 }
 
-func (e *EosClient) GetTransaction(id string) {
-	fmt.Println("GetTransaction start")
-	infoResp, err := e.client.GetTransaction(context.Background(), id)
+func (e *EosClient) GetTransaction(id string) (*eos.TransactionResp, error) {
+	res, err := e.client.GetTransaction(context.Background(), id)
 	if err != nil {
-		fmt.Println("GetTransaction error")
-		return
+		return nil, err
 	}
-	fmt.Println("GetTransaction res", infoResp)
+	return res, nil
 }
 
 func (e *EosClient) GetActions(accountName string, pos int64, offset int64) (*eos.ActionsResp, error) {
