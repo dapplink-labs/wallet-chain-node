@@ -27,7 +27,8 @@ v1/chain/get_info
 
 ### 3.3. send raw transaction
 /v1/chain/push_transaction
-SendTx
+=> SendTx
+=> 
 
 ### 3.4. query transaction recordlist
 v1/history/get_actions
@@ -35,7 +36,7 @@ v1/history/get_actions
 
 ### 3.5. query transaction detail
 /v1/history/get_transaction
-GetTxByHash
+=> GetTxByHash
 
 ### 3.6. abi_json_to_bin and abi_bin_to_json
 v1/chain/abi_json_to_bin

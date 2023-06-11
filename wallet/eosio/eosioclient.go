@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	eos "github.com/eoscanada/eos-go"
+	"github.com/eoscanada/eos-go/ecc"
 )
 
 type EosClient struct {
@@ -65,14 +66,18 @@ func (e *EosClient) GetActions() {
 	fmt.Println("GetActions res", infoResp)
 }
 
-func (e *EosClient) PushTransaction() {
-	fmt.Println("PushTransaction start")
-	infoResp, err := e.client.PushTransaction(context.Background(), &eos.PackedTransaction{})
+func (e *EosClient) PushTransaction(consumerToken string, rawTx string) (*eos.PushTransactionFullResp, error) {
+	infoResp, err := e.client.PushTransaction(context.Background(), &eos.PackedTransaction{
+		Signatures: []ecc.Signature{
+			ecc.MustNewSignature(consumerToken),
+		},
+		Compression:       1,
+		PackedTransaction: []byte(rawTx),
+	})
 	if err != nil {
-		fmt.Println("PushTransaction error")
-		return
+		return nil, err
 	}
-	fmt.Println("PushTransaction res", infoResp)
+	return infoResp, nil
 }
 
 func (e *EosClient) GetAccount(accountName string) (string, error) {

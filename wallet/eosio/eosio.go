@@ -40,21 +40,36 @@ func (w *WalletAdaptor) getClient() *EosClient {
 }
 
 func (w *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.BalanceResponse, error) {
-	balance, err := w.getClient().GetAccount(req.Address)
+	res, err := w.getClient().GetAccount(req.Address)
 	if err != nil {
-		log.Error("get balance error", "err", err)
+		log.Error("GetBalance error", "err", err)
 		return &wallet2.BalanceResponse{
 			Code:    common.ReturnCode_ERROR,
-			Msg:     "get balance error",
+			Msg:     "GetBalance error",
 			Balance: "0",
 		}, err
 	}
 	return &wallet2.BalanceResponse{
 		Code:    common.ReturnCode_SUCCESS,
-		Msg:     "get balance success",
-		Balance: balance,
+		Msg:     "GetBalance success",
+		Balance: res,
 	}, nil
+}
 
+func (w *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxResponse, error) {
+	res, err := w.getClient().PushTransaction(req.ConsumerToken, req.RawTx)
+	if err != nil {
+		log.Error("SendTx error", "err", err)
+		return &wallet2.SendTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "SendTx error",
+		}, err
+	}
+	return &wallet2.SendTxResponse{
+		Code:   common.ReturnCode_SUCCESS,
+		Msg:    "SendTx success",
+		TxHash: res.TransactionID,
+	}, nil
 }
 
 func (w *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
@@ -63,11 +78,6 @@ func (w *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.
 }
 
 func (w *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (w *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
