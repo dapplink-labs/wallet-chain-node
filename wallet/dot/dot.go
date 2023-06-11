@@ -1,11 +1,11 @@
 package dot
 
 import (
-	"github.com/SavourDao/savour-hd/config"
-	wallet2 "github.com/SavourDao/savour-hd/rpc/wallet"
-	"github.com/SavourDao/savour-hd/wallet"
-	"github.com/SavourDao/savour-hd/wallet/fallback"
-	"github.com/SavourDao/savour-hd/wallet/multiclient"
+	"github.com/savour-labs/wallet-hd-chain/config"
+	wallet2 "github.com/savour-labs/wallet-hd-chain/rpc/wallet"
+	"github.com/savour-labs/wallet-hd-chain/wallet"
+	"github.com/savour-labs/wallet-hd-chain/wallet/fallback"
+	"github.com/savour-labs/wallet-hd-chain/wallet/multiclient"
 )
 
 const (

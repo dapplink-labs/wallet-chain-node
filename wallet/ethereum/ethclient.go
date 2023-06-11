@@ -9,13 +9,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/SavourDao/savour-hd/config"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/params"
+	"github.com/savour-labs/wallet-hd-chain/config"
 )
 
 var (

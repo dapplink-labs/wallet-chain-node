@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	wallet2 "github.com/SavourDao/savour-hd/rpc/wallet"
+	wallet2 "github.com/savour-labs/wallet-hd-chain/rpc/wallet"
 	"github.com/stretchr/testify/assert"
 )
 

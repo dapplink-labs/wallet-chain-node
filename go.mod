@@ -1,4 +1,4 @@
-module github.com/SavourDao/savour-hd
+module github.com/savour-labs/wallet-hd-chain
 
 go 1.18
 

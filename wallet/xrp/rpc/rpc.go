@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/SavourDao/savour-hd/wallet/near/types"
+	"github.com/savour-labs/wallet-hd-chain/wallet/near/types"
 	"io/ioutil"
 	"net/http"
 )

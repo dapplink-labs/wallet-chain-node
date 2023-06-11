@@ -2,9 +2,9 @@ package tezos
 
 import (
 	"fmt"
-	"github.com/SavourDao/savour-hd/wallet/tezos/types"
 	gresty "github.com/go-resty/resty/v2"
 	"github.com/pkg/errors"
+	"github.com/savour-labs/wallet-hd-chain/wallet/tezos/types"
 )
 
 var errTezosScanHTTPError = errors.New("Tezos chain http error")

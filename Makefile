@@ -8,12 +8,12 @@ LDFLAGSSTRING +=-X main.GitDate=$(GITDATE)
 LDFLAGSSTRING +=-X main.GitVersion=$(GITVERSION)
 LDFLAGS :=-ldflags "$(LDFLAGSSTRING)"
 
-savour-hd:
+wallet-hd-chain:
 	env GO111MODULE=on go build $(LDFLAGS)
-.PHONY: savour-hd
+.PHONY: wallet-hd-chain
 
 clean:
-	rm savour-hd
+	rm wallet-hd-chain
 
 test:
 	go test -v ./...
