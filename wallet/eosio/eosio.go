@@ -73,8 +73,29 @@ func (w *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxRespo
 }
 
 func (w *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	txMsgList := []*wallet2.TxMessage{}
+	pos := (req.Page - 1) * req.Pagesize
+	offset := req.Pagesize
+	res, err := w.getClient().GetActions(req.ContractAddress, int64(pos), int64(offset))
+	if err != nil {
+		log.Error("GetTxByAddress error", "err", err)
+		return &wallet2.TxAddressResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "GetTxByAddress error",
+			Tx:   txMsgList,
+		}, err
+	}
+	for _, action := range res.Actions {
+		txMsgList = append(txMsgList, &wallet2.TxMessage{
+			Hash:  string(action.Trace.TransactionID),
+			Index: uint32(action.Trace.ActionOrdinal),
+		})
+	}
+	return &wallet2.TxAddressResponse{
+		Code: common.ReturnCode_SUCCESS,
+		Msg:  "GetTxByAddress success",
+		Tx:   txMsgList,
+	}, nil
 }
 
 func (w *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {

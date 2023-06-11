@@ -56,14 +56,16 @@ func (e *EosClient) GetTransaction(id string) {
 	fmt.Println("GetTransaction res", infoResp)
 }
 
-func (e *EosClient) GetActions() {
-	fmt.Println("GetActions start")
-	infoResp, err := e.client.GetActions(context.Background(), eos.GetActionsRequest{})
+func (e *EosClient) GetActions(accountName string, pos int64, offset int64) (*eos.ActionsResp, error) {
+	infoResp, err := e.client.GetActions(context.Background(), eos.GetActionsRequest{
+		AccountName: eos.AccountName(accountName),
+		Pos:         eos.Int64(pos),
+		Offset:      eos.Int64(offset),
+	})
 	if err != nil {
-		fmt.Println("GetActions error")
-		return
+		return nil, err
 	}
-	fmt.Println("GetActions res", infoResp)
+	return infoResp, nil
 }
 
 func (e *EosClient) PushTransaction(consumerToken string, rawTx string) (*eos.PushTransactionFullResp, error) {

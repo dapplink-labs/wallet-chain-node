@@ -28,7 +28,7 @@ v1/chain/get_info
 ### 3.3. send raw transaction
 /v1/chain/push_transaction
 => SendTx
-=> 
+=> done
 
 ### 3.4. query transaction recordlist
 v1/history/get_actions
