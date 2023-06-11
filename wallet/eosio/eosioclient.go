@@ -19,31 +19,34 @@ func newClient(url string) (*EosClient, error) {
 	}, nil
 }
 
-func (e *EosClient) ABIBinToJSON(id string) {
-	_, err := e.client.ABIBinToJSON(
+func (e *EosClient) ABIBinToJSON(accountName string, action string, data map[string]interface{}) (eos.M, error) {
+	dataByte, err := eos.MarshalBinary(data)
+	if err != nil {
+		return nil, err
+	}
+	res, err := e.client.ABIBinToJSON(
 		context.Background(),
-		eos.AccountName(""),
-		eos.Name(""),
-		eos.HexBytes{},
+		eos.AccountName(accountName),
+		eos.Name(action),
+		dataByte,
 	)
 	if err != nil {
-		return
+		return nil, err
 	}
+	return res, nil
 }
 
-func (e *EosClient) ABIJSONToBin(id string) {
-	fmt.Println("ABIJSONToBin start")
-	infoResp, err := e.client.ABIJSONToBin(
+func (e *EosClient) ABIJSONToBin(accountName string, action string, data map[string]interface{}) (eos.HexBytes, error) {
+	res, err := e.client.ABIJSONToBin(
 		context.Background(),
-		eos.AccountName(""),
-		eos.Name(""),
-		eos.M{},
+		eos.AccountName(accountName),
+		eos.Name(action),
+		data,
 	)
 	if err != nil {
-		fmt.Println("ABIJSONToBin error")
-		return
+		return nil, err
 	}
-	fmt.Println("ABIJSONToBin res", infoResp)
+	return res, nil
 }
 
 func (e *EosClient) GetTransaction(id string) (*eos.TransactionResp, error) {
