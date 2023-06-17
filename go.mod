@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	cosmossdk.io/api v0.2.4
+	emperror.dev/errors v0.8.1
 	github.com/algorand/go-algorand-sdk v0.0.0-00010101000000-000000000000
 	github.com/armon/go-metrics v0.4.1
 	github.com/btcsuite/btcd v0.22.1
@@ -12,6 +13,7 @@ require (
 	github.com/cosmos/cosmos-sdk v0.40.0
 	github.com/eoscanada/eos-go v0.10.2
 	github.com/ethereum/go-ethereum v1.10.26
+	github.com/fbsobreira/gotron-sdk v0.0.0-20221101181131-c4daceb828f0
 	github.com/filecoin-project/go-address v1.0.0
 	github.com/filecoin-project/go-jsonrpc v0.1.9
 	github.com/filecoin-project/lotus v1.18.1
@@ -37,7 +39,6 @@ require (
 
 require (
 	contrib.go.opencensus.io/exporter/stackdriver v0.12.6 // indirect
-	emperror.dev/errors v0.8.1 // indirect
 	filippo.io/edwards25519 v1.0.0-rc.1 // indirect
 	github.com/99designs/go-keychain v0.0.0-20191008050251-8e49817e8af4 // indirect
 	github.com/99designs/keyring v1.2.1 // indirect
