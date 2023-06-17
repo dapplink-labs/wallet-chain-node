@@ -4,11 +4,10 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
-	nearrpc "github.com/SavourDao/savour-hd/wallet/near/rpc"
-	"github.com/SavourDao/savour-hd/wallet/near/transaction"
-	"github.com/SavourDao/savour-hd/wallet/near/types"
 	"github.com/mr-tron/base58/base58"
-	"github.com/near/borsh-go"
+	nearrpc "github.com/savour-labs/wallet-hd-chain/wallet/near/rpc"
+	"github.com/savour-labs/wallet-hd-chain/wallet/near/transaction"
+	"github.com/savour-labs/wallet-hd-chain/wallet/near/types"
 )
 
 // Account provides functions for a single account.

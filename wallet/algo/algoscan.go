@@ -2,8 +2,8 @@ package algo
 
 import (
 	"fmt"
-	"github.com/SavourDao/savour-hd/config"
 	"github.com/go-resty/resty/v2"
+	"github.com/savour-labs/wallet-hd-chain/config"
 	"github.com/syndtr/goleveldb/leveldb/errors"
 )
 

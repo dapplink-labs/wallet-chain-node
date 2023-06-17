@@ -2,7 +2,7 @@ package xrp
 
 import (
 	"fmt"
-	"github.com/SavourDao/savour-hd/config"
+	"github.com/savour-labs/wallet-hd-chain/config"
 	"testing"
 )
 

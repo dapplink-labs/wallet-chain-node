@@ -1,13 +1,13 @@
 package solana
 
 import (
-	"github.com/SavourDao/savour-hd/config"
-	"github.com/SavourDao/savour-hd/rpc/common"
-	wallet2 "github.com/SavourDao/savour-hd/rpc/wallet"
-	"github.com/SavourDao/savour-hd/wallet"
-	"github.com/SavourDao/savour-hd/wallet/fallback"
-	"github.com/SavourDao/savour-hd/wallet/multiclient"
 	"github.com/ethereum/go-ethereum/log"
+	"github.com/savour-labs/wallet-hd-chain/config"
+	"github.com/savour-labs/wallet-hd-chain/rpc/common"
+	wallet2 "github.com/savour-labs/wallet-hd-chain/rpc/wallet"
+	"github.com/savour-labs/wallet-hd-chain/wallet"
+	"github.com/savour-labs/wallet-hd-chain/wallet/fallback"
+	"github.com/savour-labs/wallet-hd-chain/wallet/multiclient"
 )
 
 const (

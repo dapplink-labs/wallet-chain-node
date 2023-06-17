@@ -1,7 +1,7 @@
 package wallet
 
 import (
-	wallet2 "github.com/SavourDao/savour-hd/rpc/wallet"
+	wallet2 "github.com/savour-labs/wallet-hd-chain/rpc/wallet"
 )
 
 type WalletAdaptor interface {

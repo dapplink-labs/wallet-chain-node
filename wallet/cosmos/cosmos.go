@@ -7,13 +7,13 @@ import (
 	"strings"
 
 	authv1beta1 "cosmossdk.io/api/cosmos/auth/v1beta1"
-	"github.com/SavourDao/savour-hd/config"
-	"github.com/SavourDao/savour-hd/rpc/common"
-	"github.com/SavourDao/savour-hd/rpc/wallet"
-	wallet2 "github.com/SavourDao/savour-hd/wallet"
-	"github.com/SavourDao/savour-hd/wallet/fallback"
 	types2 "github.com/cosmos/cosmos-sdk/types"
 	"github.com/golang/protobuf/ptypes"
+	"github.com/savour-labs/wallet-hd-chain/config"
+	"github.com/savour-labs/wallet-hd-chain/rpc/common"
+	"github.com/savour-labs/wallet-hd-chain/rpc/wallet"
+	wallet2 "github.com/savour-labs/wallet-hd-chain/wallet"
+	"github.com/savour-labs/wallet-hd-chain/wallet/fallback"
 )
 
 type WalletAdaptor struct {

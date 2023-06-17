@@ -5,8 +5,7 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/SavourDao/savour-hd/wallet/near/keys"
-	"github.com/near/borsh-go"
+	"github.com/savour-labs/wallet-hd-chain/wallet/near/keys"
 )
 
 // Signature asdf.

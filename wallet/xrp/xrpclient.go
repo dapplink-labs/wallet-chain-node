@@ -2,11 +2,11 @@ package xrp
 
 import (
 	"encoding/json"
-	"github.com/SavourDao/savour-hd/config"
-	xrprpc "github.com/SavourDao/savour-hd/wallet/xrp/rpc"
-	"github.com/SavourDao/savour-hd/wallet/xrp/types"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/params"
+	"github.com/savour-labs/wallet-hd-chain/config"
+	xrprpc "github.com/savour-labs/wallet-hd-chain/wallet/xrp/rpc"
+	"github.com/savour-labs/wallet-hd-chain/wallet/xrp/types"
 	"math/big"
 	"sync"
 )
