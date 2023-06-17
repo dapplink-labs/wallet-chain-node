@@ -56,6 +56,7 @@ type Fullnode struct {
 	FileCoin Node       `yaml:"filecoin"`
 	Dot      Node       `yaml:"dot"`
 	Eos      Node       `yaml:"eos"`
+	Oasis    Node       `yaml:"eos"`
 }
 
 // Config instance define

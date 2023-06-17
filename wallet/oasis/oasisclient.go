@@ -12,17 +12,17 @@ import (
 	"github.com/filecoin-project/lotus/chain/types"
 )
 
-type Client struct {
-	cflb       string
-	endpoint   string
-	httpClient *http.Client
+type OasisClient struct {
+	cflb        string
+	endpoint    string
+	oasisClient *http.Client
 }
 
-func NewClient(cflb, endpoint string) (*Client, error) {
-	return &Client{
-		cflb:       cflb,
-		endpoint:   endpoint,
-		httpClient: new(http.Client),
+func NewOasisClient(cflb, endpoint string) (*OasisClient, error) {
+	return &OasisClient{
+		cflb:        cflb,
+		endpoint:    endpoint,
+		oasisClient: new(http.Client),
 	}, nil
 }
 
@@ -32,7 +32,7 @@ type baseReq struct {
 }
 
 // GetBalance get balance with coin name and address
-func (c *Client) GetBalance(ctx context.Context, addr string) (types.BigInt, error) {
+func (c *OasisClient) GetBalance(ctx context.Context, addr string) (types.BigInt, error) {
 	route := "/account/balance"
 
 	type AccountIdentifier struct {
@@ -68,7 +68,7 @@ func (c *Client) GetBalance(ctx context.Context, addr string) (types.BigInt, err
 }
 
 // GetNonce from balance api
-func (c *Client) GetNonce(ctx context.Context, addr string) (uint64, error) {
+func (c *OasisClient) GetNonce(ctx context.Context, addr string) (uint64, error) {
 	route := "/account/balance"
 
 	type AccountIdentifier struct {
@@ -104,7 +104,7 @@ func (c *Client) GetNonce(ctx context.Context, addr string) (uint64, error) {
 }
 
 // BroadcastTx send tx to the network
-func (c *Client) BroadcastTx(ctx context.Context, txByte []byte) error {
+func (c *OasisClient) BroadcastTx(ctx context.Context, txByte []byte) error {
 	route := "/construction/submit"
 
 	payload := struct {
@@ -125,7 +125,7 @@ func (c *Client) BroadcastTx(ctx context.Context, txByte []byte) error {
 }
 
 // GetSupportNetwork get support network
-func (c *Client) GetSupportNetwork(ctx context.Context) (map[string]string, error) {
+func (c *OasisClient) GetSupportNetwork(ctx context.Context) (map[string]string, error) {
 	route := "/network/list"
 
 	payload := struct {
@@ -162,7 +162,7 @@ func (c *Client) GetSupportNetwork(ctx context.Context) (map[string]string, erro
 	return m, nil
 }
 
-func (c *Client) doPost(route string, input interface{}) ([]byte, error) {
+func (c *OasisClient) doPost(route string, input interface{}) ([]byte, error) {
 	requestBody, err := json.Marshal(input)
 	if err != nil {
 		return nil, err
@@ -178,7 +178,7 @@ func (c *Client) doPost(route string, input interface{}) ([]byte, error) {
 	req.Header.Set("Cookie", fmt.Sprintf("__cflb=%s", c.cflb))
 
 	// send req
-	resp, err := c.httpClient.Do(req)
+	resp, err := c.oasisClient.Do(req)
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
 		return nil, errors.New(fmt.Sprintf("resp status code is not ok, code: %d", resp.StatusCode))
