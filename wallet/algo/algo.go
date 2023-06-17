@@ -2,6 +2,10 @@ package algo
 
 import (
 	"context"
+	"math/big"
+	"strconv"
+	"strings"
+
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/savour-labs/wallet-hd-chain/cache"
 	"github.com/savour-labs/wallet-hd-chain/config"
@@ -10,9 +14,6 @@ import (
 	"github.com/savour-labs/wallet-hd-chain/wallet"
 	"github.com/savour-labs/wallet-hd-chain/wallet/fallback"
 	"github.com/savour-labs/wallet-hd-chain/wallet/multiclient"
-	"math/big"
-	"strconv"
-	"strings"
 )
 
 const (
@@ -170,6 +171,16 @@ func (a *WalletAdaptor) VerifyAccountSignedTx(req *wallet2.VerifySignedTxRequest
 }
 
 func (a *WalletAdaptor) VerifyUtxoSignedTx(req *wallet2.VerifySignedTxRequest) (*wallet2.VerifySignedTxResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) ABIBinToJSON(req *wallet2.ABIBinToJSONRequest) (*wallet2.ABIBinToJSONResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) ABIJSONToBin(req *wallet2.ABIJSONToBinRequest) (*wallet2.ABIJSONToBinResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }

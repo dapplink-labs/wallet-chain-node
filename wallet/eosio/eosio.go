@@ -1,6 +1,8 @@
 package eosio
 
 import (
+	"encoding/json"
+
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/savour-labs/wallet-hd-chain/config"
 	"github.com/savour-labs/wallet-hd-chain/rpc/common"
@@ -114,6 +116,63 @@ func (w *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHash
 			Hash:   string(res.ID),
 			Status: wallet2.TxStatus(res.Receipt.Status),
 		},
+	}, nil
+}
+
+func (w *WalletAdaptor) ABIJSONToBin(req *wallet2.ABIJSONToBinRequest) (*wallet2.ABIJSONToBinResponse, error) {
+	var dataMap map[string]interface{}
+	err := json.Unmarshal([]byte(req.JsonString), &dataMap)
+	if err != nil {
+		log.Error("ABIJSONToBin Unmarshal error", "err", err)
+		return &wallet2.ABIJSONToBinResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "ABIJSONToBin Unmarshal error",
+		}, err
+	}
+	res, err := w.getClient().ABIJSONToBin(
+		req.Code,
+		req.Action,
+		dataMap,
+	)
+	if err != nil {
+		log.Error("ABIJSONToBin error", "err", err)
+		return &wallet2.ABIJSONToBinResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "ABIJSONToBin error",
+		}, err
+	}
+	return &wallet2.ABIJSONToBinResponse{
+		Code: common.ReturnCode_SUCCESS,
+		Msg:  "ABIJSONToBin success",
+		Bin:  res,
+	}, nil
+}
+
+func (w *WalletAdaptor) ABIBinToJSON(req *wallet2.ABIBinToJSONRequest) (*wallet2.ABIBinToJSONResponse, error) {
+	res, err := w.getClient().ABIBinToJSON(
+		req.Code,
+		req.Action,
+		req.Bin,
+	)
+	if err != nil {
+		log.Error("ABIBinToJSON error", "err", err)
+		return &wallet2.ABIBinToJSONResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "ABIBinToJSON error",
+		}, err
+	}
+	resByte, err := json.Marshal(res)
+	if err != nil {
+		log.Error("ABIBinToJSON Marshal error", "err", err)
+		return &wallet2.ABIBinToJSONResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "ABIBinToJSON Marshal error",
+		}, err
+	}
+	return &wallet2.ABIBinToJSONResponse{
+		Code:       common.ReturnCode_SUCCESS,
+		Msg:        "ABIBinToJSON success",
+		JsonString: string(resByte),
 	}, nil
 }
 

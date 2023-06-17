@@ -18,16 +18,12 @@ func newClient(url string) (*EosClient, error) {
 	}, nil
 }
 
-func (e *EosClient) ABIBinToJSON(accountName string, action string, data map[string]interface{}) (eos.M, error) {
-	dataByte, err := eos.MarshalBinary(data)
-	if err != nil {
-		return nil, err
-	}
+func (e *EosClient) ABIBinToJSON(code string, action string, data []byte) (map[string]interface{}, error) {
 	res, err := e.client.ABIBinToJSON(
 		context.Background(),
-		eos.AccountName(accountName),
+		eos.AccountName(code),
 		eos.Name(action),
-		dataByte,
+		data,
 	)
 	if err != nil {
 		return nil, err
@@ -35,10 +31,10 @@ func (e *EosClient) ABIBinToJSON(accountName string, action string, data map[str
 	return res, nil
 }
 
-func (e *EosClient) ABIJSONToBin(accountName string, action string, data map[string]interface{}) (eos.HexBytes, error) {
+func (e *EosClient) ABIJSONToBin(code string, action string, data map[string]interface{}) ([]byte, error) {
 	res, err := e.client.ABIJSONToBin(
 		context.Background(),
-		eos.AccountName(accountName),
+		eos.AccountName(code),
 		eos.Name(action),
 		data,
 	)

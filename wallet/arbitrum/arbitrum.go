@@ -3,10 +3,16 @@ package arbitrum
 import (
 	"context"
 	"fmt"
+
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/ethereum/go-ethereum"
 	ethcommon "github.com/ethereum/go-ethereum/common"
 	etherscan "github.com/nanmu42/etherscan-api"
+
+	"math"
+	"math/big"
+	"strconv"
+	"strings"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/types"
@@ -21,10 +27,6 @@ import (
 	"github.com/savour-labs/wallet-hd-chain/wallet/fallback"
 	"github.com/savour-labs/wallet-hd-chain/wallet/multiclient"
 	"github.com/shopspring/decimal"
-	"math"
-	"math/big"
-	"strconv"
-	"strings"
 )
 
 const (
@@ -699,6 +701,16 @@ func (wa *WalletAdaptor) GetMinRent(req *wallet2.MinRentRequest) (*wallet2.MinRe
 		Code: common.ReturnCode_ERROR,
 		Msg:  "Do not support this interface",
 	}, nil
+}
+
+func (a *WalletAdaptor) ABIBinToJSON(req *wallet2.ABIBinToJSONRequest) (*wallet2.ABIBinToJSONResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) ABIJSONToBin(req *wallet2.ABIJSONToBinRequest) (*wallet2.ABIJSONToBinResponse, error) {
+	//TODO implement me
+	panic("implement me")
 }
 
 type semaphore chan struct{}

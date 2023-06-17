@@ -230,3 +230,13 @@ func (a *WalletAdaptor) GetMinRent(req *wallet.MinRentRequest) (*wallet.MinRentR
 		Msg:  "Do not support this interface",
 	}, nil
 }
+
+func (a *WalletAdaptor) ABIBinToJSON(req *wallet.ABIBinToJSONRequest) (*wallet.ABIBinToJSONResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) ABIJSONToBin(req *wallet.ABIJSONToBinRequest) (*wallet.ABIJSONToBinResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}

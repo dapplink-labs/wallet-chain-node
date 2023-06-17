@@ -5,6 +5,10 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"math/big"
+	"strconv"
+	"strings"
+
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/log"
@@ -20,9 +24,6 @@ import (
 	"github.com/savour-labs/wallet-hd-chain/wallet"
 	"github.com/savour-labs/wallet-hd-chain/wallet/fallback"
 	"github.com/savour-labs/wallet-hd-chain/wallet/multiclient"
-	"math/big"
-	"strconv"
-	"strings"
 )
 
 const TrxDecimals = 6
@@ -644,6 +645,16 @@ func (a *WalletAdaptor) GetUtxo(req *wallet2.UtxoRequest) (*wallet2.UtxoResponse
 	}, nil
 }
 
+func (a *WalletAdaptor) ABIBinToJSON(req *wallet2.ABIBinToJSONRequest) (*wallet2.ABIBinToJSONResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) ABIJSONToBin(req *wallet2.ABIJSONToBinRequest) (*wallet2.ABIJSONToBinResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 type semaphore chan struct{}
 
 func (s semaphore) Acquire() {
@@ -773,7 +784,7 @@ func decodeTriggerSmartContract(txContract *core.Transaction_Contract, txi *core
 	return depositList, nil
 }
 
-//IMPORTANT, current support only 1 TRC20 transfer
+// IMPORTANT, current support only 1 TRC20 transfer
 func decodeTriggerSmartContractLocal(txContract *core.Transaction_Contract, txHash string) ([]depositInfo, error) {
 	var tsc core.TriggerSmartContract
 	if err := pb.Unmarshal(txContract.GetParameter().GetValue(), &tsc); err != nil {

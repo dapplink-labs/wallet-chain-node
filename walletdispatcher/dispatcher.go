@@ -2,6 +2,9 @@ package walletdispatcher
 
 import (
 	"context"
+	"runtime/debug"
+	"strings"
+
 	"github.com/savour-labs/wallet-hd-chain/rpc/common"
 	"github.com/savour-labs/wallet-hd-chain/wallet"
 	"github.com/savour-labs/wallet-hd-chain/wallet/avalanche"
@@ -15,8 +18,6 @@ import (
 	"github.com/savour-labs/wallet-hd-chain/wallet/solana"
 	"github.com/savour-labs/wallet-hd-chain/wallet/xrp"
 	"github.com/savour-labs/wallet-hd-chain/wallet/zksync"
-	"runtime/debug"
-	"strings"
 
 	"github.com/savour-labs/wallet-hd-chain/config"
 	wallet2 "github.com/savour-labs/wallet-hd-chain/rpc/wallet"
@@ -401,4 +402,26 @@ func (d *WalletDispatcher) VerifyUtxoSignedTx(ctx context.Context, request *wall
 		}, nil
 	}
 	return d.registry[request.Chain].VerifyUtxoSignedTx(request)
+}
+
+func (d *WalletDispatcher) ABIBinToJSON(ctx context.Context, request *wallet2.ABIBinToJSONRequest) (*wallet2.ABIBinToJSONResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.ABIBinToJSONResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  config.UnsupportedChain,
+		}, nil
+	}
+	return d.registry[request.Chain].ABIBinToJSON(request)
+}
+
+func (d *WalletDispatcher) ABIJSONToBin(ctx context.Context, request *wallet2.ABIJSONToBinRequest) (*wallet2.ABIJSONToBinResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.ABIJSONToBinResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  config.UnsupportedChain,
+		}, nil
+	}
+	return d.registry[request.Chain].ABIJSONToBin(request)
 }

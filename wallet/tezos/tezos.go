@@ -1,6 +1,9 @@
 package tezos
 
 import (
+	"math/big"
+	"strings"
+
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/savour-labs/wallet-hd-chain/cache"
@@ -9,8 +12,6 @@ import (
 	wallet2 "github.com/savour-labs/wallet-hd-chain/rpc/wallet"
 	"github.com/savour-labs/wallet-hd-chain/wallet"
 	"github.com/savour-labs/wallet-hd-chain/wallet/fallback"
-	"math/big"
-	"strings"
 )
 
 const (
@@ -219,6 +220,16 @@ func (wa *WalletAdaptor) GetMinRent(req *wallet2.MinRentRequest) (*wallet2.MinRe
 		Code: common.ReturnCode_ERROR,
 		Msg:  "Do not support this interface",
 	}, nil
+}
+
+func (a *WalletAdaptor) ABIBinToJSON(req *wallet2.ABIBinToJSONRequest) (*wallet2.ABIBinToJSONResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) ABIJSONToBin(req *wallet2.ABIJSONToBinRequest) (*wallet2.ABIJSONToBinResponse, error) {
+	//TODO implement me
+	panic("implement me")
 }
 
 type semaphore chan struct{}
