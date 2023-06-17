@@ -20,7 +20,7 @@ type Client struct {
 	client *gresty.Client
 }
 
-func NewTezosClient(url string) *Client {
+func NewTezosClient(url string) (*Client, error) {
 	client := gresty.New()
 	client.SetHostURL(url)
 	client.OnAfterResponse(func(c *gresty.Client, r *gresty.Response) error {
@@ -34,7 +34,7 @@ func NewTezosClient(url string) *Client {
 	})
 	return &Client{
 		client: client,
-	}
+	}, nil
 }
 
 func (c *Client) GetAccountBalance(address string) (balance *types.AccountBalance, err error) {

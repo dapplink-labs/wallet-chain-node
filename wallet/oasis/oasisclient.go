@@ -12,6 +12,15 @@ import (
 	"github.com/filecoin-project/lotus/chain/types"
 )
 
+type TransactionIdentifier struct {
+	Hash string `json:"hash"`
+}
+
+type Transaction struct {
+	TransactionIdentifier *TransactionIdentifier `json:"transaction_identifier"`
+	Metadata              interface{}            `json:"metadata"`
+}
+
 type OasisClient struct {
 	cflb        string
 	endpoint    string
@@ -104,7 +113,7 @@ func (c *OasisClient) GetNonce(ctx context.Context, addr string) (uint64, error)
 }
 
 // BroadcastTx send tx to the network
-func (c *OasisClient) BroadcastTx(ctx context.Context, txByte []byte) error {
+func (c *OasisClient) BroadcastTx(ctx context.Context, txByte []byte) (string, error) {
 	route := "/construction/submit"
 
 	payload := struct {
@@ -117,11 +126,11 @@ func (c *OasisClient) BroadcastTx(ctx context.Context, txByte []byte) error {
 
 	ret, err := c.doPost(route, payload)
 	if err != nil {
-		return err
+		return "", err
 	}
-
+	// todo: return transaction tx hash
 	fmt.Println(string(ret))
-	return nil
+	return "", nil
 }
 
 // GetSupportNetwork get support network

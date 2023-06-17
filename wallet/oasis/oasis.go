@@ -27,7 +27,7 @@ type WalletAdaptor struct {
 }
 
 func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
-	client, err := NewOasisClient(conf.Fullnode.Oasis.ApiToken, conf.Fullnode.Oasis.TpApiUrl)
+	client, err := NewOasisClient(conf.Fullnode.Oasis.RPCs[0].RPCPass, conf.Fullnode.Oasis.RPCs[0].RPCURL)
 	if err != nil {
 		return nil, err
 	}
@@ -107,7 +107,19 @@ func (wa *WalletAdaptor) GetGasPrice(req *wallet2.GasPriceRequest) (*wallet2.Gas
 }
 
 func (wa *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxResponse, error) {
-	return nil, nil
+	txHash, err := wa.getClient().BroadcastTx(context.TODO(), []byte(req.RawTx))
+	if err != nil {
+		log.Error("SendTx error", "err", err)
+		return &wallet2.SendTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "SendTx error",
+		}, err
+	}
+	return &wallet2.SendTxResponse{
+		Code:   common.ReturnCode_SUCCESS,
+		Msg:    "SendTx success",
+		TxHash: txHash,
+	}, nil
 }
 
 func (a *WalletAdaptor) ConvertAddress(req *wallet2.ConvertAddressRequest) (*wallet2.ConvertAddressResponse, error) {
