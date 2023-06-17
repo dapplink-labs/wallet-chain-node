@@ -11,6 +11,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/nanmu42/etherscan-api"
 	"github.com/savour-labs/wallet-hd-chain/cache"
 	"github.com/savour-labs/wallet-hd-chain/config"
 	"github.com/savour-labs/wallet-hd-chain/rpc/common"
