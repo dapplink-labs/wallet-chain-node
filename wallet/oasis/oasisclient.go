@@ -128,9 +128,18 @@ func (c *OasisClient) BroadcastTx(ctx context.Context, txByte []byte) (string, e
 	if err != nil {
 		return "", err
 	}
-	// todo: return transaction tx hash
-	fmt.Println(string(ret))
-	return "", nil
+
+	res := struct {
+		TransactionIdentifier struct {
+			Hash string `json:"hash"`
+		}
+	}{}
+
+	if err := json.Unmarshal(ret, &res); err != nil {
+		return "", err
+	}
+
+	return res.TransactionIdentifier.Hash, nil
 }
 
 // GetSupportNetwork get support network
