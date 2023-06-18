@@ -9,10 +9,10 @@ parent:
 
 <div align="center">
   <a href="https://github.com/savour-labs/wallet-hd-chain/releases/latest">
-    <img alt="Version" src="https://img.shields.io/github/tag/savour labs/savour-core.svg" />
+    <img alt="Version" src="https://img.shields.io/github/tag/savour labs/wallet-hd-chain.svg" />
   </a>
   <a href="https://github.com/savour-labs/wallet-hd-chain/blob/main/LICENSE">
-    <img alt="License: Apache-2.0" src="https://img.shields.io/github/license/savour labs/savour-core.svg" />
+    <img alt="License: Apache-2.0" src="https://img.shields.io/github/license/savour labs/wallet-hd-chain.svg" />
   </a>
   <a href="https://pkg.go.dev/github.com/savour-labs/wallet-hd-chain">
     <img alt="GoDoc" src="https://godoc.org/github.com/savour-labs/wallet-hd-chain?status.svg" />
