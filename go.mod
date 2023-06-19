@@ -13,7 +13,6 @@ require (
 	github.com/cosmos/cosmos-sdk v0.40.0
 	github.com/eoscanada/eos-go v0.10.2
 	github.com/ethereum/go-ethereum v1.10.26
-	github.com/fbsobreira/gotron-sdk v0.0.0-20221101181131-c4daceb828f0
 	github.com/filecoin-project/go-address v1.0.0
 	github.com/filecoin-project/go-jsonrpc v0.1.9
 	github.com/filecoin-project/lotus v1.18.1
@@ -28,7 +27,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/portto/solana-go-sdk v1.22.1
 	github.com/shopspring/decimal v1.3.1
-	github.com/stretchr/testify v1.8.1
+	github.com/stretchr/testify v1.8.4
 	github.com/syndtr/goleveldb v1.0.1-0.20220614013038-64ee5596c38a
 	github.com/tidwall/gjson v1.14.3
 	go.uber.org/atomic v1.10.0
@@ -226,6 +225,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.13.0 // indirect
 	github.com/streamingfast/logging v0.0.0-20210811175431-f3b44b61606a // indirect
+	github.com/stretchr/objx v0.5.0 // indirect
 	github.com/subosito/gotenv v1.4.1 // indirect
 	github.com/tendermint/btcd v0.1.1 // indirect
 	github.com/tendermint/crypto v0.0.0-20191022145703-50d29ede1e15 // indirect
