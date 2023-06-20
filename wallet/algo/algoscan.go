@@ -9,11 +9,11 @@ import (
 
 var errTssHTTPError = errors.New("tss http error")
 
-type AlgoClient struct {
+type AlgoScanClient struct {
 	client *resty.Client
 }
 
-func NewAlgoScanClient(conf *config.Config) *AlgoClient {
+func NewAlgoScanClient(conf *config.Config) *AlgoScanClient {
 	client := resty.New()
 	client.SetHostURL(conf.Fullnode.Algo.TpApiUrl)
 	client.OnAfterResponse(func(c *resty.Client, r *resty.Response) error {
@@ -25,16 +25,16 @@ func NewAlgoScanClient(conf *config.Config) *AlgoClient {
 		}
 		return nil
 	})
-	return &AlgoClient{
+	return &AlgoScanClient{
 		client: client,
 	}
 }
 
-func (c *AlgoClient) GetAccount() error {
+func (asc *AlgoScanClient) GetAccount() error {
 
 	return nil
 }
 
-func (c *AlgoClient) GettxByAddress() error {
+func (asc *AlgoScanClient) GettxByAddress() error {
 	return nil
 }

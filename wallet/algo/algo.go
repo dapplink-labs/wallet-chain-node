@@ -24,7 +24,7 @@ const (
 type WalletAdaptor struct {
 	fallback.WalletAdaptor
 	clients     *multiclient.MultiClient
-	algoscanCli *AlgoClient
+	algoscanCli *AlgoScanClient
 }
 
 func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {

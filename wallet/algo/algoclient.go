@@ -6,30 +6,28 @@ import (
 	"github.com/algorand/go-algorand-sdk/client/v2/algod"
 	"github.com/algorand/go-algorand-sdk/client/v2/common"
 	altype "github.com/algorand/go-algorand-sdk/types"
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
-	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/savour-labs/wallet-hd-chain/config"
-	"math/big"
 	"net"
 	"strings"
 )
 
-type algoClient struct {
-	Client        *algod.Client
+type AlgoClient interface {
+	GetLatestBlockHeight() (int64, error)
+	GetAccountBalance(address string) *algod.AccountInformation
+	GetTransactionParams(ctx context.Context) (altype.SuggestedParams, error)
+	getTransactionByHash(round uint64, txid string) *algod.GetTransactionProof
+}
+
+type Client struct {
+	client        *algod.Client
 	confirmations uint64
 }
 
-type Client interface {
-	bind.ContractBackend
-
-	BlockByNumber(context.Context, *big.Int) (*types.Block, error)
-}
-
-func newAlgoClients(conf *config.Config) ([]*algoClient, error) {
-	var clients []*algoClient
+func newAlgoClients(conf *config.Config) ([]*Client, error) {
+	var clients []*Client
 	for _, rpc := range conf.Fullnode.Algo.RPCs {
-		client := &algoClient{
+		client := &Client{
 			confirmations: conf.Fullnode.Algo.Confirmations,
 		}
 		rpcURL := rpc.RPCURL
@@ -46,7 +44,7 @@ func newAlgoClients(conf *config.Config) ([]*algoClient, error) {
 			rpcURL = strings.Replace(rpc.RPCURL, words[0], ipAddr.String(), 1)
 		}
 		var err error
-		client.Client, err = algod.MakeClient(rpcURL, conf.Fullnode.Algo.ApiToken)
+		client.client, err = algod.MakeClient(rpcURL, conf.Fullnode.Algo.ApiToken)
 		if err != nil {
 			log.Error("ethclient dial failed", "err", err)
 			continue
@@ -59,27 +57,29 @@ func newAlgoClients(conf *config.Config) ([]*algoClient, error) {
 	return clients, nil
 }
 
-func newLocalAlgoClient(network config.NetWorkType) *algoClient {
-	return &algoClient{
-		Client: &algod.Client{},
+func newLocalAlgoClient(network config.NetWorkType) *Client {
+	return &Client{
+		client: &algod.Client{},
 	}
 }
 
-func (a algoClient) GetLatestBlockHeight() (int64, error) {
-	//TODO implement me
-	panic("implement me")
+func GetLatestBlockHeight() (int64, error) {
+	return 0, nil
 }
 
-func (a algoClient) GetAccountBalance(address string) *algod.AccountInformation {
-	return a.Client.AccountInformation(address)
+func (c Client) GetAccountBalance(address string) *algod.AccountInformation {
+	return c.client.AccountInformation(address)
 }
 
-func (a algoClient) GetTransactionParams(ctx context.Context) (altype.SuggestedParams, error) {
+func (c Client) GetTransactionParams(ctx context.Context) (altype.SuggestedParams, error) {
 	h := common.Header{}
-	return a.Client.SuggestedParams().Do(ctx, &h)
+	return c.client.SuggestedParams().Do(ctx, &h)
 }
 
-func (a algoClient) Send_transaction(rawtxn []byte) *algod.SendRawTransaction {
-	return a.Client.SendRawTransaction(rawtxn)
+func (c Client) SendRawtransaction(rawtxn []byte) *algod.SendRawTransaction {
+	return c.client.SendRawTransaction(rawtxn)
+}
 
+func (c Client) getTransactionByHash(round uint64, txid string) *algod.GetTransactionProof {
+	return c.client.GetTransactionProof(round, txid)
 }
