@@ -2,6 +2,7 @@ package walletdispatcher
 
 import (
 	"context"
+	"github.com/savour-labs/wallet-hd-chain/wallet/ada"
 	"runtime/debug"
 	"strings"
 
@@ -62,11 +63,13 @@ func New(conf *config.Config) (*WalletDispatcher, error) {
 		near.ChainName:      near.NewChainAdaptor,
 		xrp.ChainName:       xrp.NewChainAdaptor,
 		eosio.ChainName:     eosio.NewChainAdaptor,
+		ada.ChainName:       ada.NewChainAdaptor,
 	}
 	supportedChains := []string{
 		bitcoin.ChainName, ethereum.ChainName, solana.ChainName, arbitrum.ChainName,
 		zksync.ChainName, optimism.ChainName, polygon.ChainName, binance.ChainName,
 		heco.ChainName, avalanche.ChainName, evmos.ChainName, near.ChainName, xrp.ChainName, eosio.ChainName,
+		ada.ChainName,
 	}
 	for _, c := range conf.Chains {
 		if factory, ok := walletAdaptorFactoryMap[c]; ok {
@@ -99,11 +102,12 @@ func NewLocal(network config.NetWorkType) *WalletDispatcher {
 		heco.ChainName:      heco.NewLocalWalletAdaptor,
 		avalanche.ChainName: avalanche.NewLocalWalletAdaptor,
 		evmos.ChainName:     evmos.NewLocalWalletAdaptor,
+		ada.ChainName:       ada.NewLocalWalletAdaptor,
 	}
 	supportedChains := []string{
 		bitcoin.ChainName, ethereum.ChainName, solana.ChainName, arbitrum.ChainName,
 		zksync.ChainName, optimism.ChainName, polygon.ChainName, binance.ChainName,
-		heco.ChainName, avalanche.ChainName, evmos.ChainName,
+		heco.ChainName, avalanche.ChainName, evmos.ChainName, ada.ChainName,
 	}
 	for _, c := range supportedChains {
 		if factory, ok := walletAdaptorFactoryMap[c]; ok {

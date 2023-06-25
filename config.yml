@@ -121,6 +121,13 @@ fullnode:
         rpc_pass:
     confirmations: 1
 
-chains: [Bitcoin, Ethereum, Solana, Tron, Arbitrum, Optimism, BscChain, Heco, Polygon, NEAR, XRP, EOS]
+  ada:
+    rpcs:
+      - rpc_url: 'https://rpc-mainnet-cardano-evm.c1.milkomeda.com:443'
+        rpc_user:
+        rpc_pass:
+    confirmations: 1
+
+chains: [Bitcoin, Ethereum, Solana, Arbitrum, Optimism, BscChain, Heco, Polygon, NEAR, XRP, EOS, ADA]
 
 
