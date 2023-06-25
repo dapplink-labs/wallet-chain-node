@@ -31,7 +31,10 @@ go mod tidy
 ```
 ### build
 ```bash
+# linux default
 go build or go install wallet-hd-chain
+# macOS with Apple Silicon (M1, M2)
+CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 go build
 ```
 
 ### start 
@@ -42,7 +45,7 @@ go build or go install wallet-hd-chain
 ### Start the RPC interface test interface
 
 ```bash
-grpcui -plaintext 127.0.0.1:8089
+grpcui -plaintext 127.0.0.1:8189
 ```
 
 ## Contribute
