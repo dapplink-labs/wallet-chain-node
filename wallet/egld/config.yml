@@ -1,0 +1,131 @@
+server:
+  port: 8189
+  timeout: 120s
+  sleep: 10s
+
+network: mainnet
+
+fullnode:
+  btc:
+    rpcs:
+      - rpc_url: 'https://electrum.coineuskal.com:50002'
+        rpc_user:
+        rpc_pass:
+    confirmations: 1
+  eth:
+    rpcs:
+      - rpc_url: 'https://eth-mainnet.nodereal.io/v1/1659dfb40aa24bbb8153a677b98064d7'
+    confirmations: 4
+    tp_api_url: 'https://api.etherscan.io/api?'
+    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+  arbi:
+    rpcs:
+      - rpc_url: 'https://rpc.ankr.com/arbitrum'
+    confirmations: 4
+    tp_api_url: 'https://api.arbiscan.io/api?'
+    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+  op:
+    rpcs:
+      - rpc_url: 'https://mainnet.optimism.io'
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+  zksync:
+    rpcs:
+      - rpc_url: ''
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+  bsc:
+    rpcs:
+      - rpc_url: 'https://bsc.mytokenpocket.vip'
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+  heco:
+    rpcs:
+      - rpc_url: 'https://http-mainnet.hecochain.com'
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+  avax:
+    rpcs:
+      - rpc_url: ''
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+  evmos:
+    rpcs:
+      - rpc_url: ''
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+  polygon:
+    rpcs:
+      - rpc_url: 'https://polygon-bor.publicnode.com'
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+  trx:
+    rpcs:
+      - rpc_url: '34.237.210.82:50051'
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: ''
+  near:
+    rpcs:
+      - rpc_url: 'https://rpc.mainnet.near.org'
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: ''
+
+  alog:
+    rpcs:
+      - rpc_url: 'https://mainnet-api.algonode.cloud'
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: ''
+    apiToken: 1
+
+  solana:
+    public_api: 'https://public-api.solscan.io'
+    NonceAccountAddr: DJyNpXgggw1WGgjTVzFsNjb3fuQZVMqhoakvSBfX9LYx
+    FeeAccountPriKey: 4TMFNY9ntAn3CHzguSAvDNLPRoQTaK3sWbQQXdDXaE6KWRBLufGL6PJdsD2koiEe3gGmMdRK3aAw7sikGNksHJrN
+
+  dot:
+    rpcs:
+      - rpc_url: 'https://mainnet-api.algonode.cloud'
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: ''
+    apiToken: 1
+
+  cosmos:
+    rpcs:
+      - rpc_url: ''
+        rpc_user:
+        rpc_pass:
+    confirmations: 1
+
+  filecoin:
+    rpcs:
+      - rpc_url: ''
+        rpc_user:
+        rpc_pass:
+    confirmations: 1
+
+  eos:
+    rpcs:
+      - rpc_url: 'https://eos.greymass.com:443'
+        rpc_user:
+        rpc_pass:
+    confirmations: 1
+  egld:
+    rpcs:
+      - rpc_url: 'https://testnet-gateway.multiversx.com'
+        rpc_user:
+        rpc_pass:
+
+chains: [Bitcoin, Ethereum, Solana, Tron, Arbitrum, Optimism, BscChain, Heco, Polygon, NEAR, XRP, EOS,EGLD]
+
+
