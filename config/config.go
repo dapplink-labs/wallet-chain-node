@@ -58,6 +58,7 @@ type Fullnode struct {
 	Eos      Node       `yaml:"eos"`
 	Oasis    Node       `yaml:"oasis"`
 	Tezos    Node       `yaml:"tezos"`
+	Aptos    Node       `yaml:"aptos"`
 }
 
 // Config instance define
