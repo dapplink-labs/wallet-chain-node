@@ -5,6 +5,7 @@ import (
 	"errors"
 	"math/big"
 	"net"
+	"net/http"
 	"strings"
 	"sync"
 	"time"
@@ -15,6 +16,7 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/params"
+	"github.com/imroc/req"
 	"github.com/savour-labs/wallet-hd-chain/config"
 )
 
@@ -30,6 +32,9 @@ type adaClient struct {
 	rw               sync.RWMutex
 	confirmations    uint64
 	local            bool
+	adaReq           *req.Req
+	httpClient       *http.Client
+	baseURL          string
 }
 
 type Client interface {
@@ -39,6 +44,10 @@ type Client interface {
 	BlockByNumber(context.Context, *big.Int) (*types.Block, error)
 	TransactionReceipt(context.Context, common.Hash) (*types.Receipt, error)
 	NonceAt(context.Context, common.Address, *big.Int) (uint64, error)
+}
+
+type SendRawTransactionRequest struct {
+	TxHex string `json:"txHex"`
 }
 
 // newAdaClient init the eth client
@@ -140,4 +149,35 @@ func (client *adaClient) GetLatestBlockHeight() (int64, error) {
 		return 0, err
 	}
 	return number.Number().Int64(), err
+}
+
+func (client *adaClient) SendAdaTransaction(wid string, aid int64, to string, amount uint64, passphrase string) ([]byte, error) {
+	var (
+		body  map[string]interface{}
+		param = make(req.QueryParam, 0)
+	)
+	///api/v1/transactions
+	method := "transactions"
+	url := client.baseURL + method
+	body = map[string]interface{}{
+		"groupingPolicy":   "OptimizeForHighThroughput",
+		"spendingPassword": passphrase,
+	}
+	source := map[string]interface{}{
+		"accountIndex": aid,
+		"walletId":     wid,
+	}
+	dst1 := map[string]interface{}{
+		"amount":  amount,
+		"address": to,
+	}
+	body["source"] = source
+	var dst []interface{}
+	dst = append(dst, dst1)
+	body["destinations"] = dst
+	r, err := client.adaReq.Post(url, param, req.BodyJSON(&body))
+	if err != nil {
+		return nil, err
+	}
+	return r.Bytes(), nil
 }

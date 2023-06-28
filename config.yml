@@ -123,7 +123,8 @@ fullnode:
 
   ada:
     rpcs:
-      - rpc_url: 'https://rpc-mainnet-cardano-evm.c1.milkomeda.com:443'
+      - rpc_url: 'https://faucet.sidechain.evmtestnet.iohkdev.io'
+#      - rpc_url: 'https://rpc-mainnet-cardano-evm.c1.milkomeda.com'
         rpc_user:
         rpc_pass:
     confirmations: 1

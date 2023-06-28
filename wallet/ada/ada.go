@@ -20,6 +20,7 @@ import (
 	"github.com/savour-labs/wallet-hd-chain/wallet/fallback"
 	"github.com/savour-labs/wallet-hd-chain/wallet/multiclient"
 	"github.com/shopspring/decimal"
+	"github.com/tidwall/gjson"
 	"math"
 	"math/big"
 	"strconv"
@@ -284,17 +285,11 @@ func (wa *WalletAdaptor) GetGasPrice(req *wallet2.GasPriceRequest) (*wallet2.Gas
 
 func (wa *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxResponse, error) {
 	signedTx := new(types.Transaction)
-	if err := rlp.DecodeBytes([]byte(req.RawTx), signedTx); err != nil {
-		log.Error("signedTx DecodeBytes failed", "err", err)
-		return &wallet2.SendTxResponse{
-			Code:   common.ReturnCode_ERROR,
-			Msg:    "Send tx fail",
-			TxHash: "",
-		}, err
-	}
 	log.Info("broadcast tx", "tx", hexutil.Encode([]byte(req.RawTx)))
 	txHash := fmt.Sprintf("0x%x", signedTx.Hash())
-	if err := wa.getClient().SendTransaction(context.TODO(), signedTx); err != nil {
+	// TODO implement parse req
+	result, err := wa.getClient().SendAdaTransaction("", 1, "", 1, "")
+	if err != nil {
 		log.Error("braoadcast tx failed", "tx_hash", txHash, "err", err)
 		return &wallet2.SendTxResponse{
 			Code:   common.ReturnCode_ERROR,
@@ -302,11 +297,12 @@ func (wa *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxResp
 			TxHash: "",
 		}, err
 	}
-	log.Info("braoadcast tx success", "tx_hash", txHash)
+	res := gjson.GetBytes(result, "data")
+	log.Info("tx success", "tx_hash", txHash)
 	return &wallet2.SendTxResponse{
 		Code:   common.ReturnCode_SUCCESS,
-		Msg:    "Send and  braoadcast tx success",
-		TxHash: txHash,
+		Msg:    "Send tx success",
+		TxHash: res.String(),
 	}, nil
 }
 

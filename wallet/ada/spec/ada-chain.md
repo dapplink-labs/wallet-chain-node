@@ -11,15 +11,15 @@ rosetta node: https://explorer.cardano.org/rosetta/
 
 ## 2. wallet api
 
-### 3.1. query account balance
+### 3.1. query account balance ✅
 ada api
 rosetta api
 
-### 3.2. query account nonce
+### 3.2. query account nonce  ✅
 ada api
 rosetta api
 
-### 3.3. query estimate gas fee
+### 3.3. query estimate gas fee  ✅
 ada api
 rosetta api
 
