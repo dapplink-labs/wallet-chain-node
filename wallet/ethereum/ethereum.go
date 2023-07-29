@@ -292,18 +292,26 @@ func (wa *WalletAdaptor) GetGasPrice(req *wallet2.GasPriceRequest) (*wallet2.Gas
 }
 
 func (wa *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxResponse, error) {
-	signedTx := new(types.Transaction)
-	if err := rlp.DecodeBytes([]byte(req.RawTx), signedTx); err != nil {
+	txbytes, err := hexutil.Decode(req.RawTx)
+	if err != nil {
+		return &wallet2.SendTxResponse{
+			Code:   common.ReturnCode_ERROR,
+			Msg:    "Send tx fail(Decode)",
+			TxHash: "",
+		}, err
+	}
+	txSigned := new(types.Transaction)
+	if err := rlp.DecodeBytes(txbytes, txSigned); err != nil {
 		log.Error("signedTx DecodeBytes failed", "err", err)
 		return &wallet2.SendTxResponse{
 			Code:   common.ReturnCode_ERROR,
-			Msg:    "Send tx fail",
+			Msg:    "Send tx fail(DecodeBytes)",
 			TxHash: "",
 		}, err
 	}
 	log.Info("broadcast tx", "tx", hexutil.Encode([]byte(req.RawTx)))
-	txHash := fmt.Sprintf("0x%x", signedTx.Hash())
-	if err := wa.getClient().SendTransaction(context.TODO(), signedTx); err != nil {
+	txHash := fmt.Sprintf("0x%x", txSigned.Hash())
+	if err := wa.getClient().SendTransaction(context.TODO(), txSigned); err != nil {
 		log.Error("braoadcast tx failed", "tx_hash", txHash, "err", err)
 		return &wallet2.SendTxResponse{
 			Code:   common.ReturnCode_ERROR,
@@ -315,7 +323,7 @@ func (wa *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxResp
 	return &wallet2.SendTxResponse{
 		Code:   common.ReturnCode_SUCCESS,
 		Msg:    "Send and  braoadcast tx success",
-		TxHash: txHash,
+		TxHash: "txHash",
 	}, nil
 }
 
