@@ -3,11 +3,6 @@ package ethereum
 import (
 	"context"
 	"fmt"
-	"math"
-	"math/big"
-	"strconv"
-	"strings"
-
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/ethereum/go-ethereum"
 	ethcommon "github.com/ethereum/go-ethereum/common"
@@ -17,7 +12,6 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rlp"
 	"github.com/nanmu42/etherscan-api"
-	"github.com/savour-labs/wallet-hd-chain/cache"
 	"github.com/savour-labs/wallet-hd-chain/config"
 	"github.com/savour-labs/wallet-hd-chain/rpc/common"
 	wallet2 "github.com/savour-labs/wallet-hd-chain/rpc/wallet"
@@ -25,6 +19,9 @@ import (
 	"github.com/savour-labs/wallet-hd-chain/wallet/fallback"
 	"github.com/savour-labs/wallet-hd-chain/wallet/multiclient"
 	"github.com/shopspring/decimal"
+	"math"
+	"math/big"
+	"strconv"
 )
 
 const (
@@ -103,15 +100,15 @@ func (a *WalletAdaptor) makeSignerOffline(height int64) types.Signer {
 }
 
 func (wa *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.BalanceResponse, error) {
-	key := strings.Join([]string{req.Chain, req.Coin, req.Address, req.ContractAddress}, ":")
-	balanceCache := cache.GetBalanceCache()
-	if r, exist := balanceCache.Get(key); exist {
-		return &wallet2.BalanceResponse{
-			Code:    common.ReturnCode_SUCCESS,
-			Msg:     "get balance success",
-			Balance: r.(*big.Int).String(),
-		}, nil
-	}
+	//key := strings.Join([]string{req.Chain, req.Coin, req.Address, req.ContractAddress}, ":")
+	//balanceCache := cache.GetBalanceCache()
+	//if r, exist := balanceCache.Get(key); exist {
+	//	return &wallet2.BalanceResponse{
+	//		Code:    common.ReturnCode_SUCCESS,
+	//		Msg:     "get balance from cache success",
+	//		Balance: r.(*big.Int).String(),
+	//	}, nil
+	//}
 	var result *big.Int
 	var err error
 	if len(req.ContractAddress) > 0 {
@@ -135,7 +132,7 @@ func (wa *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balan
 			Balance: "0",
 		}, err
 	} else {
-		balanceCache.Add(key, result)
+		// balanceCache.Add(key, result)
 		return &wallet2.BalanceResponse{
 			Code:    common.ReturnCode_SUCCESS,
 			Msg:     "get balance success",
@@ -145,11 +142,11 @@ func (wa *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balan
 }
 
 func (wa *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
-	key := strings.Join([]string{req.Coin, req.Address, strconv.Itoa(int(req.Page)), strconv.Itoa(int(req.Pagesize))}, ":")
-	txCache := cache.GetTxCache()
-	if r, exist := txCache.Get(key); exist {
-		return r.(*wallet2.TxAddressResponse), nil
-	}
+	//key := strings.Join([]string{req.Coin, req.Address, strconv.Itoa(int(req.Page)), strconv.Itoa(int(req.Pagesize))}, ":")
+	//txCache := cache.GetTxCache()
+	//if r, exist := txCache.Get(key); exist {
+	//	return r.(*wallet2.TxAddressResponse), nil
+	//}
 	txs, err := wa.etherscanCli.NormalTxByAddress(req.Address, &Startblock, &Endblock, int(req.Page), int(req.Pagesize), false)
 	if err != nil {
 		return &wallet2.TxAddressResponse{
@@ -197,11 +194,11 @@ func (wa *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2
 }
 
 func (wa *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {
-	key := strings.Join([]string{req.Coin, req.Hash}, ":")
-	txCache := cache.GetTxCache()
-	if r, exist := txCache.Get(key); exist {
-		return r.(*wallet2.TxHashResponse), nil
-	}
+	//key := strings.Join([]string{req.Coin, req.Hash}, ":")
+	//txCache := cache.GetTxCache()
+	//if r, exist := txCache.Get(key); exist {
+	//	return r.(*wallet2.TxHashResponse), nil
+	//}
 	tx, _, err := wa.getClient().TransactionByHash(context.TODO(), ethcommon.HexToHash(req.Hash))
 	if err != nil {
 		if err == ethereum.NotFound {
