@@ -319,7 +319,7 @@ func (wa *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxResp
 	log.Info("braoadcast tx success", "tx_hash", txHash)
 	return &wallet2.SendTxResponse{
 		Code:   common.ReturnCode_SUCCESS,
-		Msg:    "Send and  braoadcast tx success",
+		Msg:    "Send and braoadcast tx success",
 		TxHash: txHash,
 	}, nil
 }
