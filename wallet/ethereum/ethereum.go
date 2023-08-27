@@ -312,7 +312,7 @@ func (wa *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxResp
 		log.Error("braoadcast tx failed", "tx_hash", txHash, "err", err)
 		return &wallet2.SendTxResponse{
 			Code:   common.ReturnCode_ERROR,
-			Msg:    "Send tx fail",
+			Msg:    err.Error(),
 			TxHash: "",
 		}, err
 	}
