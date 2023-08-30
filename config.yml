@@ -8,7 +8,7 @@ network: mainnet
 fullnode:
   btc:
     rpcs:
-      - rpc_url: 'https://electrum.coineuskal.com:50002'
+      - rpc_url: 'https://btc.getblock.io/7350dbd9-4f17-4917-9555-bfadbc6b8a21/mainnet/'
         rpc_user:
         rpc_pass:
     confirmations: 1
