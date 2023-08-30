@@ -4,6 +4,7 @@ import (
 	"fmt"
 	gresty "github.com/go-resty/resty/v2"
 	"github.com/pkg/errors"
+	"github.com/savour-labs/wallet-hd-chain/wallet/bitcoin/types"
 )
 
 /*
@@ -33,25 +34,25 @@ func NewBlockChainClient(url string) (*BcClient, error) {
 	}, nil
 }
 
-func (c *BcClient) GetAccountBalance(address string) (interface{}, error) {
-	var accountBalance interface{}
+func (c *BcClient) GetAccountBalance(address string) (string, error) {
+	var accountBalance map[string]*types.AccountBalance
 	response, err := c.client.R().
 		SetResult(&accountBalance).
-		Get("balance?active=" + address)
+		Get("/balance?active=" + address)
 	if err != nil {
-		return nil, fmt.Errorf("cannot get account balance: %w", err)
+		return "", fmt.Errorf("cannot get account balance: %w", err)
 	}
 	if response.StatusCode() != 200 {
-		return nil, errors.New("get account balance fail")
+		return "", errors.New("get account balance fail")
 	}
-	return accountBalance, nil
+	return accountBalance[address].FinalBalance.String(), nil
 }
 
 func (c *BcClient) GetAccountUtxo(address string) (interface{}, error) {
 	var utxoUnspentList interface{}
 	response, err := c.client.R().
 		SetResult(&utxoUnspentList).
-		Get("unspent?active=" + address)
+		Get("/unspent?active=" + address)
 	if err != nil {
 		return nil, fmt.Errorf("cannot utxo fail: %w", err)
 	}
@@ -65,7 +66,7 @@ func (c *BcClient) GetTransactionsByAddress(address, pageSize, page string) (int
 	var transactionList interface{}
 	response, err := c.client.R().
 		SetResult(&transactionList).
-		Get("rawaddr/" + address + "?limit=" + pageSize + "&offset=" + page)
+		Get("/rawaddr/" + address + "?limit=" + pageSize + "&offset=" + page)
 	if err != nil {
 		return nil, fmt.Errorf("cannot utxo fail: %w", err)
 	}
@@ -79,7 +80,7 @@ func (c *BcClient) GetTransactionsByHash(txHash string) (interface{}, error) {
 	var transaction interface{}
 	response, err := c.client.R().
 		SetResult(&transaction).
-		Get("rawtx/" + txHash)
+		Get("/rawtx/" + txHash)
 	if err != nil {
 		return nil, fmt.Errorf("cannot utxo fail: %w", err)
 	}

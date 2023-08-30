@@ -29,16 +29,20 @@ import (
 )
 
 const (
-	confirms     = 1
-	btcDecimals  = 8
-	btcFeeBlocks = 3
-	ChainName    = "Bitcoin"
-	Symbol       = "BTC"
+	confirms         = 1
+	btcDecimals      = 8
+	btcFeeBlocks     = 3
+	ChainName        = "Bitcoin"
+	Symbol           = "BTC"
+	BlockChainApiUrl = "https://blockchain.info"
+	OkLinkUrl        = "https://www.oklink.com"
 )
 
 type WalletAdaptor struct {
 	fallback.WalletAdaptor
-	clients *multiclient.MultiClient
+	clients   *multiclient.MultiClient
+	bcClient  *BcClient
+	oklClient *OkLinkClient
 }
 
 func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
@@ -58,8 +62,18 @@ func newChainAdaptorWithClients(clients []*btcClient) *WalletAdaptor {
 	for i, client := range clients {
 		clis[i] = client
 	}
+	bcClient, err := NewBlockChainClient(BlockChainApiUrl)
+	if err != nil {
+		log.Error("new blockchain client fail", "err", err)
+	}
+	oklClient, err := NewOkLinkClient(OkLinkUrl)
+	if err != nil {
+		log.Error("new oklink client fail", "err", err)
+	}
 	return &WalletAdaptor{
-		clients: multiclient.New(clis),
+		clients:   multiclient.New(clis),
+		bcClient:  bcClient,
+		oklClient: oklClient,
 	}
 }
 
@@ -114,8 +128,19 @@ func (a *WalletAdaptor) ValidAddress(req *wallet2.ValidAddressRequest) (*wallet2
 }
 
 func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.BalanceResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	balance, err := a.bcClient.GetAccountBalance(req.Address)
+	if err != nil {
+		return &wallet2.BalanceResponse{
+			Code:    common.ReturnCode_ERROR,
+			Msg:     "get btc balance fail",
+			Balance: "0",
+		}, err
+	}
+	return &wallet2.BalanceResponse{
+		Code:    common.ReturnCode_SUCCESS,
+		Msg:     "get btc balance success",
+		Balance: balance,
+	}, nil
 }
 
 func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
