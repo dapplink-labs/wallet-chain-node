@@ -48,8 +48,8 @@ func (c *BcClient) GetAccountBalance(address string) (string, error) {
 	return accountBalance[address].FinalBalance.String(), nil
 }
 
-func (c *BcClient) GetAccountUtxo(address string) (interface{}, error) {
-	var utxoUnspentList interface{}
+func (c *BcClient) GetAccountUtxo(address string) ([]types.UnspentOutput, error) {
+	var utxoUnspentList types.UnspentOutputList
 	response, err := c.client.R().
 		SetResult(&utxoUnspentList).
 		Get("/unspent?active=" + address)
@@ -59,7 +59,7 @@ func (c *BcClient) GetAccountUtxo(address string) (interface{}, error) {
 	if response.StatusCode() != 200 {
 		return nil, errors.New("get account counter fail")
 	}
-	return utxoUnspentList, nil
+	return utxoUnspentList.UnspentOutputs, nil
 }
 
 func (c *BcClient) GetTransactionsByAddress(address, pageSize, page string) (interface{}, error) {

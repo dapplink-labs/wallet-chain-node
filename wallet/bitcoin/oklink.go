@@ -4,6 +4,7 @@ import (
 	"fmt"
 	gresty "github.com/go-resty/resty/v2"
 	"github.com/pkg/errors"
+	"github.com/savour-labs/wallet-hd-chain/wallet/bitcoin/types"
 )
 
 /*
@@ -33,19 +34,19 @@ func NewOkLinkClient(url string) (*OkLinkClient, error) {
 	}, nil
 }
 
-func (c *OkLinkClient) GetGasFee(coinName string) (interface{}, error) {
-	var GasFee interface{}
+func (c *OkLinkClient) GetGasFee(coinName string) (string, error) {
+	var GasFeeData types.GasFeeData
 	okAccessKey := make(map[string]string)
 	okAccessKey["Ok-Access-Key"] = "ac6562a6-825e-4a16-8200-de3879da9b73"
 	response, err := c.client.R().
 		SetHeaders(okAccessKey).
-		SetResult(&GasFee).
+		SetResult(&GasFeeData).
 		Get("/api/v5/explorer/blockchain/fee?chainShortName=" + coinName)
 	if err != nil {
-		return "", fmt.Errorf("cannot get account balance: %w", err)
+		return "0", fmt.Errorf("cannot get account balance: %w", err)
 	}
 	if response.StatusCode() != 200 {
-		return "", errors.New("get account balance fail")
+		return "0", errors.New("get account balance fail")
 	}
-	return GasFee, nil
+	return GasFeeData.Data[0].BestTransactionFee, nil
 }
