@@ -293,6 +293,11 @@ func (a *WalletAdaptor) GetUtxo(req *wallet.UtxoRequest) (*wallet.UtxoResponse, 
 	}, nil
 }
 
+func (a *WalletAdaptor) GetUnspentOutputs(req *wallet2.UnspentOutputsRequest) (*wallet2.UnspentOutputsResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (a *WalletAdaptor) GetMinRent(req *wallet.MinRentRequest) (*wallet.MinRentResponse, error) {
 	return &wallet.MinRentResponse{
 		Code: common.ReturnCode_ERROR,

@@ -226,6 +226,11 @@ func (w *WalletAdaptor) GetUtxoTxFromSignedData(req *wallet2.TxFromSignedDataReq
 	panic("implement me")
 }
 
+func (w *WalletAdaptor) GetUnspentOutputs(req *wallet2.UnspentOutputsRequest) (*wallet2.UnspentOutputsResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (w *WalletAdaptor) CreateAccountSignedTx(req *wallet2.CreateAccountSignedTxRequest) (*wallet2.CreateSignedTxResponse, error) {
 	//TODO implement me
 	panic("implement me")

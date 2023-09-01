@@ -251,6 +251,17 @@ func (d *WalletDispatcher) GetUtxo(ctx context.Context, request *wallet2.UtxoReq
 	return d.registry[request.Chain].GetUtxo(request)
 }
 
+func (d *WalletDispatcher) GetUnspentOutputs(ctx context.Context, request *wallet2.UnspentOutputsRequest) (*wallet2.UnspentOutputsResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.UnspentOutputsResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  config.UnsupportedOperation,
+		}, nil
+	}
+	return d.registry[request.Chain].GetUnspentOutputs(request)
+}
+
 func (d *WalletDispatcher) GetMinRent(ctx context.Context, request *wallet2.MinRentRequest) (*wallet2.MinRentResponse, error) {
 	resp := d.preHandler(request)
 	if resp != nil {

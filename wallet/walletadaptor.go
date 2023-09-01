@@ -16,6 +16,7 @@ type WalletAdaptor interface {
 	GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error)
 	GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error)
 	GetAccount(req *wallet2.AccountRequest) (*wallet2.AccountResponse, error)
+	GetUnspentOutputs(req *wallet2.UnspentOutputsRequest) (*wallet2.UnspentOutputsResponse, error)
 	GetUtxo(req *wallet2.UtxoRequest) (*wallet2.UtxoResponse, error)
 	GetMinRent(req *wallet2.MinRentRequest) (*wallet2.MinRentResponse, error)
 

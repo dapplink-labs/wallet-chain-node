@@ -144,8 +144,20 @@ func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balanc
 }
 
 func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	txList, err := a.bcClient.GetTransactionsByAddress(req.Address, strconv.Itoa(int(req.Page)), strconv.Itoa(int(req.Pagesize)))
+	if err != nil {
+		return &wallet2.TxAddressResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "get transaction list fail",
+			Tx:   nil,
+		}, err
+	}
+	fmt.Println(txList)
+	return &wallet2.TxAddressResponse{
+		Code: common.ReturnCode_SUCCESS,
+		Msg:  "get transaction list success",
+		Tx:   nil,
+	}, err
 }
 
 func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {
@@ -213,61 +225,18 @@ func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHash
 	return reply, nil
 }
 
-func (a *WalletAdaptor) GetUtxo(req *wallet2.UtxoRequest) (*wallet2.UtxoResponse, error) {
-	utxo := req.Vin
-	txhash, err := chainhash.NewHashFromStr(utxo.Hash)
-	if err != nil {
-		log.Info("QueryUtxo NewHashFromStr", "err", err)
-		return &wallet2.UtxoResponse{
-			Code: common.ReturnCode_ERROR,
-			Msg:  err.Error(),
-		}, err
-	}
-	reply, err := a.getClient().GetTxOut(txhash, utxo.Index, true)
-	if err != nil {
-		log.Info("QueryUtxo GetTxOut", "err", err)
-		return &wallet2.UtxoResponse{
-			Code: common.ReturnCode_ERROR,
-			Msg:  err.Error(),
-		}, err
-	}
-	if reply == nil {
-		log.Info("QueryUtxo GetTxOut", "err", "hash not found")
-		err = errors.New("hash not found")
-		return &wallet2.UtxoResponse{
-			Code: common.ReturnCode_ERROR,
-			Msg:  err.Error(),
-		}, err
-	}
-	if btcToSatoshi(reply.Value).Int64() != utxo.Amount {
-		log.Info("QueryUtxo GetTxOut", "err", "amount mismatch")
-		err = errors.New("amount mismatch")
-		return &wallet2.UtxoResponse{
-			Code: common.ReturnCode_ERROR,
-			Msg:  err.Error(),
-		}, err
-	}
-	tx, err := a.getClient().GetRawTransactionVerbose(txhash)
-	if err != nil {
-		log.Info("QueryUtxo GetRawTransactionVerbose", "err", err)
+func (a *WalletAdaptor) GetUnspentOutputs(req *wallet2.UnspentOutputsRequest) (*wallet2.UnspentOutputsResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
 
-		return &wallet2.UtxoResponse{
-			Code: common.ReturnCode_ERROR,
-			Msg:  err.Error(),
-		}, err
+func (a *WalletAdaptor) GetUtxo(req *wallet2.UtxoRequest) (*wallet2.UtxoResponse, error) {
+	utxoList, err := a.bcClient.GetAccountUtxo(req.Chain)
+	fmt.Println(utxoList)
+	if err != nil {
+		return nil, err
 	}
-	if tx.Vout[utxo.Index].ScriptPubKey.Addresses[0] != utxo.Address {
-		log.Info("QueryUtxo GetTxOut", "err", "address mismatch")
-		err := errors.New("address mismatch")
-		return &wallet2.UtxoResponse{
-			Code: common.ReturnCode_ERROR,
-			Msg:  err.Error(),
-		}, err
-	}
-	return &wallet2.UtxoResponse{
-		Code:    common.ReturnCode_SUCCESS,
-		Unspent: true,
-	}, nil
+	return nil, err
 }
 
 func (w *WalletAdaptor) GetGasPrice(req *wallet2.GasPriceRequest) (*wallet2.GasPriceResponse, error) {

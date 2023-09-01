@@ -902,3 +902,8 @@ func queryTransactionLocal(txRaw *core.TransactionRaw, symbol string) (*wallet2.
 	}, nil
 
 }
+
+func (a *WalletAdaptor) GetUnspentOutputs(req *wallet2.UnspentOutputsRequest) (*wallet2.UnspentOutputsResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}

@@ -727,6 +727,11 @@ func (wa *WalletAdaptor) GetAccount(req *wallet2.AccountRequest) (*wallet2.Accou
 	}, nil
 }
 
+func (wa *WalletAdaptor) GetUnspentOutputs(req *wallet2.UnspentOutputsRequest) (*wallet2.UnspentOutputsResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (wa *WalletAdaptor) GetUtxo(req *wallet2.UtxoRequest) (*wallet2.UtxoResponse, error) {
 	return &wallet2.UtxoResponse{
 		Code: common.ReturnCode_ERROR,

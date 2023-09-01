@@ -21,6 +21,11 @@ type WalletAdaptor struct {
 	clients *multiclient.MultiClient
 }
 
+func (a *WalletAdaptor) GetUnspentOutputs(req *wallet2.UnspentOutputsRequest) (*wallet2.UnspentOutputsResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (a *WalletAdaptor) ConvertAddress(req *wallet2.ConvertAddressRequest) (*wallet2.ConvertAddressResponse, error) {
 	//TODO implement me
 	panic("implement me")
