@@ -144,7 +144,7 @@ func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balanc
 }
 
 func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
-	txList, err := a.bcClient.GetTransactionsByAddress(req.Address, strconv.Itoa(int(req.Page)), strconv.Itoa(int(req.Pagesize)))
+	transaction, err := a.bcClient.GetTransactionsByAddress(req.Address, strconv.Itoa(int(req.Page)), strconv.Itoa(int(req.Pagesize)))
 	if err != nil {
 		return &wallet2.TxAddressResponse{
 			Code: common.ReturnCode_ERROR,
@@ -152,11 +152,45 @@ func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.
 			Tx:   nil,
 		}, err
 	}
-	fmt.Println(txList)
+	var tx_list []*wallet2.TxMessage
+	for _, ttxs := range transaction.Txs {
+		var from_addrs []*wallet2.Address
+		var to_addrs []*wallet2.Address
+		var value_list []*wallet2.Value
+		var direction int32
+		for _, inputs := range ttxs.Inputs {
+			from_addrs = append(from_addrs, &wallet2.Address{Address: inputs.PrevOut.Addr})
+		}
+		tx_fee := ttxs.Fee
+		for _, out := range ttxs.Out {
+			to_addrs = append(to_addrs, &wallet2.Address{Address: out.Addr})
+			value_list = append(value_list, &wallet2.Value{Value: out.Value.String()})
+		}
+		datetime := ttxs.Time.String()
+		if strings.EqualFold(req.Address, from_addrs[0].Address) {
+			direction = 0
+		} else {
+			direction = 1
+		}
+		tx := &wallet2.TxMessage{
+			Hash:            ttxs.Hash,
+			Froms:           from_addrs,
+			Tos:             to_addrs,
+			Values:          value_list,
+			Fee:             tx_fee.String(),
+			Status:          wallet2.TxStatus_Success,
+			Type:            direction,
+			Height:          ttxs.BlockHeight.String(),
+			ContractAddress: "0x00",
+			Datetime:        datetime,
+		}
+		tx_list = append(tx_list, tx)
+	}
+
 	return &wallet2.TxAddressResponse{
 		Code: common.ReturnCode_SUCCESS,
 		Msg:  "get transaction list success",
-		Tx:   nil,
+		Tx:   tx_list,
 	}, err
 }
 

@@ -62,8 +62,8 @@ func (c *BcClient) GetAccountUtxo(address string) ([]types.UnspentOutput, error)
 	return utxoUnspentList.UnspentOutputs, nil
 }
 
-func (c *BcClient) GetTransactionsByAddress(address, pageSize, page string) (interface{}, error) {
-	var transactionList interface{}
+func (c *BcClient) GetTransactionsByAddress(address, pageSize, page string) (*types.Transaction, error) {
+	var transactionList types.Transaction
 	response, err := c.client.R().
 		SetResult(&transactionList).
 		Get("/rawaddr/" + address + "?limit=" + pageSize + "&offset=" + page)
@@ -73,11 +73,11 @@ func (c *BcClient) GetTransactionsByAddress(address, pageSize, page string) (int
 	if response.StatusCode() != 200 {
 		return nil, errors.New("get account counter fail")
 	}
-	return transactionList, nil
+	return &transactionList, nil
 }
 
-func (c *BcClient) GetTransactionsByHash(txHash string) (interface{}, error) {
-	var transaction interface{}
+func (c *BcClient) GetTransactionsByHash(txHash string) (*types.TxsItem, error) {
+	var transaction types.TxsItem
 	response, err := c.client.R().
 		SetResult(&transaction).
 		Get("/rawtx/" + txHash)
@@ -87,5 +87,5 @@ func (c *BcClient) GetTransactionsByHash(txHash string) (interface{}, error) {
 	if response.StatusCode() != 200 {
 		return nil, errors.New("get account counter fail")
 	}
-	return transaction, nil
+	return &transaction, nil
 }
