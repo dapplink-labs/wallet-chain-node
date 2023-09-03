@@ -195,68 +195,43 @@ func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.
 }
 
 func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {
-	tx, err := a.getClient().GetRawTransactionVerbose((*chainhash.Hash)([]byte((req.Hash))))
-	if err != nil {
-		if rpcErr, ok := err.(*btcjson.RPCError); ok && rpcErr.Code == btcjson.ErrRPCBlockNotFound {
-			return &wallet2.TxHashResponse{
-				Code: common.ReturnCode_ERROR,
-				Msg:  "Tx status not found",
-			}, nil
-		}
-		log.Error("queryTransaction GetRawTransactionVerbose", "err", err)
-		return &wallet2.TxHashResponse{
-			Code: common.ReturnCode_ERROR,
-			Msg:  err.Error(),
-		}, err
-	}
-
-	if tx == nil || req.Hash != tx.Txid {
-		log.Error("queryTransaction txid mismatch")
-		return &wallet2.TxHashResponse{
-			Code: common.ReturnCode_ERROR,
-			Msg:  err.Error(),
-		}, nil
-	}
-
-	if tx.Confirmations < confirms {
-		log.Error("queryTransaction confirmes too low", "tx confirms", tx.Confirmations, "need confirms", confirms)
-		return &wallet2.TxHashResponse{
-			Code: common.ReturnCode_ERROR,
-			Msg:  err.Error(),
-		}, nil
-	}
-
-	blockHash, _ := chainhash.NewHashFromStr(tx.BlockHash)
-	block, err := a.getClient().GetBlockVerbose(blockHash)
-	if err != nil {
-		log.Error("queryTransaction GetBlockVerbose", "err", err)
-		return &wallet2.TxHashResponse{
-			Code: common.ReturnCode_ERROR,
-			Msg:  err.Error(),
-		}, err
-	}
-
-	reply, err := a.assembleUtxoTransactionReplyForTxHash(tx, block.Height, block.Time, func(txid string, index uint32) (int64, string, error) {
-		preHash, err2 := chainhash.NewHashFromStr(txid)
-		if err2 != nil {
-			return 0, "", err2
-		}
-		preTx, err2 := a.getClient().GetRawTransactionVerbose(preHash)
-		if err2 != nil {
-			return 0, "", err2
-		}
-		amount := btcToSatoshi(preTx.Vout[index].Value).Int64()
-
-		return amount, preTx.Vout[index].ScriptPubKey.Addresses[0], nil
-	})
+	transaction, err := a.bcClient.GetTransactionsByHash(req.Hash)
 	if err != nil {
 		return &wallet2.TxHashResponse{
 			Code: common.ReturnCode_ERROR,
-			Msg:  err.Error(),
+			Msg:  "get transaction list fail",
+			Tx:   nil,
 		}, err
 	}
-
-	return reply, nil
+	var from_addrs []*wallet2.Address
+	var to_addrs []*wallet2.Address
+	var value_list []*wallet2.Value
+	for _, inputs := range transaction.Inputs {
+		from_addrs = append(from_addrs, &wallet2.Address{Address: inputs.PrevOut.Addr})
+	}
+	tx_fee := transaction.Fee
+	for _, out := range transaction.Out {
+		to_addrs = append(to_addrs, &wallet2.Address{Address: out.Addr})
+		value_list = append(value_list, &wallet2.Value{Value: out.Value.String()})
+	}
+	datetime := transaction.Time.String()
+	txMsg := &wallet2.TxMessage{
+		Hash:            transaction.Hash,
+		Froms:           from_addrs,
+		Tos:             to_addrs,
+		Values:          value_list,
+		Fee:             tx_fee.String(),
+		Status:          wallet2.TxStatus_Success,
+		Type:            0,
+		Height:          transaction.BlockHeight.String(),
+		ContractAddress: "0x00",
+		Datetime:        datetime,
+	}
+	return &wallet2.TxHashResponse{
+		Code: common.ReturnCode_SUCCESS,
+		Msg:  "get transaction success",
+		Tx:   txMsg,
+	}, nil
 }
 
 func (a *WalletAdaptor) GetUnspentOutputs(req *wallet2.UnspentOutputsRequest) (*wallet2.UnspentOutputsResponse, error) {
