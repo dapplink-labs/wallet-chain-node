@@ -14,13 +14,12 @@ require (
 	github.com/cosmos/cosmos-sdk v0.40.0
 	github.com/eoscanada/eos-go v0.10.2
 	github.com/ethereum/go-ethereum v1.10.26
-	github.com/fbsobreira/gotron-sdk v0.0.0-20221101181131-c4daceb828f0
 	github.com/filecoin-project/go-address v1.0.0
 	github.com/filecoin-project/go-jsonrpc v0.1.9
 	github.com/filecoin-project/lotus v1.18.1
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/golang-module/dongle v0.1.1
-	github.com/golang/protobuf v1.5.2
+	github.com/golang/protobuf v1.5.3
 	github.com/hashicorp/golang-lru v0.5.5-0.20210104140557-80c98217689d
 	github.com/lib/pq v1.10.7
 	github.com/mr-tron/base58 v1.2.0
@@ -33,8 +32,8 @@ require (
 	github.com/syndtr/goleveldb v1.0.1-0.20220614013038-64ee5596c38a
 	github.com/tidwall/gjson v1.14.3
 	go.uber.org/atomic v1.10.0
-	google.golang.org/grpc v1.50.1
-	google.golang.org/protobuf v1.28.1
+	google.golang.org/grpc v1.58.0
+	google.golang.org/protobuf v1.31.0
 	gopkg.in/yaml.v2 v2.4.0
 )
 
@@ -59,7 +58,7 @@ require (
 	github.com/btcsuite/go-socks v0.0.0-20170105172521-4720035b7bfd // indirect
 	github.com/btcsuite/websocket v0.0.0-20150119174127-31079b680792 // indirect
 	github.com/cespare/xxhash v1.1.0 // indirect
-	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/confio/ics23/go v0.7.0 // indirect
 	github.com/cosmos/cosmos-proto v1.0.0-alpha8 // indirect
 	github.com/cosmos/go-bip39 v1.0.0 // indirect
@@ -112,7 +111,7 @@ require (
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/godbus/dbus v0.0.0-20190726142602-4481cbc300e2 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
-	github.com/golang/glog v1.0.0 // indirect
+	github.com/golang/glog v1.1.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
@@ -253,15 +252,16 @@ require (
 	go.opentelemetry.io/otel/trace v1.9.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/zap v1.23.0 // indirect
-	golang.org/x/crypto v0.0.0-20221010152910-d6f0a8c073c2 // indirect
-	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
-	golang.org/x/net v0.0.0-20221017152216-f25eb7ecb193 // indirect
-	golang.org/x/sys v0.0.0-20221013171732-95e765b1cc43 // indirect
-	golang.org/x/term v0.0.0-20220722155259-a9ba230a4035 // indirect
-	golang.org/x/text v0.3.8 // indirect
-	golang.org/x/tools v0.1.12 // indirect
+	golang.org/x/crypto v0.11.0 // indirect
+	golang.org/x/mod v0.8.0 // indirect
+	golang.org/x/net v0.12.0 // indirect
+	golang.org/x/sys v0.10.0 // indirect
+	golang.org/x/term v0.10.0 // indirect
+	golang.org/x/text v0.11.0 // indirect
+	golang.org/x/tools v0.6.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220609144429-65e65417b02f // indirect
-	google.golang.org/genproto v0.0.0-20221014213838-99cd37c6964a // indirect
+	google.golang.org/genproto v0.0.0-20230711160842-782d3b101e98 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20230711160842-782d3b101e98 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
@@ -269,5 +269,7 @@ require (
 )
 
 replace github.com/algorand/go-algorand-sdk => ../go-algorand-sdk
+
 replace github.com/multiversx/mx-sdk-go => ../mx-sdk-go
+
 replace github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
