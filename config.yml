@@ -23,28 +23,52 @@ fullnode:
       - rpc_url: 'https://rpc.ankr.com/arbitrum'
     confirmations: 4
     tp_api_url: 'https://api.arbiscan.io/api?'
-    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+    tp_api_key: '6P1K37SEYSN8VMWFVYGC8W6K5ZEQ5CDA7Y'
   op:
     rpcs:
       - rpc_url: 'https://mainnet.optimism.io'
+    confirmations: 4
+    tp_api_url: 'https://api-optimistic.etherscan.io/api?'
+    tp_api_key: 'X1SJQ62NAPMZ24DRBKA2GU414N6S6THUKQ'
+  polygon:
+    rpcs:
+      - rpc_url: 'https://polygon-bor.publicnode.com'
+    confirmations: 4
+    tp_api_url: 'https://api.polygonscan.com/api?'
+    tp_api_key: 'DCIEZ5TQSFY88QUTHQBKYG92I828A44ZRN'
+  bsc:
+    rpcs:
+      - rpc_url: 'https://bsc.mytokenpocket.vip'
+    confirmations: 4
+    tp_api_url: 'https://api.bscscan.com/api?'
+    tp_api_key: ''
+  heco:
+    rpcs:
+      - rpc_url: 'https://http-mainnet.hecochain.com'
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+  mantle:
+    rpcs:
+      - rpc_url: 'https://mantle-mainnet.public.blastapi.io'
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+  base:
+    rpcs:
+      - rpc_url: 'https://mantle-mainnet.public.blastapi.io'
+    confirmations: 4
+    tp_api_url: ''
+    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+  linea:
+    rpcs:
+      - rpc_url: 'https://mantle-mainnet.public.blastapi.io'
     confirmations: 4
     tp_api_url: ''
     tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
   zksync:
     rpcs:
       - rpc_url: ''
-    confirmations: 4
-    tp_api_url: ''
-    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
-  bsc:
-    rpcs:
-      - rpc_url: 'https://bsc.mytokenpocket.vip'
-    confirmations: 4
-    tp_api_url: ''
-    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
-  heco:
-    rpcs:
-      - rpc_url: 'https://http-mainnet.hecochain.com'
     confirmations: 4
     tp_api_url: ''
     tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
@@ -60,15 +84,9 @@ fullnode:
     confirmations: 4
     tp_api_url: ''
     tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
-  polygon:
-    rpcs:
-      - rpc_url: 'https://polygon-bor.publicnode.com'
-    confirmations: 4
-    tp_api_url: ''
-    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
   trx:
     rpcs:
-      - rpc_url: '34.237.210.82:50051'
+      - rpc_url: 'https://api.trongrid.io/'
     confirmations: 4
     tp_api_url: ''
     tp_api_key: ''
@@ -121,6 +139,6 @@ fullnode:
         rpc_pass:
     confirmations: 1
 
-chains: [Bitcoin, Ethereum, Solana, Tron, Arbitrum, Optimism, BscChain, Heco, Polygon, NEAR, XRP, EOS]
+chains: [Bitcoin, Ethereum, Arbitrum, Optimism, BscChain, Heco, Polygon, Mantle, Base, Linea, NEAR, XRP, EOS, Solana]
 
 

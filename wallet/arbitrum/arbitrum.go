@@ -19,7 +19,6 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rlp"
-	"github.com/savour-labs/wallet-hd-chain/cache"
 	"github.com/savour-labs/wallet-hd-chain/config"
 	"github.com/savour-labs/wallet-hd-chain/rpc/common"
 	wallet2 "github.com/savour-labs/wallet-hd-chain/rpc/wallet"
@@ -105,19 +104,19 @@ func (a *WalletAdaptor) makeSignerOffline(height int64) types.Signer {
 }
 
 func (wa *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.BalanceResponse, error) {
-	key := strings.Join([]string{req.Chain, req.Coin, req.Address, req.ContractAddress}, ":")
-	balanceCache := cache.GetBalanceCache()
-	if r, exist := balanceCache.Get(key); exist {
-		return &wallet2.BalanceResponse{
-			Code:    common.ReturnCode_SUCCESS,
-			Msg:     "get balance success",
-			Balance: r.(*big.Int).String(),
-		}, nil
-	}
 	var result *big.Int
 	var err error
 	if len(req.ContractAddress) > 0 {
-		result, err = wa.getClient().Erc20BalanceOf(req.ContractAddress, req.Address, nil)
+		erc20Balance, err := wa.etherscanCli.TokenBalance(req.ContractAddress, req.Address)
+		if err != nil {
+			log.Error("get token balance fail", "err", err)
+			return &wallet2.BalanceResponse{
+				Code:    common.ReturnCode_ERROR,
+				Msg:     "get erc20 balance fail",
+				Balance: "0",
+			}, err
+		}
+		result = (*big.Int)(erc20Balance)
 	} else {
 		result, err = wa.getClient().BalanceAt(context.TODO(), ethcommon.HexToAddress(req.Address), nil)
 	}
@@ -129,7 +128,6 @@ func (wa *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balan
 			Balance: "0",
 		}, err
 	} else {
-		balanceCache.Add(key, result)
 		return &wallet2.BalanceResponse{
 			Code:    common.ReturnCode_SUCCESS,
 			Msg:     "get balance success",
@@ -139,49 +137,89 @@ func (wa *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balan
 }
 
 func (wa *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
-	key := strings.Join([]string{req.Coin, req.Address, strconv.Itoa(int(req.Page)), strconv.Itoa(int(req.Pagesize))}, ":")
-	txCache := cache.GetTxCache()
-	if r, exist := txCache.Get(key); exist {
-		return r.(*wallet2.TxAddressResponse), nil
-	}
-	txs, err := wa.etherscanCli.NormalTxByAddress(req.Address, &Startblock, &Endblock, int(req.Page), int(req.Pagesize), false)
-	if err != nil {
-		return &wallet2.TxAddressResponse{
-			Code: common.ReturnCode_ERROR,
-			Msg:  err.Error(),
-		}, err
-	}
 	var tx_list []*wallet2.TxMessage
-	for _, ktx := range txs {
-		var from_addrs []*wallet2.Address
-		var to_addrs []*wallet2.Address
-		var value_list []*wallet2.Value
-		var direction int32
-		from_addrs = append(from_addrs, &wallet2.Address{Address: ktx.From})
-		to_addrs = append(to_addrs, &wallet2.Address{Address: ktx.To})
-		value_list = append(value_list, &wallet2.Value{Value: ktx.Value.Int().String()})
-		bigIntGasUsed := int64(ktx.GasUsed)
-		bigIntGasPrice := big.NewInt(ktx.GasPrice.Int().Int64())
-		tx_fee := bigIntGasPrice.Int64() * bigIntGasUsed
-		datetime := ktx.TimeStamp.Time().Format("2006-01-02 15:04:05")
-		if req.Address == ktx.From {
-			direction = 0 // 转出
-		} else {
-			direction = 1 // 转入
+	if req.ContractAddress != "0x00" {
+		txs, err := wa.etherscanCli.ERC20Transfers(&req.ContractAddress, &req.Address, &Startblock, &Endblock, int(req.Page), int(req.Pagesize), true)
+		if err != nil {
+			return &wallet2.TxAddressResponse{
+				Code: common.ReturnCode_ERROR,
+				Msg:  err.Error(),
+			}, err
 		}
-		tx := &wallet2.TxMessage{
-			Hash:            ktx.Hash,
-			Froms:           from_addrs,
-			Tos:             to_addrs,
-			Values:          value_list,
-			Fee:             strconv.FormatInt(tx_fee, 10),
-			Status:          wallet2.TxStatus_Success,
-			Type:            direction,
-			Height:          strconv.Itoa(ktx.BlockNumber),
-			ContractAddress: ktx.ContractAddress,
-			Datetime:        datetime,
+		for _, ktx := range txs {
+			fmt.Println("ktx:", ktx.Value.Int())
+			var from_addrs []*wallet2.Address
+			var to_addrs []*wallet2.Address
+			var value_list []*wallet2.Value
+			var direction int32
+			from_addrs = append(from_addrs, &wallet2.Address{Address: ktx.From})
+			to_addrs = append(to_addrs, &wallet2.Address{Address: ktx.To})
+			value_list = append(value_list, &wallet2.Value{Value: ktx.Value.Int().String()})
+			bigIntGasUsed := int64(ktx.GasUsed)
+			bigIntGasPrice := big.NewInt(ktx.GasPrice.Int().Int64())
+			tx_fee := bigIntGasPrice.Int64() * bigIntGasUsed
+			datetime := ktx.TimeStamp.Time().Format("2006-01-02 15:04:05")
+			if strings.EqualFold(req.Address, ktx.From) {
+				direction = 0 // 转出
+			} else {
+				direction = 1 // 转入
+			}
+			tx := &wallet2.TxMessage{
+				Hash:            ktx.Hash,
+				Froms:           from_addrs,
+				Tos:             to_addrs,
+				Values:          value_list,
+				Fee:             strconv.FormatInt(tx_fee, 10),
+				Status:          wallet2.TxStatus_Success,
+				Type:            direction,
+				Height:          strconv.Itoa(ktx.BlockNumber),
+				ContractAddress: ktx.ContractAddress,
+				Datetime:        datetime,
+			}
+			tx_list = append(tx_list, tx)
 		}
-		tx_list = append(tx_list, tx)
+	} else {
+		txs, err := wa.etherscanCli.NormalTxByAddress(req.Address, &Startblock, &Endblock, int(req.Page), int(req.Pagesize), true)
+		if err != nil {
+			return &wallet2.TxAddressResponse{
+				Code: common.ReturnCode_ERROR,
+				Msg:  err.Error(),
+			}, err
+		}
+		for _, ktx := range txs {
+			if ktx.Value.Int().String() == "0" {
+				continue
+			}
+			var from_addrs []*wallet2.Address
+			var to_addrs []*wallet2.Address
+			var value_list []*wallet2.Value
+			var direction int32
+			from_addrs = append(from_addrs, &wallet2.Address{Address: ktx.From})
+			to_addrs = append(to_addrs, &wallet2.Address{Address: ktx.To})
+			value_list = append(value_list, &wallet2.Value{Value: ktx.Value.Int().String()})
+			bigIntGasUsed := int64(ktx.GasUsed)
+			bigIntGasPrice := big.NewInt(ktx.GasPrice.Int().Int64())
+			tx_fee := bigIntGasPrice.Int64() * bigIntGasUsed
+			datetime := ktx.TimeStamp.Time().Format("2006-01-02 15:04:05")
+			if strings.EqualFold(req.Address, ktx.From) {
+				direction = 0 // 转出
+			} else {
+				direction = 1 // 转入
+			}
+			tx := &wallet2.TxMessage{
+				Hash:            ktx.Hash,
+				Froms:           from_addrs,
+				Tos:             to_addrs,
+				Values:          value_list,
+				Fee:             strconv.FormatInt(tx_fee, 10),
+				Status:          wallet2.TxStatus_Success,
+				Type:            direction,
+				Height:          strconv.Itoa(ktx.BlockNumber),
+				ContractAddress: ktx.ContractAddress,
+				Datetime:        datetime,
+			}
+			tx_list = append(tx_list, tx)
+		}
 	}
 	return &wallet2.TxAddressResponse{
 		Code: common.ReturnCode_SUCCESS,
@@ -191,11 +229,6 @@ func (wa *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2
 }
 
 func (wa *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {
-	key := strings.Join([]string{req.Coin, req.Hash}, ":")
-	txCache := cache.GetTxCache()
-	if r, exist := txCache.Get(key); exist {
-		return r.(*wallet2.TxHashResponse), nil
-	}
 	tx, _, err := wa.getClient().TransactionByHash(context.TODO(), ethcommon.HexToHash(req.Hash))
 	if err != nil {
 		if err == ethereum.NotFound {

@@ -1,7 +1,7 @@
 package tron
 
 import (
-	"errors"
+	"github.com/pkg/errors"
 	"math/big"
 	"net"
 	"strings"
@@ -9,11 +9,8 @@ import (
 
 	"github.com/ethereum/go-ethereum/log"
 	tclient "github.com/fbsobreira/gotron-sdk/pkg/client"
-	"github.com/savour-labs/wallet-hd-chain/config"
-)
 
-var (
-	blockNumberCacheTime int64 = 10 // seconds
+	"github.com/savour-labs/wallet-hd-chain/config"
 )
 
 const (
@@ -32,6 +29,7 @@ type tronClient struct {
 	local            bool
 }
 
+// newTronClient init the tron client
 func newTronClients(conf *config.Config) ([]*tronClient, error) {
 	var clients []*tronClient
 	log.Info("tron client setup", "network", conf.NetWork)
@@ -54,6 +52,7 @@ func newTronClients(conf *config.Config) ([]*tronClient, error) {
 
 			rpcURL = strings.Replace(rpc.RPCURL, words[0], ipAddr.String(), 1)
 		}
+		log.Info("rpcURL is", rpcURL)
 		c := tclient.NewGrpcClient(rpcURL)
 		if err := c.Start(); err != nil {
 			continue

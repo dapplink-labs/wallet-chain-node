@@ -2,6 +2,10 @@ package walletdispatcher
 
 import (
 	"context"
+	"github.com/savour-labs/wallet-hd-chain/wallet/base"
+	"github.com/savour-labs/wallet-hd-chain/wallet/linea"
+	"github.com/savour-labs/wallet-hd-chain/wallet/mantle"
+	"github.com/savour-labs/wallet-hd-chain/wallet/tron"
 	"runtime/debug"
 	"strings"
 
@@ -52,6 +56,10 @@ func New(conf *config.Config) (*WalletDispatcher, error) {
 		ethereum.ChainName:  ethereum.NewChainAdaptor,
 		solana.ChainName:    solana.NewChainAdaptor,
 		arbitrum.ChainName:  arbitrum.NewChainAdaptor,
+		base.ChainName:      base.NewChainAdaptor,
+		linea.ChainName:     linea.NewChainAdaptor,
+		mantle.ChainName:    mantle.NewChainAdaptor,
+		tron.ChainName:      tron.NewWalletAdaptor,
 		zksync.ChainName:    zksync.NewChainAdaptor,
 		optimism.ChainName:  optimism.NewChainAdaptor,
 		polygon.ChainName:   polygon.NewChainAdaptor,
@@ -64,8 +72,8 @@ func New(conf *config.Config) (*WalletDispatcher, error) {
 		eosio.ChainName:     eosio.NewChainAdaptor,
 	}
 	supportedChains := []string{
-		bitcoin.ChainName, ethereum.ChainName, solana.ChainName, arbitrum.ChainName,
-		zksync.ChainName, optimism.ChainName, polygon.ChainName, binance.ChainName,
+		bitcoin.ChainName, ethereum.ChainName, solana.ChainName, arbitrum.ChainName, base.ChainName, linea.ChainName,
+		mantle.ChainName, tron.ChainName, zksync.ChainName, optimism.ChainName, polygon.ChainName, binance.ChainName,
 		heco.ChainName, avalanche.ChainName, evmos.ChainName, near.ChainName, xrp.ChainName, eosio.ChainName,
 	}
 	for _, c := range conf.Chains {

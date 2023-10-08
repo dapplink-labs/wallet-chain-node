@@ -50,6 +50,7 @@ type WalletAdaptor struct {
 func NewWalletAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
 	clients, err := newTronClients(conf)
 	if err != nil {
+		log.Error("new tron client err", "err", err)
 		return nil, err
 	}
 	clis := make([]multiclient.Client, len(clients))

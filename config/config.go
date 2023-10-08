@@ -60,6 +60,10 @@ type Fullnode struct {
 	Tezos    Node       `yaml:"tezos"`
 	Aptos    Node       `yaml:"aptos"`
 	Egld     Node       `yaml:"egld"`
+	Mantle   Node       `yaml:"mantle"`
+	Scroll   Node       `yaml:"scroll"`
+	Base     Node       `yaml:"base"`
+	Linea    Node       `yaml:"linea"`
 }
 
 // Config instance define
