@@ -56,19 +56,19 @@ fullnode:
     tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
   base:
     rpcs:
-      - rpc_url: 'https://mantle-mainnet.public.blastapi.io'
+      - rpc_url: 'https://base.publicnode.com'
     confirmations: 4
-    tp_api_url: ''
-    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+    tp_api_url: 'https://api.basescan.org/api?'
+    tp_api_key: '1WKZ9C3XGTYYM1YXSR3DJHT2C2DDYVV4XA'
   linea:
     rpcs:
-      - rpc_url: 'https://mantle-mainnet.public.blastapi.io'
+      - rpc_url: 'https://linea.blockpi.network/v1/rpc/public'
     confirmations: 4
-    tp_api_url: ''
-    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+    tp_api_url: 'https://api.lineascan.build/api?'
+    tp_api_key: 'EQJNPFWQSSTTTWJH18AYNABQ6WWSXD4IMX'
   zksync:
     rpcs:
-      - rpc_url: ''
+      - rpc_url: 'https://zksync-era.blockpi.network/v1/rpc/public'
     confirmations: 4
     tp_api_url: ''
     tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
