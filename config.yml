@@ -38,10 +38,10 @@ fullnode:
     tp_api_key: 'DCIEZ5TQSFY88QUTHQBKYG92I828A44ZRN'
   bsc:
     rpcs:
-      - rpc_url: 'https://bsc.mytokenpocket.vip'
+      - rpc_url: 'https://api.zan.top/node/v1/bsc/mainnet/public'
     confirmations: 4
     tp_api_url: 'https://api.bscscan.com/api?'
-    tp_api_key: ''
+    tp_api_key: 'MH55R6KFBHAJA9AV26FIAMZQGX8MY57C5Y'
   heco:
     rpcs:
       - rpc_url: 'https://http-mainnet.hecochain.com'
