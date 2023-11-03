@@ -138,6 +138,11 @@ fullnode:
         rpc_user:
         rpc_pass:
     confirmations: 1
+  ada:
+    rpcs:
+      - rpc_url: 'https://go.getblock.io/c9e1612aba7244ac80167f48c783fd72'
+        rpc_user:
+        rpc_pass:
 
 chains: [Bitcoin, Ethereum, Arbitrum, Optimism, BscChain, Heco, Polygon, Mantle, Base, Linea, NEAR, XRP, EOS, Solana]
 

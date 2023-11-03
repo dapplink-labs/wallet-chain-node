@@ -12,11 +12,9 @@
 ## 2. wallet api
 
 ### 3.1. query account balance
-ada api
 rosetta api
 
-### 3.2. query account nonce
-ada api
+### 3.2. query account utxo
 rosetta api
 
 ### 3.3. query estimate gas fee
@@ -32,12 +30,10 @@ ada api
 rosetta api
 
 ### 3.6. query transaction recordlist
-use explorer api
-please look it from explorer
+rosetta api
+
 
 ### 3.7. query transaction detail
-ada api
 rosetta api
-use explorer api
-please look it from explorer
+
 
