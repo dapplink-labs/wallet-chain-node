@@ -2,6 +2,7 @@ package ada
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/coinbase/rosetta-sdk-go/asserter"
 	rosetta_dk_go_client "github.com/coinbase/rosetta-sdk-go/client"
 	"github.com/coinbase/rosetta-sdk-go/types"
@@ -194,6 +195,30 @@ func (c *adaClient) GetTxFee(relativeTtl, transactionSize int64) ([]*types.Amoun
 	}
 	//log.Printf("Rosetta Error: %+v\n", types.PrettyPrintStruct(metaDataResponse))
 	return metaDataResponse.SuggestedFee, nil
+}
+
+func (c *adaClient) Preprocess(operationStr string) (map[string]interface{}, error) {
+	ctx := context.Background()
+	networkIdentifier := c.GetNetworkList(ctx)
+	var operation []*types.Operation
+	jsonErr := json.Unmarshal([]byte(operationStr), &operation)
+	if jsonErr != nil {
+		panic(jsonErr)
+	}
+	req := &types.ConstructionPreprocessRequest{
+		NetworkIdentifier: networkIdentifier,
+		Operations:        operation,
+	}
+	preprocess, rosettaErr, err := c.client.ConstructionAPI.ConstructionPreprocess(ctx, req)
+	if rosettaErr != nil {
+		log.Printf("Rosetta Error: %+v\n", rosettaErr)
+		panic(rosettaErr)
+	}
+	if err != nil {
+		panic(err)
+
+	}
+	return preprocess.Options, nil
 }
 
 func (c *adaClient) GetBlockRequest(ctx context.Context) (*types.BlockRequest, error) {
