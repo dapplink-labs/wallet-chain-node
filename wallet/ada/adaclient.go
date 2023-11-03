@@ -127,6 +127,7 @@ func (c *adaClient) GetLatestBlockHeight() (int64, error) {
 	if err != nil {
 		panic(err)
 	}
+	//log.Printf("Current Block: %s\n", types.PrettyPrintStruct(blockResponse.Block))
 
 	return blockResponse.Block.BlockIdentifier.Index, nil
 }
@@ -168,8 +169,31 @@ func (c *adaClient) GetNetworkList(ctx context.Context) *types.NetworkIdentifier
 		panic("no available networks")
 	}
 	primaryNetwork := networkList.NetworkIdentifiers[0]
-	//log.Printf("Primary Network: %s\n", types.PrettyPrintStruct(primaryNetwork))
+	//log.Printf("Primary Network: %s\n", types.PrettyPrintStruct(networkList))
 	return primaryNetwork
+}
+
+func (c *adaClient) GetTxFee(relativeTtl, transactionSize int64) ([]*types.Amount, error) {
+	ctx := context.Background()
+	networkIdentifier := c.GetNetworkList(ctx)
+	req := &types.ConstructionMetadataRequest{
+		NetworkIdentifier: networkIdentifier,
+		Options: map[string]interface{}{
+			"relative_ttl":     relativeTtl,
+			"transaction_size": transactionSize,
+		},
+	}
+	metaDataResponse, rosettaErr, err := c.client.ConstructionAPI.ConstructionMetadata(ctx, req)
+	if rosettaErr != nil {
+		log.Printf("Rosetta Error: %+v\n", rosettaErr)
+		panic(rosettaErr)
+	}
+	if err != nil {
+		panic(err)
+
+	}
+	//log.Printf("Rosetta Error: %+v\n", types.PrettyPrintStruct(metaDataResponse))
+	return metaDataResponse.SuggestedFee, nil
 }
 
 func (c *adaClient) GetBlockRequest(ctx context.Context) (*types.BlockRequest, error) {

@@ -28,6 +28,27 @@ func TestAdaClient_GetLatestBlockHeight(t *testing.T) {
 	fmt.Println("height:", height)
 }
 
+func TestAdaClient_GetTxFee(t *testing.T) {
+	var f = flag.String("c", "../../config.yml", "config path")
+	flag.Parse()
+	conf, err := config.New(*f)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(conf.Fullnode.Ada.RPCs[0].RPCURL)
+
+	client, err := NewAdaClient(conf)
+	if err != nil {
+		panic(err)
+	}
+	txFee, err := client[0].GetTxFee(1000, 569)
+	if err != nil {
+		panic(err)
+	}
+	marshal, _ := json.Marshal(txFee)
+	fmt.Println("txFee:", string(marshal))
+}
+
 func TestAdaClient_GetAccountBalance(t *testing.T) {
 	var f = flag.String("c", "../../config.yml", "config path")
 	flag.Parse()
