@@ -14,6 +14,7 @@
 ### 3.1. query account balance
 rosetta api
 
+
 ### 3.2. query account utxo
 rosetta api
 

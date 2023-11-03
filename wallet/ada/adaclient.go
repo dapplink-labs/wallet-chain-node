@@ -38,7 +38,7 @@ func NewAdaClient(conf *config.Config) ([]*adaClient, error) {
 	return clients, nil
 }
 
-func (c *adaClient) GetUtxoByAddress(address string) ([]*types.Coin, error) {
+func (c *adaClient) GetUtxoByAddress(address string) (*types.AccountCoinsResponse, error) {
 	ctx := context.Background()
 	networkIdentifier := c.GetNetworkList(ctx)
 	accountCoinsRequest := &types.AccountCoinsRequest{
@@ -53,7 +53,7 @@ func (c *adaClient) GetUtxoByAddress(address string) ([]*types.Coin, error) {
 	if err != nil {
 		panic(err)
 	}
-	return accountCoinsResponse.Coins, nil
+	return accountCoinsResponse, nil
 }
 
 func (c *adaClient) GetAccountBalance(address string) ([]*types.Amount, error) {
@@ -94,14 +94,13 @@ func (c *adaClient) GetTransactionsByHash(txHash string) ([]*types.BlockTransact
 	return transactions.Transactions, nil
 }
 
-func (c *adaClient) GetTransactionsByAddress(address string, limit, offset, maxBlock *int64) ([]*types.BlockTransaction, error) {
+func (c *adaClient) GetTransactionsByAddress(address string, limit, offset *int64) (*types.SearchTransactionsResponse, error) {
 	ctx := context.Background()
 	networkIdentifier := c.GetNetworkList(ctx)
 	searchTransactionsRequest := &types.SearchTransactionsRequest{
 		AccountIdentifier: &types.AccountIdentifier{Address: address},
 		Limit:             limit,
 		Offset:            offset,
-		MaxBlock:          maxBlock,
 		NetworkIdentifier: networkIdentifier}
 	transactions, rosettaErr, err := c.client.SearchAPI.SearchTransactions(ctx, searchTransactionsRequest)
 	if rosettaErr != nil {
@@ -111,7 +110,7 @@ func (c *adaClient) GetTransactionsByAddress(address string, limit, offset, maxB
 	if err != nil {
 		panic(err)
 	}
-	return transactions.Transactions, nil
+	return transactions, nil
 }
 
 func (c *adaClient) GetLatestBlockHeight() (int64, error) {
@@ -131,6 +130,26 @@ func (c *adaClient) GetLatestBlockHeight() (int64, error) {
 	//log.Printf("Current Block: %s\n", types.PrettyPrintStruct(blockResponse.Block))
 
 	return blockResponse.Block.BlockIdentifier.Index, nil
+}
+
+func (c *adaClient) GetBlockByHash(hash string, index int64) (*types.BlockResponse, error) {
+	ctx := context.Background()
+	networkIdentifier := c.GetNetworkList(ctx)
+	blockRequest := &types.BlockRequest{
+		NetworkIdentifier: networkIdentifier,
+		BlockIdentifier:   &types.PartialBlockIdentifier{Hash: &hash, Index: &index},
+	}
+	blockResponse, rosettaErr, err := c.client.BlockAPI.Block(ctx, blockRequest)
+	if rosettaErr != nil {
+		log.Printf("Rosetta Error: %+v\n", rosettaErr)
+		panic(rosettaErr)
+	}
+	if err != nil {
+		panic(err)
+	}
+	//log.Printf("Current Block: %s\n", types.PrettyPrintStruct(blockResponse.Block))
+
+	return blockResponse, nil
 }
 
 func (c *adaClient) SendRawTransaction(signedTx string) (string, error) {

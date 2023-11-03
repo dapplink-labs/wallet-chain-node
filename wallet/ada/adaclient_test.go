@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/savour-labs/wallet-hd-chain/config"
+	"math/big"
 	"testing"
 )
 
@@ -103,12 +104,18 @@ func TestAdaClient_GetTransactionsByAddress(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
+
+	page := 2
+	pageSize := 10
+	limit := int64(pageSize)
+	offset := int64((page - 1) * pageSize)
 	txList, err := client[0].GetTransactionsByAddress("addr1qx46npjjkvwe8rdu0s8w350jk8escgp0we8wkjxxd0mwx74t4xr99vcajwxmclqwargl9v0npssz7ajwadyvv6lkudaq8zwr53",
-		nil, nil, nil)
+		&limit, &offset)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("交易数量：", len(txList))
+
+	fmt.Println("交易数量：", len(txList.Transactions))
 	marshal, _ := json.Marshal(txList)
 	fmt.Println("txList:", string(marshal))
 }
@@ -131,6 +138,21 @@ func TestAdaClient_GetTransactionsByHash(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
+	input_value_sum := big.NewInt(0)
+	output_value_sum := big.NewInt(0)
+	for _, operation := range transaction[0].Transaction.Operations {
+		toIntValue := stringToInt(operation.Amount.Value)
+		if operation.Type == Input {
+			input_value_sum = new(big.Int).Add(input_value_sum, toIntValue)
+		}
+		if operation.Type == Output {
+			output_value_sum = output_value_sum.Add(output_value_sum, toIntValue)
+		}
+	}
+	fmt.Println("input_value_sum：", input_value_sum)
+	fmt.Println("output_value_sum：", output_value_sum)
+	tx_fee := new(big.Int).Sub(new(big.Int).Abs(input_value_sum), new(big.Int).Abs(output_value_sum))
+	fmt.Println("交易费用：", tx_fee.String())
 	marshal, _ := json.Marshal(transaction)
 	fmt.Println("transaction:", string(marshal))
 }
