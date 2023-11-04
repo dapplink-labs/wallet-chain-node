@@ -2,13 +2,15 @@ package xrp
 
 import (
 	"encoding/json"
+	"math/big"
+	"sync"
+
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/params"
+
 	"github.com/savour-labs/wallet-hd-chain/config"
 	xrprpc "github.com/savour-labs/wallet-hd-chain/wallet/xrp/rpc"
 	"github.com/savour-labs/wallet-hd-chain/wallet/xrp/types"
-	"math/big"
-	"sync"
 )
 
 type Client struct {

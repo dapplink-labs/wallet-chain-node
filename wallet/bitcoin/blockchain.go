@@ -2,8 +2,10 @@ package bitcoin
 
 import (
 	"fmt"
+
 	gresty "github.com/go-resty/resty/v2"
 	"github.com/pkg/errors"
+
 	"github.com/savour-labs/wallet-hd-chain/wallet/bitcoin/types"
 )
 

@@ -10,13 +10,15 @@ import (
 	"strings"
 
 	"github.com/btcsuite/btcd/btcec/v2"
+	pb "github.com/golang/protobuf/proto"
+	"github.com/golang/protobuf/ptypes"
+
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/fbsobreira/gotron-sdk/pkg/address"
 	"github.com/fbsobreira/gotron-sdk/pkg/proto/api"
 	"github.com/fbsobreira/gotron-sdk/pkg/proto/core"
-	pb "github.com/golang/protobuf/proto"
-	"github.com/golang/protobuf/ptypes"
+
 	"github.com/savour-labs/wallet-hd-chain/cache"
 	"github.com/savour-labs/wallet-hd-chain/config"
 	"github.com/savour-labs/wallet-hd-chain/rpc/common"

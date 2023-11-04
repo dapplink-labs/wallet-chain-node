@@ -2,9 +2,10 @@ package tron
 
 import (
 	"fmt"
+	"strings"
+
 	gresty "github.com/go-resty/resty/v2"
 	"github.com/pkg/errors"
-	"strings"
 )
 
 var errTronGridHTTPError = errors.New("tron grid http error")

@@ -2,37 +2,38 @@ package walletdispatcher
 
 import (
 	"context"
-	"github.com/savour-labs/wallet-hd-chain/wallet/base"
-	"github.com/savour-labs/wallet-hd-chain/wallet/linea"
-	"github.com/savour-labs/wallet-hd-chain/wallet/mantle"
-	"github.com/savour-labs/wallet-hd-chain/wallet/tron"
 	"runtime/debug"
 	"strings"
 
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
+	"github.com/ethereum/go-ethereum/log"
+
+	"github.com/savour-labs/wallet-hd-chain/config"
 	"github.com/savour-labs/wallet-hd-chain/rpc/common"
+	wallet2 "github.com/savour-labs/wallet-hd-chain/rpc/wallet"
 	"github.com/savour-labs/wallet-hd-chain/wallet"
+	"github.com/savour-labs/wallet-hd-chain/wallet/ada"
+	"github.com/savour-labs/wallet-hd-chain/wallet/arbitrum"
 	"github.com/savour-labs/wallet-hd-chain/wallet/avalanche"
+	"github.com/savour-labs/wallet-hd-chain/wallet/base"
 	"github.com/savour-labs/wallet-hd-chain/wallet/binance"
+	"github.com/savour-labs/wallet-hd-chain/wallet/bitcoin"
 	"github.com/savour-labs/wallet-hd-chain/wallet/eosio"
 	"github.com/savour-labs/wallet-hd-chain/wallet/ethereum"
 	"github.com/savour-labs/wallet-hd-chain/wallet/evmos"
 	"github.com/savour-labs/wallet-hd-chain/wallet/heco"
+	"github.com/savour-labs/wallet-hd-chain/wallet/linea"
+	"github.com/savour-labs/wallet-hd-chain/wallet/mantle"
 	"github.com/savour-labs/wallet-hd-chain/wallet/near"
 	"github.com/savour-labs/wallet-hd-chain/wallet/optimism"
 	"github.com/savour-labs/wallet-hd-chain/wallet/polygon"
 	"github.com/savour-labs/wallet-hd-chain/wallet/solana"
+	"github.com/savour-labs/wallet-hd-chain/wallet/tron"
 	"github.com/savour-labs/wallet-hd-chain/wallet/xrp"
 	"github.com/savour-labs/wallet-hd-chain/wallet/zksync"
-
-	"github.com/savour-labs/wallet-hd-chain/config"
-	wallet2 "github.com/savour-labs/wallet-hd-chain/rpc/wallet"
-	"github.com/savour-labs/wallet-hd-chain/wallet/arbitrum"
-	"github.com/savour-labs/wallet-hd-chain/wallet/bitcoin"
-
-	"github.com/ethereum/go-ethereum/log"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type CommonRequest interface {
@@ -70,11 +71,12 @@ func New(conf *config.Config) (*WalletDispatcher, error) {
 		near.ChainName:      near.NewChainAdaptor,
 		xrp.ChainName:       xrp.NewChainAdaptor,
 		eosio.ChainName:     eosio.NewChainAdaptor,
+		ada.ChainName:       ada.NewChainAdaptor,
 	}
 	supportedChains := []string{
 		bitcoin.ChainName, ethereum.ChainName, solana.ChainName, arbitrum.ChainName, base.ChainName, linea.ChainName,
 		mantle.ChainName, tron.ChainName, zksync.ChainName, optimism.ChainName, polygon.ChainName, binance.ChainName,
-		heco.ChainName, avalanche.ChainName, evmos.ChainName, near.ChainName, xrp.ChainName, eosio.ChainName,
+		heco.ChainName, avalanche.ChainName, evmos.ChainName, near.ChainName, xrp.ChainName, eosio.ChainName, ada.ChainName,
 	}
 	for _, c := range conf.Chains {
 		if factory, ok := walletAdaptorFactoryMap[c]; ok {
