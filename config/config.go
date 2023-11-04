@@ -64,6 +64,7 @@ type Fullnode struct {
 	Scroll   Node       `yaml:"scroll"`
 	Base     Node       `yaml:"base"`
 	Linea    Node       `yaml:"linea"`
+	Ada      Node       `yaml:"ada"`
 }
 
 // Config instance define

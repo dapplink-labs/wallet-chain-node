@@ -14,7 +14,6 @@ require (
 	github.com/cosmos/cosmos-sdk v0.40.0
 	github.com/eoscanada/eos-go v0.10.2
 	github.com/ethereum/go-ethereum v1.10.26
-	github.com/fbsobreira/gotron-sdk v0.0.0-20221101181131-c4daceb828f0
 	github.com/filecoin-project/go-address v1.0.0
 	github.com/filecoin-project/go-jsonrpc v0.1.9
 	github.com/filecoin-project/lotus v1.18.1
@@ -44,7 +43,7 @@ require (
 	github.com/99designs/go-keychain v0.0.0-20191008050251-8e49817e8af4 // indirect
 	github.com/99designs/keyring v1.2.1 // indirect
 	github.com/ChainSafe/go-schnorrkel v0.0.0-20200405005733-88cbf1b4c40d // indirect
-	github.com/DataDog/zstd v1.4.5 // indirect
+	github.com/DataDog/zstd v1.5.2 // indirect
 	github.com/GeertJohan/go.incremental v1.0.0 // indirect
 	github.com/GeertJohan/go.rice v1.0.2 // indirect
 	github.com/StackExchange/wmi v1.2.1 // indirect
@@ -60,6 +59,8 @@ require (
 	github.com/btcsuite/websocket v0.0.0-20150119174127-31079b680792 // indirect
 	github.com/cespare/xxhash v1.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/coinbase/rosetta-sdk-go v0.8.3 // indirect
+	github.com/coinbase/rosetta-sdk-go/types v1.0.0 // indirect
 	github.com/confio/ics23/go v0.7.0 // indirect
 	github.com/cosmos/cosmos-proto v1.0.0-alpha8 // indirect
 	github.com/cosmos/go-bip39 v1.0.0 // indirect
@@ -269,5 +270,7 @@ require (
 )
 
 replace github.com/algorand/go-algorand-sdk => ../go-algorand-sdk
+
 replace github.com/multiversx/mx-sdk-go => ../mx-sdk-go
+
 replace github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
