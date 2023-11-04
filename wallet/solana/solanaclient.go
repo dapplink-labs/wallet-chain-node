@@ -21,7 +21,7 @@ import (
 	"github.com/portto/solana-go-sdk/rpc"
 	"github.com/portto/solana-go-sdk/types"
 
-	"github.com/savour-labs/wallet-hd-chain/config"
+	"github.com/savour-labs/wallet-chain-node/config"
 )
 
 type solanaClient struct {

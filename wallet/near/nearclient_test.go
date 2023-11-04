@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/savour-labs/wallet-hd-chain/config"
+	"github.com/savour-labs/wallet-chain-node/config"
 )
 
 func newTestClient() *NearClient {

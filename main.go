@@ -11,9 +11,9 @@ import (
 
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/savour-labs/wallet-hd-chain/config"
-	wallet2 "github.com/savour-labs/wallet-hd-chain/rpc/wallet"
-	"github.com/savour-labs/wallet-hd-chain/walletdispatcher"
+	"github.com/savour-labs/wallet-chain-node/config"
+	wallet2 "github.com/savour-labs/wallet-chain-node/rpc/wallet"
+	"github.com/savour-labs/wallet-chain-node/walletdispatcher"
 )
 
 func main() {

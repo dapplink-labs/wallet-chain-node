@@ -8,14 +8,14 @@ parent:
 </div>
 
 <div align="center">
-  <a href="https://github.com/savour-labs/wallet-hd-chain/releases/latest">
-    <img alt="Version" src="https://img.shields.io/github/tag/savour-labs/wallet-hd-chain.svg" />
+  <a href="https://github.com/savour-labs/wallet-chain-node/releases/latest">
+    <img alt="Version" src="https://img.shields.io/github/tag/savour-labs/wallet-chain-node.svg" />
   </a>
-  <a href="https://github.com/savour-labs/wallet-hd-chain/blob/main/LICENSE">
-    <img alt="License: Apache-2.0" src="https://img.shields.io/github/license/savour-labs/wallet-hd-chain.svg" />
+  <a href="https://github.com/savour-labs/wallet-chain-node/blob/main/LICENSE">
+    <img alt="License: Apache-2.0" src="https://img.shields.io/github/license/savour-labs/wallet-chain-node.svg" />
   </a>
-  <a href="https://pkg.go.dev/github.com/savour-labs/wallet-hd-chain">
-    <img alt="GoDoc" src="https://godoc.org/github.com/savour-labs/wallet-hd-chain?status.svg" />
+  <a href="https://pkg.go.dev/github.com/savour-labs/wallet-chain-node">
+    <img alt="GoDoc" src="https://godoc.org/github.com/savour-labs/wallet-chain-node?status.svg" />
   </a>
 </div>
 
@@ -31,12 +31,12 @@ go mod tidy
 ```
 ### build
 ```bash
-go build or go install wallet-hd-chain
+go build or go install wallet-chain-node
 ```
 
 ### start 
 ```bash
-./wallet-hd-chain -c ./config.yml
+./wallet-chain-node -c ./config.yml
 ```
 
 ### Start the RPC interface test interface
@@ -49,12 +49,12 @@ grpcui -plaintext 127.0.0.1:8089
 
 ### 1.fork repo
 
-fork wallet-hd-chain to your github
+fork wallet-chain-node to your github
 
 ### 2.clone repo
 
 ```bash
-git@github.com:guoshijiang/wallet-hd-chain.git
+git@github.com:guoshijiang/wallet-chain-node.git
 ```
 
 ### 3. create new branch and commit code
@@ -72,11 +72,11 @@ git push origin xxx
 
 ### 4.commit PR
 
-Have a pr on your github and submit it to the wallet-hd-chain repository
+Have a pr on your github and submit it to the wallet-chain-node repository
 
 ### 5.review 
 
-After the wallet-hd-chain code maintainer has passed the review, the code will be merged into the wallet-hd-chain library. At this point, your PR submission is complete
+After the wallet-chain-node code maintainer has passed the review, the code will be merged into the wallet-chain-node library. At this point, your PR submission is complete
 
 ### 6.Disclaimer
 

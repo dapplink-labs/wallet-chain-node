@@ -4,7 +4,7 @@ import (
 	"crypto/sha256"
 	"fmt"
 	borsh "github.com/near/borsh-go"
-	"github.com/savour-labs/wallet-hd-chain/wallet/near/keys"
+	"github.com/savour-labs/wallet-chain-node/wallet/near/keys"
 	"math/big"
 )
 

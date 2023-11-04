@@ -7,7 +7,7 @@ package egld
 //	"github.com/multiversx/mx-sdk-go/core"
 //	"github.com/multiversx/mx-sdk-go/data"
 //	"github.com/pkg/errors"
-//	"github.com/savour-labs/wallet-hd-chain/config"
+//	"github.com/savour-labs/wallet-chain-node/config"
 //	"net"
 //	"strings"
 //	"time"

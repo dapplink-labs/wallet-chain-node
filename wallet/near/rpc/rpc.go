@@ -3,7 +3,7 @@ package nearrpc
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/savour-labs/wallet-hd-chain/wallet/near/types"
+	"github.com/savour-labs/wallet-chain-node/wallet/near/types"
 	"io/ioutil"
 	"net/http"
 )

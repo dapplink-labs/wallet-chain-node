@@ -10,7 +10,7 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 	tclient "github.com/fbsobreira/gotron-sdk/pkg/client"
 
-	"github.com/savour-labs/wallet-hd-chain/config"
+	"github.com/savour-labs/wallet-chain-node/config"
 )
 
 const (

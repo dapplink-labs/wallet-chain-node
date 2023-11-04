@@ -14,7 +14,7 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/pkg/errors"
 
-	"github.com/savour-labs/wallet-hd-chain/config"
+	"github.com/savour-labs/wallet-chain-node/config"
 )
 
 const (

@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/savour-labs/wallet-hd-chain/wallet/near/types"
+	"github.com/savour-labs/wallet-chain-node/wallet/near/types"
 )
 
 type RRCClient interface {

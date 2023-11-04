@@ -6,7 +6,7 @@ import (
 	gresty "github.com/go-resty/resty/v2"
 	"github.com/pkg/errors"
 
-	"github.com/savour-labs/wallet-hd-chain/wallet/bitcoin/types"
+	"github.com/savour-labs/wallet-chain-node/wallet/bitcoin/types"
 )
 
 /*

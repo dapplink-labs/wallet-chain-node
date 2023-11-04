@@ -16,7 +16,7 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/params"
 
-	"github.com/savour-labs/wallet-hd-chain/config"
+	"github.com/savour-labs/wallet-chain-node/config"
 )
 
 var (
