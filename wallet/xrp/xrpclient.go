@@ -8,9 +8,9 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/params"
 
-	"github.com/savour-labs/wallet-hd-chain/config"
-	xrprpc "github.com/savour-labs/wallet-hd-chain/wallet/xrp/rpc"
-	"github.com/savour-labs/wallet-hd-chain/wallet/xrp/types"
+	"github.com/savour-labs/wallet-chain-node/config"
+	xrprpc "github.com/savour-labs/wallet-chain-node/wallet/xrp/rpc"
+	"github.com/savour-labs/wallet-chain-node/wallet/xrp/types"
 )
 
 type Client struct {

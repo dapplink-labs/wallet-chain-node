@@ -1,8 +1,8 @@
 package fallback
 
 import (
-	"github.com/savour-labs/wallet-hd-chain/rpc/common"
-	"github.com/savour-labs/wallet-hd-chain/rpc/wallet"
+	"github.com/savour-labs/wallet-chain-node/rpc/common"
+	"github.com/savour-labs/wallet-chain-node/rpc/wallet"
 )
 
 type WalletAdaptor struct{}

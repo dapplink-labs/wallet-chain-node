@@ -21,12 +21,12 @@ import (
 
 	"github.com/ethereum/go-ethereum/params"
 
-	"github.com/savour-labs/wallet-hd-chain/config"
-	"github.com/savour-labs/wallet-hd-chain/wallet/near/account"
-	"github.com/savour-labs/wallet-hd-chain/wallet/near/keys"
-	nearrpc "github.com/savour-labs/wallet-hd-chain/wallet/near/rpc"
-	"github.com/savour-labs/wallet-hd-chain/wallet/near/transaction"
-	"github.com/savour-labs/wallet-hd-chain/wallet/near/types"
+	"github.com/savour-labs/wallet-chain-node/config"
+	"github.com/savour-labs/wallet-chain-node/wallet/near/account"
+	"github.com/savour-labs/wallet-chain-node/wallet/near/keys"
+	nearrpc "github.com/savour-labs/wallet-chain-node/wallet/near/rpc"
+	"github.com/savour-labs/wallet-chain-node/wallet/near/transaction"
+	"github.com/savour-labs/wallet-chain-node/wallet/near/types"
 )
 
 type NearClient struct {

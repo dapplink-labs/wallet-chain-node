@@ -2,10 +2,10 @@ package egld
 
 //
 //import (
-//	"github.com/savour-labs/wallet-hd-chain/config"
-//	wallet2 "github.com/savour-labs/wallet-hd-chain/rpc/wallet"
-//	"github.com/savour-labs/wallet-hd-chain/wallet/fallback"
-//	"github.com/savour-labs/wallet-hd-chain/wallet/multiclient"
+//	"github.com/savour-labs/wallet-chain-node/config"
+//	wallet2 "github.com/savour-labs/wallet-chain-node/rpc/wallet"
+//	"github.com/savour-labs/wallet-chain-node/wallet/fallback"
+//	"github.com/savour-labs/wallet-chain-node/wallet/multiclient"
 //)
 //
 //const (

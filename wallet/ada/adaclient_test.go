@@ -7,7 +7,7 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/savour-labs/wallet-hd-chain/config"
+	"github.com/savour-labs/wallet-chain-node/config"
 )
 
 func TestAdaClient_GetLatestBlockHeight(t *testing.T) {

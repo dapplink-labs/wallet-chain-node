@@ -5,11 +5,11 @@ import (
 
 	"github.com/ethereum/go-ethereum/core/types"
 
-	"github.com/savour-labs/wallet-hd-chain/config"
-	"github.com/savour-labs/wallet-hd-chain/rpc/common"
-	wallet2 "github.com/savour-labs/wallet-hd-chain/rpc/wallet"
-	"github.com/savour-labs/wallet-hd-chain/wallet"
-	"github.com/savour-labs/wallet-hd-chain/wallet/fallback"
+	"github.com/savour-labs/wallet-chain-node/config"
+	"github.com/savour-labs/wallet-chain-node/rpc/common"
+	wallet2 "github.com/savour-labs/wallet-chain-node/rpc/wallet"
+	"github.com/savour-labs/wallet-chain-node/wallet"
+	"github.com/savour-labs/wallet-chain-node/wallet/fallback"
 )
 
 type WalletAdaptor struct {

@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	wallet2 "github.com/savour-labs/wallet-hd-chain/rpc/wallet"
+	wallet2 "github.com/savour-labs/wallet-chain-node/rpc/wallet"
 )
 
 func TestClient_GetBalance(t *testing.T) {

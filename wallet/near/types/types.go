@@ -2,7 +2,7 @@ package types
 
 import (
 	"github.com/ethereum/go-ethereum/rpc"
-	"github.com/savour-labs/wallet-hd-chain/wallet/near/keys"
+	"github.com/savour-labs/wallet-chain-node/wallet/near/keys"
 )
 
 type RpcRequest struct {
