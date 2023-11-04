@@ -65,6 +65,7 @@ type Fullnode struct {
 	Base     Node       `yaml:"base"`
 	Linea    Node       `yaml:"linea"`
 	Ada      Node       `yaml:"ada"`
+	Sui      Node       `yaml:"sui"`
 }
 
 // Config instance define
