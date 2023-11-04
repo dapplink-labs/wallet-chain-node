@@ -5,12 +5,11 @@ import (
 	"time"
 
 	"github.com/coinbase/rosetta-sdk-go/types"
-
 	"github.com/ethereum/go-ethereum/log"
-
 	"github.com/savour-labs/wallet-hd-chain/config"
 	"github.com/savour-labs/wallet-hd-chain/rpc/common"
 	wallet2 "github.com/savour-labs/wallet-hd-chain/rpc/wallet"
+
 	"github.com/savour-labs/wallet-hd-chain/wallet"
 	"github.com/savour-labs/wallet-hd-chain/wallet/fallback"
 	"github.com/savour-labs/wallet-hd-chain/wallet/multiclient"
@@ -25,9 +24,11 @@ const (
 
 	// defaultTimeout is the default timeout for
 	// HTTP requests.
-	defaultTimeout = 10 * time.Second
-	Input          = "input"
-	Output         = "output"
+	defaultTimeout  = 10 * time.Second
+	Input           = "input"
+	Output          = "output"
+	relativeTtl     = int64(1000)
+	transactionSize = int64(5000)
 )
 
 type WalletAdaptor struct {
@@ -197,6 +198,37 @@ func (w *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxRespo
 		Code:   common.ReturnCode_SUCCESS,
 		Msg:    "send tx success",
 		TxHash: txHash,
+	}, nil
+}
+
+func (w *WalletAdaptor) GetGasPrice(req *wallet2.GasPriceRequest) (*wallet2.GasPriceResponse, error) {
+	// todo 需要等待参数结构体修改
+	//oprationStr := ""
+	// get gas price preprocess
+	//preprocess, preErr := w.getClient().Preprocess(oprationStr)
+	//if preErr != nil {
+	//	log.Info("preprocess", "err", preErr)
+	//	return &wallet2.GasPriceResponse{
+	//		Code: common.ReturnCode_ERROR,
+	//		Msg:  preErr.Error(),
+	//	}, preErr
+	//}
+	//relativeTtl := preprocess["relative_ttl"].(int64)
+	//transactionSize := preprocess["transaction_size"].(int64)
+
+	gasFee, err := w.getClient().GetTxFee(relativeTtl, transactionSize)
+	if err != nil {
+		log.Info("QueryGasPrice", "err", err)
+		return &wallet2.GasPriceResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  err.Error(),
+		}, err
+	}
+
+	return &wallet2.GasPriceResponse{
+		Code: common.ReturnCode_SUCCESS,
+		Msg:  "get gas price success",
+		Gas:  gasFee[0].Value,
 	}, nil
 }
 
