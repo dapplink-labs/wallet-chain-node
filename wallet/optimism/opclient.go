@@ -43,7 +43,7 @@ type Client interface {
 
 // newopClient init the eth client
 func newOpClients(conf *config.Config) ([]*opClient, error) {
-	chainConfig := params.RopstenChainConfig
+	chainConfig := params.SepoliaChainConfig
 	if conf.NetWork == "mainnet" {
 		chainConfig = params.MainnetChainConfig
 	} else if conf.NetWork == "regtest" {
@@ -90,7 +90,7 @@ func newLocalOpClient(network config.NetWorkType) *opClient {
 	case config.MainNet:
 		para = params.MainnetChainConfig
 	case config.TestNet:
-		para = params.RopstenChainConfig
+		para = params.SepoliaChainConfig
 	case config.RegTest:
 		para = params.AllCliqueProtocolChanges
 	default:

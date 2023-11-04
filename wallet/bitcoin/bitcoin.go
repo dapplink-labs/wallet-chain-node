@@ -9,7 +9,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/btcsuite/btcd/btcec"
+	"github.com/btcsuite/btcd/btcec/v2"
+	"github.com/btcsuite/btcd/btcec/v2/ecdsa"
 	"github.com/btcsuite/btcd/btcjson"
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	"github.com/btcsuite/btcd/txscript"
@@ -454,7 +455,7 @@ func (a *WalletAdaptor) CreateUtxoSignedTx(req *wallet2.CreateUtxoSignedTxReques
 
 	// assemble signatures
 	for i, in := range msgTx.TxIn {
-		btcecPub, err2 := btcec.ParsePubKey(req.PublicKeys[i], btcec.S256())
+		btcecPub, err2 := btcec.ParsePubKey(req.PublicKeys[i])
 		if err2 != nil {
 			log.Error("CreateSignedTransaction ParsePubKey", "err", err2)
 			return &wallet2.CreateSignedTxResponse{
@@ -511,13 +512,11 @@ func (a *WalletAdaptor) CreateUtxoSignedTx(req *wallet2.CreateUtxoSignedTxReques
 				Msg:  err2.Error(),
 			}, err2
 		}
-		r := new(big.Int).SetBytes(req.Signatures[i][0:32])
-		s := new(big.Int).SetBytes(req.Signatures[i][32:64])
-
-		btcecSig := &btcec.Signature{
-			R: r,
-			S: s,
-		}
+		var r *btcec.ModNScalar
+		R := r.SetInt(r.SetBytes((*[32]byte)(req.Signatures[i][0:32])))
+		var s *btcec.ModNScalar
+		S := s.SetInt(r.SetBytes((*[32]byte)(req.Signatures[i][32:64])))
+		btcecSig := ecdsa.NewSignature(R, S)
 		sig := append(btcecSig.Serialize(), byte(txscript.SigHashAll))
 		sigScript, err2 := txscript.NewScriptBuilder().AddData(sig).AddData(pkData).Script()
 		if err2 != nil {

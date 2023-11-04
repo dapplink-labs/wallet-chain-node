@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/btcsuite/btcd/btcec"
+	"github.com/btcsuite/btcd/btcec/v2"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/fbsobreira/gotron-sdk/pkg/address"
@@ -297,7 +297,7 @@ func (wa WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxRespo
 
 func (a *WalletAdaptor) ConvertAddress(req *wallet2.ConvertAddressRequest) (*wallet2.ConvertAddressResponse, error) {
 	log.Info("ConvertAddress", "req", req)
-	btcecPubKey, err := btcec.ParsePubKey(req.PublicKey, btcec.S256())
+	btcecPubKey, err := btcec.ParsePubKey(req.PublicKey)
 	if err != nil {
 		log.Error("btcec.ParsePubKey failed", "err", err)
 		return &wallet2.ConvertAddressResponse{

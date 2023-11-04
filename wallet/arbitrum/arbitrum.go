@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/btcsuite/btcd/btcec"
+	"github.com/btcsuite/btcd/btcec/v2"
 	"github.com/ethereum/go-ethereum"
 	ethcommon "github.com/ethereum/go-ethereum/common"
 	etherscan "github.com/nanmu42/etherscan-api"
@@ -93,14 +93,14 @@ func (a *WalletAdaptor) makeSigner() (types.Signer, error) {
 		return nil, err
 	}
 	log.Info("make signer", "height", height.Uint64())
-	return types.MakeSigner(a.getClient().chainConfig, height), nil
+	return types.MakeSigner(a.getClient().chainConfig, height, 10000), nil
 }
 
 func (a *WalletAdaptor) makeSignerOffline(height int64) types.Signer {
 	if height == 0 {
 		height = math.MaxInt64
 	}
-	return types.MakeSigner(a.getClient().chainConfig, big.NewInt(height))
+	return types.MakeSigner(a.getClient().chainConfig, big.NewInt(height), 10000)
 }
 
 func (wa *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.BalanceResponse, error) {
@@ -347,7 +347,7 @@ func (wa *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxResp
 }
 
 func (a *WalletAdaptor) ConvertAddress(req *wallet2.ConvertAddressRequest) (*wallet2.ConvertAddressResponse, error) {
-	publicKey, err := btcec.ParsePubKey(req.PublicKey, btcec.S256())
+	publicKey, err := btcec.ParsePubKey(req.PublicKey)
 	if err != nil {
 		log.Error(" btcec.ParsePubKey failed", "err", err)
 		return &wallet2.ConvertAddressResponse{
@@ -600,22 +600,13 @@ func (a *WalletAdaptor) queryTransaction(isERC20 bool, tx *types.Transaction, re
 		}, nil
 	}
 	reply.SignHash = signer.Hash(tx).Bytes()
-	msg, err := tx.AsMessage(signer, nil)
-	if err != nil {
-		log.Error("tx as message err", "err", err)
-		return &wallet2.AccountTxResponse{
-			Code: common.ReturnCode_ERROR,
-			Msg:  err.Error(),
-		}, nil
-	}
-
 	gasUsed := new(big.Int)
 	if receipt != nil {
 		gasUsed = gasUsed.SetUint64(receipt.GasUsed).Mul(gasUsed, tx.GasPrice())
 		if isERC20 {
 			// Check ERC20 Transfer event log
 			err := a.validateAndQueryERC20TransferReceipt(ethcommon.HexToAddress(reply.ContractAddress),
-				msg.From().String(), reply.To, reply.Amount, receipt)
+				reply.From, reply.To, reply.Amount, receipt)
 			if err != nil {
 				return &wallet2.AccountTxResponse{
 					Code: common.ReturnCode_ERROR,
@@ -625,10 +616,10 @@ func (a *WalletAdaptor) queryTransaction(isERC20 bool, tx *types.Transaction, re
 		}
 	}
 
-	log.Info("QueryTransaction", "from", msg.From().String(),
+	log.Info("QueryTransaction", "from", reply.From,
 		"block_number", blockNumber,
 		"gas_used", decimal.NewFromBigInt(gasUsed, 0).String())
-	reply.From = msg.From().String()
+	reply.From = reply.From
 	reply.CostFee = decimal.NewFromBigInt(gasUsed, 0).String()
 	reply.BlockHeight = blockNumber
 	reply.Status = wallet2.TxStatus_Success

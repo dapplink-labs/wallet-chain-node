@@ -43,7 +43,7 @@ type Client interface {
 
 // newAvaxClient init the eth client
 func newAvaxClients(conf *config.Config) ([]*avaxClient, error) {
-	chainConfig := params.RopstenChainConfig
+	chainConfig := params.SepoliaChainConfig
 	if conf.NetWork == "mainnet" {
 		chainConfig = params.MainnetChainConfig
 	} else if conf.NetWork == "regtest" {
@@ -90,7 +90,7 @@ func newLocalAvaxClient(network config.NetWorkType) *avaxClient {
 	case config.MainNet:
 		para = params.MainnetChainConfig
 	case config.TestNet:
-		para = params.RopstenChainConfig
+		para = params.SepoliaChainConfig
 	case config.RegTest:
 		para = params.AllCliqueProtocolChanges
 	default:
