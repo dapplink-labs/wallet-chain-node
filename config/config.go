@@ -1,11 +1,11 @@
 package config
 
 import (
+	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
 
 	"github.com/ethereum/go-ethereum/log"
-	"gopkg.in/yaml.v2"
 )
 
 // Server prot

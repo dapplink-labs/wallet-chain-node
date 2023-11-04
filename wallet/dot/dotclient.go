@@ -2,10 +2,12 @@ package dot
 
 import (
 	"fmt"
+
 	"github.com/go-resty/resty/v2"
 	"github.com/pkg/errors"
-	"github.com/savour-labs/wallet-hd-chain/config"
 	"github.com/tidwall/gjson"
+
+	"github.com/savour-labs/wallet-hd-chain/config"
 )
 
 var errTssHTTPError = errors.New("tss http error")

@@ -7,24 +7,26 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"github.com/ethereum/go-ethereum/params"
+	"io/ioutil"
+	"math"
+	"math/big"
+	"net/http"
+	"reflect"
+	"strconv"
+	"strings"
+	"sync"
+
 	"github.com/golang-module/dongle"
+	"github.com/shopspring/decimal"
+
+	"github.com/ethereum/go-ethereum/params"
+
 	"github.com/savour-labs/wallet-hd-chain/config"
 	"github.com/savour-labs/wallet-hd-chain/wallet/near/account"
 	"github.com/savour-labs/wallet-hd-chain/wallet/near/keys"
 	nearrpc "github.com/savour-labs/wallet-hd-chain/wallet/near/rpc"
 	"github.com/savour-labs/wallet-hd-chain/wallet/near/transaction"
 	"github.com/savour-labs/wallet-hd-chain/wallet/near/types"
-	"reflect"
-	"strings"
-
-	"github.com/shopspring/decimal"
-	"io/ioutil"
-	"math"
-	"math/big"
-	"net/http"
-	"strconv"
-	"sync"
 )
 
 type NearClient struct {

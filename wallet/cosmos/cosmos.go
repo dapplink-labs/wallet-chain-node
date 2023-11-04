@@ -6,9 +6,11 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/golang/protobuf/ptypes"
+
 	authv1beta1 "cosmossdk.io/api/cosmos/auth/v1beta1"
 	types2 "github.com/cosmos/cosmos-sdk/types"
-	"github.com/golang/protobuf/ptypes"
+
 	"github.com/savour-labs/wallet-hd-chain/config"
 	"github.com/savour-labs/wallet-hd-chain/rpc/common"
 	"github.com/savour-labs/wallet-hd-chain/rpc/wallet"

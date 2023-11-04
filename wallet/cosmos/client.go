@@ -5,8 +5,11 @@ import (
 	"errors"
 	"fmt"
 
-	authv1beta1 "cosmossdk.io/api/cosmos/auth/v1beta1"
 	"github.com/armon/go-metrics"
+	"google.golang.org/grpc"
+
+	authv1beta1 "cosmossdk.io/api/cosmos/auth/v1beta1"
+
 	"github.com/cosmos/cosmos-sdk/codec"
 	ed255192 "github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	"github.com/cosmos/cosmos-sdk/telemetry"
@@ -14,7 +17,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/tx"
 	"github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	"google.golang.org/grpc"
 )
 
 type Client struct {

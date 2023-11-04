@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	wallet2 "github.com/savour-labs/wallet-hd-chain/rpc/wallet"
 	"github.com/stretchr/testify/assert"
+
+	wallet2 "github.com/savour-labs/wallet-hd-chain/rpc/wallet"
 )
 
 func TestClient_GetBalance(t *testing.T) {

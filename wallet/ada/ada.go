@@ -118,7 +118,6 @@ func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.
 }
 
 func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {
-	//TODO implement me
 	transactionsByAddress, err := a.getClient().GetTransactionsByHash(req.Hash)
 	if err != nil {
 		return &wallet2.TxHashResponse{

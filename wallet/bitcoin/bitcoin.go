@@ -16,17 +16,19 @@ import (
 	"github.com/btcsuite/btcd/txscript"
 	"github.com/btcsuite/btcd/wire"
 	"github.com/btcsuite/btcutil"
-	"github.com/ethereum/go-ethereum/log"
 	"github.com/pkg/errors"
+	"github.com/shopspring/decimal"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
+	"github.com/ethereum/go-ethereum/log"
+
 	"github.com/savour-labs/wallet-hd-chain/config"
 	"github.com/savour-labs/wallet-hd-chain/rpc/common"
 	wallet2 "github.com/savour-labs/wallet-hd-chain/rpc/wallet"
 	"github.com/savour-labs/wallet-hd-chain/wallet"
 	"github.com/savour-labs/wallet-hd-chain/wallet/fallback"
 	"github.com/savour-labs/wallet-hd-chain/wallet/multiclient"
-	"github.com/shopspring/decimal"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 const (

@@ -3,29 +3,29 @@ package arbitrum
 import (
 	"context"
 	"fmt"
-
-	"github.com/btcsuite/btcd/btcec/v2"
-	"github.com/ethereum/go-ethereum"
-	ethcommon "github.com/ethereum/go-ethereum/common"
-	etherscan "github.com/nanmu42/etherscan-api"
-
 	"math"
 	"math/big"
 	"strconv"
 	"strings"
 
+	"github.com/btcsuite/btcd/btcec/v2"
+	etherscan "github.com/nanmu42/etherscan-api"
+	"github.com/shopspring/decimal"
+
+	"github.com/ethereum/go-ethereum"
+	ethcommon "github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rlp"
+
 	"github.com/savour-labs/wallet-hd-chain/config"
 	"github.com/savour-labs/wallet-hd-chain/rpc/common"
 	wallet2 "github.com/savour-labs/wallet-hd-chain/rpc/wallet"
 	"github.com/savour-labs/wallet-hd-chain/wallet"
 	"github.com/savour-labs/wallet-hd-chain/wallet/fallback"
 	"github.com/savour-labs/wallet-hd-chain/wallet/multiclient"
-	"github.com/shopspring/decimal"
 )
 
 const (

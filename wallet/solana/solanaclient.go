@@ -4,21 +4,24 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/ethereum/go-ethereum/params"
-	"github.com/mr-tron/base58"
-	"github.com/portto/solana-go-sdk/client"
-	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/memoprog"
-	"github.com/portto/solana-go-sdk/program/sysprog"
-	"github.com/portto/solana-go-sdk/rpc"
-	"github.com/portto/solana-go-sdk/types"
-	"github.com/savour-labs/wallet-hd-chain/config"
 	"io/ioutil"
 	"log"
 	"math/big"
 	"net/http"
 	"strconv"
 	"sync"
+
+	"github.com/ethereum/go-ethereum/params"
+	"github.com/mr-tron/base58"
+
+	"github.com/portto/solana-go-sdk/client"
+	"github.com/portto/solana-go-sdk/common"
+	"github.com/portto/solana-go-sdk/program/memoprog"
+	"github.com/portto/solana-go-sdk/program/sysprog"
+	"github.com/portto/solana-go-sdk/rpc"
+	"github.com/portto/solana-go-sdk/types"
+
+	"github.com/savour-labs/wallet-hd-chain/config"
 )
 
 type solanaClient struct {

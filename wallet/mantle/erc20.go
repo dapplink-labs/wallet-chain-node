@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"math/big"
 
+	"github.com/shopspring/decimal"
+
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/savour-labs/wallet-hd-chain/wallet/ethereum/factory"
-	"github.com/shopspring/decimal"
 )
 
 func (client *mantleClient) Erc20BalanceOf(tokenAddress, account string, blockNumber *big.Int) (*big.Int, error) {

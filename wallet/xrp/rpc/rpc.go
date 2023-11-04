@@ -4,9 +4,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/savour-labs/wallet-hd-chain/wallet/near/types"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/savour-labs/wallet-hd-chain/wallet/near/types"
 )
 
 type RRCClient interface {
