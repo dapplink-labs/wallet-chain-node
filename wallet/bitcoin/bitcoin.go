@@ -9,23 +9,26 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/btcsuite/btcd/btcec"
+	"github.com/btcsuite/btcd/btcec/v2"
+	"github.com/btcsuite/btcd/btcec/v2/ecdsa"
 	"github.com/btcsuite/btcd/btcjson"
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	"github.com/btcsuite/btcd/txscript"
 	"github.com/btcsuite/btcd/wire"
 	"github.com/btcsuite/btcutil"
-	"github.com/ethereum/go-ethereum/log"
 	"github.com/pkg/errors"
+	"github.com/shopspring/decimal"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
+	"github.com/ethereum/go-ethereum/log"
+
 	"github.com/savour-labs/wallet-hd-chain/config"
 	"github.com/savour-labs/wallet-hd-chain/rpc/common"
 	wallet2 "github.com/savour-labs/wallet-hd-chain/rpc/wallet"
 	"github.com/savour-labs/wallet-hd-chain/wallet"
 	"github.com/savour-labs/wallet-hd-chain/wallet/fallback"
 	"github.com/savour-labs/wallet-hd-chain/wallet/multiclient"
-	"github.com/shopspring/decimal"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 const (
@@ -454,7 +457,7 @@ func (a *WalletAdaptor) CreateUtxoSignedTx(req *wallet2.CreateUtxoSignedTxReques
 
 	// assemble signatures
 	for i, in := range msgTx.TxIn {
-		btcecPub, err2 := btcec.ParsePubKey(req.PublicKeys[i], btcec.S256())
+		btcecPub, err2 := btcec.ParsePubKey(req.PublicKeys[i])
 		if err2 != nil {
 			log.Error("CreateSignedTransaction ParsePubKey", "err", err2)
 			return &wallet2.CreateSignedTxResponse{
@@ -511,13 +514,11 @@ func (a *WalletAdaptor) CreateUtxoSignedTx(req *wallet2.CreateUtxoSignedTxReques
 				Msg:  err2.Error(),
 			}, err2
 		}
-		r := new(big.Int).SetBytes(req.Signatures[i][0:32])
-		s := new(big.Int).SetBytes(req.Signatures[i][32:64])
-
-		btcecSig := &btcec.Signature{
-			R: r,
-			S: s,
-		}
+		var r *btcec.ModNScalar
+		R := r.SetInt(r.SetBytes((*[32]byte)(req.Signatures[i][0:32])))
+		var s *btcec.ModNScalar
+		S := s.SetInt(r.SetBytes((*[32]byte)(req.Signatures[i][32:64])))
+		btcecSig := ecdsa.NewSignature(R, S)
 		sig := append(btcecSig.Serialize(), byte(txscript.SigHashAll))
 		sigScript, err2 := txscript.NewScriptBuilder().AddData(sig).AddData(pkData).Script()
 		if err2 != nil {

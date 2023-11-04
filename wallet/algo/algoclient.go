@@ -3,13 +3,15 @@ package algo
 import (
 	"context"
 	"errors"
+	"net"
+	"strings"
+
+	"github.com/ethereum/go-ethereum/log"
+
 	"github.com/algorand/go-algorand-sdk/client/v2/algod"
 	"github.com/algorand/go-algorand-sdk/client/v2/common"
 	altype "github.com/algorand/go-algorand-sdk/types"
-	"github.com/ethereum/go-ethereum/log"
 	"github.com/savour-labs/wallet-hd-chain/config"
-	"net"
-	"strings"
 )
 
 type AlgoClient interface {

@@ -2,8 +2,9 @@ package xrp
 
 import (
 	"fmt"
-	"github.com/savour-labs/wallet-hd-chain/config"
 	"testing"
+
+	"github.com/savour-labs/wallet-hd-chain/config"
 )
 
 func newTestClient() *Client {

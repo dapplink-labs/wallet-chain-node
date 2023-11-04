@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/savour-labs/wallet-hd-chain/config"
 	"math/big"
 	"testing"
+
+	"github.com/savour-labs/wallet-hd-chain/config"
 )
 
 func TestAdaClient_GetLatestBlockHeight(t *testing.T) {

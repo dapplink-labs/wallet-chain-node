@@ -2,9 +2,11 @@ package algo
 
 import (
 	"fmt"
+
 	"github.com/go-resty/resty/v2"
-	"github.com/savour-labs/wallet-hd-chain/config"
 	"github.com/syndtr/goleveldb/leveldb/errors"
+
+	"github.com/savour-labs/wallet-hd-chain/config"
 )
 
 var errTssHTTPError = errors.New("tss http error")

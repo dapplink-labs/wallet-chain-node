@@ -1,8 +1,9 @@
 package evmos
 
 import (
-	etherscan "github.com/nanmu42/etherscan-api"
 	"time"
+
+	etherscan "github.com/nanmu42/etherscan-api"
 )
 
 func NewEtherscanClient(apiURL string, Key string) *etherscan.Client {

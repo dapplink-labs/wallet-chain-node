@@ -6,12 +6,14 @@ import (
 	"flag"
 	"net"
 
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
+
 	"github.com/ethereum/go-ethereum/log"
+
 	"github.com/savour-labs/wallet-hd-chain/config"
 	wallet2 "github.com/savour-labs/wallet-hd-chain/rpc/wallet"
 	"github.com/savour-labs/wallet-hd-chain/walletdispatcher"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 )
 
 func main() {
