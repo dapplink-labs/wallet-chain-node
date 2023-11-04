@@ -43,7 +43,7 @@ type Client interface {
 
 // newEthClient init the eth client
 func newEthClients(conf *config.Config) ([]*ethClient, error) {
-	chainConfig := params.RopstenChainConfig
+	chainConfig := params.SepoliaChainConfig
 	if conf.NetWork == "mainnet" {
 		chainConfig = params.MainnetChainConfig
 	} else if conf.NetWork == "regtest" {
@@ -90,7 +90,7 @@ func newLocalEthClient(network config.NetWorkType) *ethClient {
 	case config.MainNet:
 		para = params.MainnetChainConfig
 	case config.TestNet:
-		para = params.RopstenChainConfig
+		para = params.SepoliaChainConfig
 	case config.RegTest:
 		para = params.AllCliqueProtocolChanges
 	default:
