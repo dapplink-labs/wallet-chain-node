@@ -29,9 +29,22 @@ func TestSuiClient_GetAccountBalance(t *testing.T) {
 
 func TestSuiClient_GetTxListByAddress(t *testing.T) {
 	client := getClient()
+	//"0x7d20dcdb2bca4f508ea9613994683eb4e76e9c4ed371169677c1be02aaf0b58e"
+	txList, err := client.GetTxListByAddress("0x95f1baf8c250c06fc2558f2ca5b35b371977f7182d381cf29b0f36f2f9da434a", "YxjRfteuVNyPfJdTf3gZD6grHjUrkTgi8pQKQZqGHyz", 5)
+	if err != nil {
+		panic(err)
+	}
+	utils.PrettyPrint(txList)
+}
 
-	client.GetTxListByAddress("0x00878369f475a454939af7b84cdd981515b1329f159a1aeb9bf0f8899e00083a")
+func TestSuiClient_GetTxDetailByDigest(t *testing.T) {
+	client := getClient()
 
+	txDetail, err := client.GetTxDetailByDigest("Tgc2M6cBMGoYidew1gC2LYwfqQzEBpK2jSAwhCWRCtJ")
+	if err != nil {
+		panic(err)
+	}
+	utils.PrettyPrint(txDetail)
 }
 
 func getClient() *suiClient {

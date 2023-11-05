@@ -2,7 +2,6 @@ package sui
 
 import (
 	"context"
-	"github.com/block-vision/sui-go-sdk/utils"
 	"log"
 
 	"github.com/block-vision/sui-go-sdk/models"
@@ -62,18 +61,53 @@ func (c *suiClient) GetAllAccountBalance(owner string) (models.CoinAllBalanceRes
 	return balance, nil
 }
 
-func (c *suiClient) GetTxListByAddress(address string) {
+func (c *suiClient) GetTxListByAddress(address string, cursor interface{}, limit uint64) (models.SuiXQueryTransactionBlocksResponse, error) {
 	ctx := context.Background()
-	blocks, err := c.client.SuiGetTotalTransactionBlocks(ctx)
+	req := models.SuiXQueryTransactionBlocksRequest{
+		SuiTransactionBlockResponseQuery: models.SuiTransactionBlockResponseQuery{
+			TransactionFilter: models.TransactionFilter{
+				"FromAddress": address,
+			},
+			Options: models.SuiTransactionBlockOptions{
+				ShowInput:          true,
+				ShowRawInput:       true,
+				ShowEffects:        true,
+				ShowEvents:         true,
+				ShowObjectChanges:  true,
+				ShowBalanceChanges: true,
+			},
+		},
+		Cursor:          cursor,
+		Limit:           limit,
+		DescendingOrder: false,
+	}
+	txList, err := c.client.SuiXQueryTransactionBlocks(ctx, req)
 	if err != nil {
-		log.Printf("get all balance Error: %+v\n", err)
+		log.Printf("get tx list  Error: %+v\n", err)
 		panic(err)
 	}
-	utils.PrettyPrint(blocks)
+	return txList, nil
 }
 
-func (c *suiClient) GetTxDetailByHash(hash string) {
-
+func (c *suiClient) GetTxDetailByDigest(digest string) (models.SuiTransactionBlockResponse, error) {
+	ctx := context.Background()
+	req := models.SuiGetTransactionBlockRequest{
+		Digest: digest,
+		Options: models.SuiTransactionBlockOptions{
+			ShowInput:          true,
+			ShowRawInput:       true,
+			ShowEffects:        true,
+			ShowEvents:         true,
+			ShowBalanceChanges: true,
+			ShowObjectChanges:  true,
+		},
+	}
+	txDetail, err := c.client.SuiGetTransactionBlock(ctx, req)
+	if err != nil {
+		log.Printf("get tx detail  Error: %+v\n", err)
+		panic(err)
+	}
+	return txDetail, nil
 }
 
 func (c *suiClient) GetTxFee() {
@@ -81,5 +115,7 @@ func (c *suiClient) GetTxFee() {
 }
 
 func (c *suiClient) SendTx(signedTx string) (string, error) {
+
+	//c.client.trans
 	panic("not implemented")
 }
