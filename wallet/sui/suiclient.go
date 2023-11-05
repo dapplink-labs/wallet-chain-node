@@ -111,11 +111,60 @@ func (c *suiClient) GetTxDetailByDigest(digest string) (models.SuiTransactionBlo
 }
 
 func (c *suiClient) GetTxFee() {
-
+	// todo wait implement this
 }
 
-func (c *suiClient) SendTx(signedTx string) (string, error) {
+func (c *suiClient) GetCoins(address, coinType string, cursor interface{}, limit uint64) (models.PaginatedCoinsResponse, error) {
+	ctx := context.Background()
+	req := models.SuiXGetCoinsRequest{
+		Owner:    address,
+		Limit:    limit,
+		Cursor:   cursor,
+		CoinType: coinType,
+	}
+	coins, err := c.client.SuiXGetCoins(ctx, req)
+	if err != nil {
+		log.Printf("get coins Error: %+v\n", err)
+		panic(err)
+	}
+	return coins, nil
+}
 
-	//c.client.trans
-	panic("not implemented")
+func (c *suiClient) GetAllCoins(address string, cursor interface{},
+	limit uint64) (models.PaginatedCoinsResponse, error) {
+	ctx := context.Background()
+	coinsRequest := models.SuiXGetAllCoinsRequest{
+		Owner:  address,
+		Limit:  limit,
+		Cursor: cursor,
+	}
+	allCoins, err := c.client.SuiXGetAllCoins(ctx, coinsRequest)
+	if err != nil {
+		log.Printf("get all coins Error: %+v\n", err)
+		panic(err)
+	}
+	return allCoins, nil
+}
+
+func (c *suiClient) SendTx(sender, gas, gasBudget string,
+	compiledModules, dependencies []string) (models.TxnMetaData, error) {
+	ctx := context.Background()
+	req := models.PublishRequest{
+		Sender:          sender,
+		CompiledModules: compiledModules,
+		Dependencies:    dependencies,
+		Gas:             gas,
+		GasBudget:       gasBudget,
+	}
+	publish, err := c.client.Publish(ctx, req)
+	if err != nil {
+		log.Printf("publish tx  Error: %+v\n", err)
+		panic(err)
+	}
+	return publish, nil
+}
+
+func (c *suiClient) GetLatestBlockHeight() (int64, error) {
+	//TODO implement me
+	panic("implement me")
 }
