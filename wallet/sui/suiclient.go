@@ -110,12 +110,21 @@ func (c *suiClient) GetTxDetailByDigest(digest string) (models.SuiTransactionBlo
 	return txDetail, nil
 }
 
-func (c *suiClient) GetTxFee() {
-	// todo wait implement this
+func (c *suiClient) GetGasPrice() (uint64, error) {
+	ctx := context.Background()
+	price, err := c.client.SuiXGetReferenceGasPrice(ctx)
+	if err != nil {
+		log.Printf("get gas price Error: %+v\n", err)
+		panic(err)
+	}
+	return price, nil
 }
 
 func (c *suiClient) GetCoins(address, coinType string, cursor interface{}, limit uint64) (models.PaginatedCoinsResponse, error) {
 	ctx := context.Background()
+	if coinType == "" {
+		coinType = SuiCoinType
+	}
 	req := models.SuiXGetCoinsRequest{
 		Owner:    address,
 		Limit:    limit,

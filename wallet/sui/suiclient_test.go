@@ -47,6 +47,16 @@ func TestSuiClient_GetTxDetailByDigest(t *testing.T) {
 	utils.PrettyPrint(txDetail)
 }
 
+func TestSuiClient_GetGasPrice(t *testing.T) {
+	client := getClient()
+
+	gasPrice, err := client.GetGasPrice()
+	if err != nil {
+		panic(err)
+	}
+	utils.PrettyPrint(gasPrice)
+}
+
 func getClient() *suiClient {
 	var f = flag.String("c", "../../config.yml", "config path")
 	flag.Parse()
