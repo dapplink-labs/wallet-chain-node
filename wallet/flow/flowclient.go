@@ -5,9 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/savour-labs/wallet-chain-node/wallet/flow/subgraph"
-	"github.com/savour-labs/wallet-chain-node/wallet/flow/subgraph/transaction_detail"
-	"github.com/savour-labs/wallet-chain-node/wallet/flow/subgraph/transactions"
 	"log"
 
 	gresty "github.com/go-resty/resty/v2"
@@ -15,6 +12,9 @@ import (
 	flow_http "github.com/onflow/flow-go-sdk/access/http"
 
 	"github.com/savour-labs/wallet-chain-node/config"
+	"github.com/savour-labs/wallet-chain-node/wallet/flow/subgraph"
+	"github.com/savour-labs/wallet-chain-node/wallet/flow/subgraph/transaction_detail"
+	"github.com/savour-labs/wallet-chain-node/wallet/flow/subgraph/transactions"
 )
 
 var errSubGraphHTTPError = errors.New("SubGraph http error")

@@ -1,7 +1,5 @@
 package transaction_detail
 
-import "time"
-
 type FlowTransactionDetailResp struct {
 	Data Data `json:"data"`
 }
@@ -35,7 +33,7 @@ type ContractTransactions struct {
 }
 type Transactions struct {
 	ID                     string                 `json:"id"`
-	Timestamp              time.Time              `json:"timestamp"`
+	Timestamp              string                 `json:"timestamp"`
 	Payer                  string                 `json:"payer"`
 	Authorizers            []string               `json:"authorizers"`
 	GasUsed                int                    `json:"gas_used"`
