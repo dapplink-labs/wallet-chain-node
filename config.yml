@@ -151,8 +151,10 @@ fullnode:
   flow:
     rpcs:
       - rpc_url: 'https://rest-mainnet.onflow.org/v1'
+        subgraph_url: 'https://flow-view-source.com/graphql'
         rpc_user:
         rpc_pass:
+
 
 chains: [Bitcoin, Ethereum, Arbitrum, Optimism, BscChain, Heco, Polygon, Mantle, Base, Linea, NEAR, XRP, EOS, Solana, Ada]
 

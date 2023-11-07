@@ -2,15 +2,17 @@ package sui
 
 import (
 	"fmt"
+	"math/big"
+
 	"github.com/block-vision/sui-go-sdk/models"
 	"github.com/ethereum/go-ethereum/log"
+
 	"github.com/savour-labs/wallet-chain-node/config"
 	"github.com/savour-labs/wallet-chain-node/rpc/common"
 	wallet2 "github.com/savour-labs/wallet-chain-node/rpc/wallet"
 	"github.com/savour-labs/wallet-chain-node/wallet"
 	"github.com/savour-labs/wallet-chain-node/wallet/fallback"
 	"github.com/savour-labs/wallet-chain-node/wallet/multiclient"
-	"math/big"
 )
 
 const (

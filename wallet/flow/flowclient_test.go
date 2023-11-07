@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/savour-labs/wallet-chain-node/config"
 	"testing"
+
+	"github.com/savour-labs/wallet-chain-node/config"
 )
 
 func getClient() *flowClient {
@@ -34,7 +35,7 @@ func TestFlowClient_GetLatestBlockHeight(t *testing.T) {
 
 func TestFlowClient_GetTxDetailByHash(t *testing.T) {
 	client := getClient()
-	txDetail, err := client.GetTxDetailByHash("29d7edc0be31be98898a3457abe001c8d46de7b3b011d8d256f39b78aae5e05e")
+	txDetail, err := client.GetTxDetailByHash("e046155b8eb0a9bd7bd6f89021112b9929a8079220fa729fe20e6c45340589c0")
 	if err != nil {
 		panic(err)
 	}
@@ -43,14 +44,27 @@ func TestFlowClient_GetTxDetailByHash(t *testing.T) {
 
 func TestFlowClient_GetBalance(t *testing.T) {
 	client := getClient()
-	balance, err := client.GetBalance("0x1e3c78c6d580273b")
+	balance, sequenceNumber, err := client.GetBalance("0x1e3c78c6d580273b", 0)
 	if err != nil {
 		panic(err)
 	}
 	printJsonStr(balance)
+	printJsonStr(sequenceNumber)
 }
 
 func printJsonStr(param interface{}) {
 	marshal, _ := json.Marshal(param)
 	fmt.Println(string(marshal))
+}
+
+func TestFlowClient_GetTxListByAddress(t *testing.T) {
+	//address := subgraph.GetTransactionsByAddress("0x18eb4ee6b3c026d2", 25, 0)
+	//marshal, _ := json.Marshal(address)
+	//fmt.Println(string(marshal))
+	client := getClient()
+	address, err := client.GetTxListByAddress("0x18eb4ee6b3c026d2", 25, 0)
+	if err != nil {
+		panic(err)
+	}
+	printJsonStr(address)
 }

@@ -3,9 +3,11 @@ package sui
 import (
 	"flag"
 	"fmt"
-	"github.com/block-vision/sui-go-sdk/utils"
-	"github.com/savour-labs/wallet-chain-node/config"
 	"testing"
+
+	"github.com/block-vision/sui-go-sdk/utils"
+
+	"github.com/savour-labs/wallet-chain-node/config"
 )
 
 func TestSuiClient_GetAllAccountBalance(t *testing.T) {
