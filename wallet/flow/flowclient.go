@@ -94,8 +94,8 @@ func (f *flowClient) GetTxDetailByHash(hash string) (*transaction_detail.FlowTra
 	return &resultTxDetail, nil
 }
 
-func (f *flowClient) GetGasPrice() {
-	//f.client.
+func (f *flowClient) GetGasLimit() uint64 {
+	return FlowComputeLimit
 }
 
 func (f *flowClient) SendTx(txStr string) error {
