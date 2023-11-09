@@ -143,6 +143,17 @@ fullnode:
       - rpc_url: 'https://go.getblock.io/c9e1612aba7244ac80167f48c783fd72'
         rpc_user:
         rpc_pass:
+  sui:
+    rpcs:
+      - rpc_url: 'https://sui-mainnet-endpoint.blockvision.org'
+        rpc_user:
+        rpc_pass:
+  flow:
+    rpcs:
+      - rpc_url: 'https://rest-mainnet.onflow.org/v1'
+        rpc_user:
+        rpc_pass:
+
 
 chains: [Bitcoin, Ethereum, Arbitrum, Optimism, BscChain, Heco, Polygon, Mantle, Base, Linea, NEAR, XRP, EOS, Solana, Ada]
 
