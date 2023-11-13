@@ -17,6 +17,16 @@ type WalletAdaptor struct {
 	client *Client
 }
 
+func (a *WalletAdaptor) GetBlock(req *wallet.BlockRequest) (*wallet.BlockResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetUnspentOutputs(req *wallet.UnspentOutputsRequest) (*wallet.UnspentOutputsResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func NewChainAdaptor(conf *config.Config) (wallet2.WalletAdaptor, error) {
 	// // todo 多个client，按高度来选取
 	client, err := NewClient(conf.Fullnode.FileCoin.RPCs[0].RPCURL, conf.Fullnode.FileCoin.ApiToken)
@@ -237,11 +247,6 @@ func (a *WalletAdaptor) ABIBinToJSON(req *wallet.ABIBinToJSONRequest) (*wallet.A
 }
 
 func (a *WalletAdaptor) ABIJSONToBin(req *wallet.ABIJSONToBinRequest) (*wallet.ABIJSONToBinResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a *WalletAdaptor) GetUnspentOutputs(req *wallet2.UnspentOutputsRequest) (*wallet2.UnspentOutputsResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
