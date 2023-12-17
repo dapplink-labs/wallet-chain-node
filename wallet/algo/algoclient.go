@@ -14,8 +14,7 @@ import (
 	"github.com/savour-labs/wallet-chain-node/config"
 )
 
-type AlgoClient interface {
-	GetLatestBlockHeight() (int64, error)
+type algoClient interface {
 	GetAccountBalance(address string) *algod.AccountInformation
 	GetTransactionParams(ctx context.Context) (altype.SuggestedParams, error)
 	getTransactionByHash(round uint64, txid string) *algod.GetTransactionProof
@@ -24,6 +23,11 @@ type AlgoClient interface {
 type Client struct {
 	client        *algod.Client
 	confirmations uint64
+}
+
+func (c Client) GetLatestBlockHeight() (int64, error) {
+	//TODO implement me
+	panic("implement me")
 }
 
 func newAlgoClients(conf *config.Config) ([]*Client, error) {

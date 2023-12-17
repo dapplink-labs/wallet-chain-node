@@ -22,6 +22,7 @@ const (
 	WalletService_GetSupportCoins_FullMethodName            = "/savourrpc.wallet.WalletService/getSupportCoins"
 	WalletService_ConvertAddress_FullMethodName             = "/savourrpc.wallet.WalletService/convertAddress"
 	WalletService_ValidAddress_FullMethodName               = "/savourrpc.wallet.WalletService/validAddress"
+	WalletService_GetBlock_FullMethodName                   = "/savourrpc.wallet.WalletService/getBlock"
 	WalletService_GetNonce_FullMethodName                   = "/savourrpc.wallet.WalletService/getNonce"
 	WalletService_GetGasPrice_FullMethodName                = "/savourrpc.wallet.WalletService/getGasPrice"
 	WalletService_GetBalance_FullMethodName                 = "/savourrpc.wallet.WalletService/getBalance"
@@ -54,6 +55,7 @@ type WalletServiceClient interface {
 	GetSupportCoins(ctx context.Context, in *SupportCoinsRequest, opts ...grpc.CallOption) (*SupportCoinsResponse, error)
 	ConvertAddress(ctx context.Context, in *ConvertAddressRequest, opts ...grpc.CallOption) (*ConvertAddressResponse, error)
 	ValidAddress(ctx context.Context, in *ValidAddressRequest, opts ...grpc.CallOption) (*ValidAddressResponse, error)
+	GetBlock(ctx context.Context, in *BlockRequest, opts ...grpc.CallOption) (*BlockResponse, error)
 	GetNonce(ctx context.Context, in *NonceRequest, opts ...grpc.CallOption) (*NonceResponse, error)
 	GetGasPrice(ctx context.Context, in *GasPriceRequest, opts ...grpc.CallOption) (*GasPriceResponse, error)
 	GetBalance(ctx context.Context, in *BalanceRequest, opts ...grpc.CallOption) (*BalanceResponse, error)
@@ -108,6 +110,15 @@ func (c *walletServiceClient) ConvertAddress(ctx context.Context, in *ConvertAdd
 func (c *walletServiceClient) ValidAddress(ctx context.Context, in *ValidAddressRequest, opts ...grpc.CallOption) (*ValidAddressResponse, error) {
 	out := new(ValidAddressResponse)
 	err := c.cc.Invoke(ctx, WalletService_ValidAddress_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) GetBlock(ctx context.Context, in *BlockRequest, opts ...grpc.CallOption) (*BlockResponse, error) {
+	out := new(BlockResponse)
+	err := c.cc.Invoke(ctx, WalletService_GetBlock_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -328,6 +339,7 @@ type WalletServiceServer interface {
 	GetSupportCoins(context.Context, *SupportCoinsRequest) (*SupportCoinsResponse, error)
 	ConvertAddress(context.Context, *ConvertAddressRequest) (*ConvertAddressResponse, error)
 	ValidAddress(context.Context, *ValidAddressRequest) (*ValidAddressResponse, error)
+	GetBlock(context.Context, *BlockRequest) (*BlockResponse, error)
 	GetNonce(context.Context, *NonceRequest) (*NonceResponse, error)
 	GetGasPrice(context.Context, *GasPriceRequest) (*GasPriceResponse, error)
 	GetBalance(context.Context, *BalanceRequest) (*BalanceResponse, error)
@@ -365,6 +377,9 @@ func (UnimplementedWalletServiceServer) ConvertAddress(context.Context, *Convert
 }
 func (UnimplementedWalletServiceServer) ValidAddress(context.Context, *ValidAddressRequest) (*ValidAddressResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidAddress not implemented")
+}
+func (UnimplementedWalletServiceServer) GetBlock(context.Context, *BlockRequest) (*BlockResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBlock not implemented")
 }
 func (UnimplementedWalletServiceServer) GetNonce(context.Context, *NonceRequest) (*NonceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetNonce not implemented")
@@ -435,7 +450,14 @@ func (UnimplementedWalletServiceServer) ABIBinToJSON(context.Context, *ABIBinToJ
 func (UnimplementedWalletServiceServer) ABIJSONToBin(context.Context, *ABIJSONToBinRequest) (*ABIJSONToBinResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ABIJSONToBin not implemented")
 }
+func (UnimplementedWalletServiceServer) mustEmbedUnimplementedWalletServiceServer() {}
 
+// UnsafeWalletServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to WalletServiceServer will
+// result in compilation errors.
+type UnsafeWalletServiceServer interface {
+	mustEmbedUnimplementedWalletServiceServer()
+}
 
 func RegisterWalletServiceServer(s grpc.ServiceRegistrar, srv WalletServiceServer) {
 	s.RegisterService(&WalletService_ServiceDesc, srv)
@@ -491,6 +513,24 @@ func _WalletService_ValidAddress_Handler(srv interface{}, ctx context.Context, d
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(WalletServiceServer).ValidAddress(ctx, req.(*ValidAddressRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_GetBlock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BlockRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).GetBlock(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WalletService_GetBlock_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).GetBlock(ctx, req.(*BlockRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -927,6 +967,10 @@ var WalletService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "validAddress",
 			Handler:    _WalletService_ValidAddress_Handler,
+		},
+		{
+			MethodName: "getBlock",
+			Handler:    _WalletService_GetBlock_Handler,
 		},
 		{
 			MethodName: "getNonce",

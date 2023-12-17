@@ -171,6 +171,17 @@ func (d *WalletDispatcher) GetSupportCoins(ctx context.Context, request *wallet2
 	return d.registry[request.Chain].GetSupportCoins(request)
 }
 
+func (d *WalletDispatcher) GetBlock(ctx context.Context, request *wallet2.BlockRequest) (*wallet2.BlockResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.BlockResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "get block number fail",
+		}, nil
+	}
+	return d.registry[request.Chain].GetBlock(request)
+}
+
 func (d *WalletDispatcher) GetNonce(ctx context.Context, request *wallet2.NonceRequest) (*wallet2.NonceResponse, error) {
 	resp := d.preHandler(request)
 	if resp != nil {

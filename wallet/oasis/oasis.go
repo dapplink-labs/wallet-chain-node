@@ -28,6 +28,11 @@ type WalletAdaptor struct {
 	oasisscanCli *OasisClient
 }
 
+func (w *WalletAdaptor) GetBlock(req *wallet2.BlockRequest) (*wallet2.BlockResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
 	client, err := NewOasisClient(conf.Fullnode.Oasis.RPCs[0].RPCPass, conf.Fullnode.Oasis.RPCs[0].RPCURL)
 	if err != nil {

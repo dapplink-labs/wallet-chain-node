@@ -70,6 +70,11 @@ func (a *WalletAdaptor) ValidAddress(req *wallet2.ValidAddressRequest) (*wallet2
 	panic("implement me")
 }
 
+func (a *WalletAdaptor) GetBlock(req *wallet2.BlockRequest) (*wallet2.BlockResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.BalanceResponse, error) {
 	balance, err := a.getClient().GetAccountBalance(req.Address)
 	if err != nil {

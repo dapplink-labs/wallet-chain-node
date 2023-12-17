@@ -25,6 +25,11 @@ type WalletAdaptor struct {
 	clients *multiclient.MultiClient
 }
 
+func (a *WalletAdaptor) GetBlock(req *wallet2.BlockRequest) (*wallet2.BlockResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
 	clients, err := NewSuiClient(conf)
 	if err != nil {
