@@ -1,6 +1,7 @@
 package sui
 
 import (
+	"encoding/json"
 	"math/big"
 
 	"github.com/block-vision/sui-go-sdk/models"
@@ -139,9 +140,15 @@ func (a *WalletAdaptor) GetUnspentOutputs(req *wallet2.UnspentOutputsRequest) (*
 	var unspentOutputList []*wallet2.UnspentOutput
 	for _, value := range coins.Data {
 		//value.
+		marshal, jsonErr := json.Marshal(value)
+		if jsonErr != nil {
+			return nil, jsonErr
+		}
 		unspentOutput := &wallet2.UnspentOutput{
-			Script: value.Digest,
-			Value:  stringToInt(value.Balance).Uint64(),
+			Script:          value.Digest,
+			TxHashBigEndian: string(marshal),
+			TxHash:          value.CoinObjectId,
+			Value:           stringToInt(value.Balance).Uint64(),
 		}
 		unspentOutputList = append(unspentOutputList, unspentOutput)
 	}

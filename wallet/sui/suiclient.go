@@ -120,7 +120,7 @@ func (c *suiClient) GetGasPrice() (uint64, error) {
 	return price, nil
 }
 
-func (c *suiClient) GetCoins(address, coinType string, cursor interface{}, limit uint64) (models.PaginatedCoinsResponse, error) {
+func (c *suiClient) GetCoins(address, coinType string, cursor string, limit uint64) (models.PaginatedCoinsResponse, error) {
 	ctx := context.Background()
 	if coinType == "" {
 		coinType = SuiCoinType
@@ -128,9 +128,12 @@ func (c *suiClient) GetCoins(address, coinType string, cursor interface{}, limit
 	req := models.SuiXGetCoinsRequest{
 		Owner:    address,
 		Limit:    limit,
-		Cursor:   cursor,
 		CoinType: coinType,
 	}
+	if cursor != "" {
+		req.Cursor = cursor
+	}
+
 	coins, err := c.client.SuiXGetCoins(ctx, req)
 	if err != nil {
 		log.Printf("get coins Error: %+v\n", err)
@@ -139,14 +142,17 @@ func (c *suiClient) GetCoins(address, coinType string, cursor interface{}, limit
 	return coins, nil
 }
 
-func (c *suiClient) GetAllCoins(address string, cursor interface{},
+func (c *suiClient) GetAllCoins(address string, cursor string,
 	limit uint64) (models.PaginatedCoinsResponse, error) {
 	ctx := context.Background()
 	coinsRequest := models.SuiXGetAllCoinsRequest{
-		Owner:  address,
-		Limit:  limit,
-		Cursor: cursor,
+		Owner: address,
+		Limit: limit,
 	}
+	if cursor != "" {
+		coinsRequest.Cursor = cursor
+	}
+
 	allCoins, err := c.client.SuiXGetAllCoins(ctx, coinsRequest)
 	if err != nil {
 		log.Printf("get all coins Error: %+v\n", err)

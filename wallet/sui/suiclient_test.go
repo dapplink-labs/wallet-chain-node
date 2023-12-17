@@ -49,6 +49,13 @@ func TestSuiClient_GetTxDetailByDigest(t *testing.T) {
 	utils.PrettyPrint(txDetail)
 }
 
+func TestSuiClient_GetCoins(t *testing.T) {
+	client := getClient()
+	coins, _ := client.GetAllCoins("0x00878369f475a454939af7b84cdd981515b1329f159a1aeb9bf0f8899e00083a", "", 50)
+	utils.PrettyPrint(coins)
+
+}
+
 func TestSuiClient_GetGasPrice(t *testing.T) {
 	client := getClient()
 
