@@ -65,10 +65,9 @@ func (w *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balanc
 }
 
 func (w *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
-	panic("implement me")
-	// todo 将从此字段读取 cursor
-	cursor := req.Network
-	transactionList, err := w.getClient().GetTransactionListByAddress(req.Address, cursor)
+	cursor := req.Cursor
+
+	transactionList, err := w.getClient().GetTransactionListByAddress(req.Address, cursor, req.Pagesize)
 	if err != nil {
 		return &wallet2.TxAddressResponse{
 			Code: common.ReturnCode_ERROR,
@@ -88,9 +87,10 @@ func (w *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.
 		tx_list = append(tx_list, txMessage)
 	}
 	return &wallet2.TxAddressResponse{
-		Code: common.ReturnCode_SUCCESS,
-		Msg:  "get transactions fail",
-		Tx:   tx_list,
+		Code:        common.ReturnCode_SUCCESS,
+		Msg:         "get transactions success",
+		Tx:          tx_list,
+		HasNextPage: transactionList.Transactions.PageInfo.HasNextPage,
 	}, err
 }
 
@@ -230,7 +230,7 @@ func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
 	}, nil
 }
 
-func newWalletAdaptor(client *arweaveClient) wallet.WalletAdaptor {
+func newWalletAdaptor(client *arweaveClient) *WalletAdaptor {
 	return &WalletAdaptor{
 		clients: multiclient.New([]multiclient.Client{client}),
 	}

@@ -160,6 +160,6 @@ fullnode:
         rpc_pass:
 
 
-chains: [Bitcoin, Ethereum, Arbitrum, Optimism, BscChain, Heco, Polygon, Mantle, Base, Linea, NEAR, XRP, EOS, Solana, Ada]
+chains: [ Bitcoin, Ethereum, Arbitrum, Optimism, BscChain, Heco, Polygon, Mantle, Base, Linea, NEAR, XRP, EOS, Solana, Ada,Arweave ]
 
 

@@ -42,6 +42,7 @@ require (
 	github.com/btcsuite/btcd/btcec/v2 v2.3.2
 	github.com/coinbase/rosetta-sdk-go v0.8.3
 	github.com/coinbase/rosetta-sdk-go/types v1.0.0
+	github.com/everFinance/goar v1.5.7
 	github.com/fbsobreira/gotron-sdk v0.0.0-20230907131216-1e824406fe8c
 	github.com/onflow/flow-go-sdk v0.44.0
 )
@@ -94,7 +95,6 @@ require (
 	github.com/enigmampc/btcutil v1.0.3-0.20200723161021-e2fb6adb2a25 // indirect
 	github.com/everFinance/arseeding v1.0.3 // indirect
 	github.com/everFinance/ethrpc v1.0.4 // indirect
-	github.com/everFinance/goar v1.5.7 // indirect
 	github.com/everFinance/goether v1.1.9 // indirect
 	github.com/everFinance/gojwk v1.0.0 // indirect
 	github.com/everFinance/ttcrsa v1.1.3 // indirect
@@ -228,6 +228,7 @@ require (
 	github.com/multiformats/go-multicodec v0.5.0 // indirect
 	github.com/multiformats/go-multihash v0.2.1 // indirect
 	github.com/multiformats/go-varint v0.0.6 // indirect
+	github.com/nbio/st v0.0.0-20140626010706-e9e8d9816f32 // indirect
 	github.com/nkovacs/streamquote v1.0.0 // indirect
 	github.com/onflow/atree v0.6.0 // indirect
 	github.com/onflow/cadence v0.41.1 // indirect
@@ -321,3 +322,5 @@ replace github.com/algorand/go-algorand-sdk => ../go-algorand-sdk
 replace github.com/multiversx/mx-sdk-go => ../mx-sdk-go
 
 replace github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
+
+replace github.com/btcsuite/btcd => github.com/btcsuite/btcd v0.22.1

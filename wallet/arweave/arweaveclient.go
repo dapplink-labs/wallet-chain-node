@@ -117,9 +117,9 @@ func (a *arweaveClient) GetTransactionByTxHash(txHash string) (*TransactionDetai
 	return &result, nil
 }
 
-func (a *arweaveClient) GetTransactionListByAddress(address, after string) (*TransactionList, error) {
+func (a *arweaveClient) GetTransactionListByAddress(address, after string, pageSize uint32) (*TransactionList, error) {
 	queryGql := "query {\n  transactions(\n    owners: [\"%s\"]\n    first: %d \n after: \"%s\" \n  ) {\n    pageInfo{ hasNextPage}\n    edges {\n      cursor\n      node {\n        id\n        owner {\n          address\n        }\n        recipient\n        quantity {\n          ar\n        }\n        fee {\n          ar\n        }\n        block {\n          id\n   height\n       timestamp\n        }\n      }\n    }\n  }\n}\n"
-	queryGql = fmt.Sprintf(queryGql, address, PageSize, after)
+	queryGql = fmt.Sprintf(queryGql, address, pageSize, after)
 	gqlResult, err := a.client.GraphQL(queryGql)
 	if err != nil {
 		log.Printf("Get transaction list error: %+v\n", err)

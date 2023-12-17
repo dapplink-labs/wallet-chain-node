@@ -47,7 +47,7 @@ func TestArweaveClient_GetTransactionById(t *testing.T) {
 
 func TestArweaveClient_GetTransactionListByAddress(t *testing.T) {
 	client := getClient()
-	address, _ := client.GetTransactionListByAddress("Ar-A703DqqY7IhOZLrV1X3JoFvtdfHGhceRlhx2KyRg", "")
+	address, _ := client.GetTransactionListByAddress("Ar-A703DqqY7IhOZLrV1X3JoFvtdfHGhceRlhx2KyRg", "", 10)
 	utils.PrettyPrint(address)
 }
 
