@@ -67,6 +67,7 @@ type Fullnode struct {
 	Ada      Node       `yaml:"ada"`
 	Sui      Node       `yaml:"sui"`
 	Flow     Node       `yaml:"flow"`
+	Arweave  Node       `yaml:"arweave"`
 }
 
 // Config instance define
