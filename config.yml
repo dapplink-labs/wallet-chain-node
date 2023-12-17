@@ -14,25 +14,25 @@ fullnode:
     confirmations: 1
   eth:
     rpcs:
-      - rpc_url: 'https://eth-mainnet.nodereal.io/v1/1659dfb40aa24bbb8153a677b98064d7'
+      - rpc_url: 'https://rpc.ankr.com/eth/7f3ae11204e03961b67c557c4996244f0a53222b23c31a7baf9ae91c6bd89702'
     confirmations: 4
     tp_api_url: 'https://api.etherscan.io/api?'
     tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
   arbi:
     rpcs:
-      - rpc_url: 'https://rpc.ankr.com/arbitrum'
+      - rpc_url: 'https://rpc.ankr.com/arbitrum/7f3ae11204e03961b67c557c4996244f0a53222b23c31a7baf9ae91c6bd89702'
     confirmations: 4
     tp_api_url: 'https://api.arbiscan.io/api?'
     tp_api_key: '6P1K37SEYSN8VMWFVYGC8W6K5ZEQ5CDA7Y'
   op:
     rpcs:
-      - rpc_url: 'https://mainnet.optimism.io'
+      - rpc_url: 'https://rpc.ankr.com/optimism/7f3ae11204e03961b67c557c4996244f0a53222b23c31a7baf9ae91c6bd89702'
     confirmations: 4
     tp_api_url: 'https://api-optimistic.etherscan.io/api?'
     tp_api_key: 'X1SJQ62NAPMZ24DRBKA2GU414N6S6THUKQ'
   polygon:
     rpcs:
-      - rpc_url: 'https://polygon-bor.publicnode.com'
+      - rpc_url: 'https://rpc.ankr.com/polygon/7f3ae11204e03961b67c557c4996244f0a53222b23c31a7baf9ae91c6bd89702'
     confirmations: 4
     tp_api_url: 'https://api.polygonscan.com/api?'
     tp_api_key: 'DCIEZ5TQSFY88QUTHQBKYG92I828A44ZRN'
@@ -50,13 +50,13 @@ fullnode:
     tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
   mantle:
     rpcs:
-      - rpc_url: 'https://mantle-mainnet.public.blastapi.io'
+      - rpc_url: 'https://rpc.ankr.com/mantle/7f3ae11204e03961b67c557c4996244f0a53222b23c31a7baf9ae91c6bd89702'
     confirmations: 4
     tp_api_url: ''
     tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
   base:
     rpcs:
-      - rpc_url: 'https://base.publicnode.com'
+      - rpc_url: 'https://rpc.ankr.com/base/7f3ae11204e03961b67c557c4996244f0a53222b23c31a7baf9ae91c6bd89702'
     confirmations: 4
     tp_api_url: 'https://api.basescan.org/api?'
     tp_api_key: '1WKZ9C3XGTYYM1YXSR3DJHT2C2DDYVV4XA'
