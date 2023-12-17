@@ -61,7 +61,7 @@ func (c *suiClient) GetAllAccountBalance(owner string) (models.CoinAllBalanceRes
 	return balance, nil
 }
 
-func (c *suiClient) GetTxListByAddress(address string, cursor interface{}, limit uint64) (models.SuiXQueryTransactionBlocksResponse, error) {
+func (c *suiClient) GetTxListByAddress(address string, cursor string, limit uint32) (models.SuiXQueryTransactionBlocksResponse, error) {
 	ctx := context.Background()
 	req := models.SuiXQueryTransactionBlocksRequest{
 		SuiTransactionBlockResponseQuery: models.SuiTransactionBlockResponseQuery{
@@ -78,7 +78,7 @@ func (c *suiClient) GetTxListByAddress(address string, cursor interface{}, limit
 			},
 		},
 		Cursor:          cursor,
-		Limit:           limit,
+		Limit:           uint64(limit),
 		DescendingOrder: false,
 	}
 	txList, err := c.client.SuiXQueryTransactionBlocks(ctx, req)

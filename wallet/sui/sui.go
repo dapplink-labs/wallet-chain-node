@@ -1,7 +1,6 @@
 package sui
 
 import (
-	"fmt"
 	"math/big"
 
 	"github.com/block-vision/sui-go-sdk/models"
@@ -89,9 +88,9 @@ func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balanc
 }
 
 func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
-	// todo 这里的page是string类型的游标，请求结构体需要升级，最好改成interface
-	cursor := req.Page
-	_, err := a.getClient().GetTxListByAddress(req.Address, cursor, uint64(req.Pagesize))
+
+	cursor := req.Cursor
+	_, err := a.getClient().GetTxListByAddress(req.Address, cursor, req.Pagesize)
 	if err != nil {
 		return &wallet2.TxAddressResponse{
 			Code: common.ReturnCode_ERROR,
@@ -121,31 +120,31 @@ func (a *WalletAdaptor) GetAccount(req *wallet2.AccountRequest) (*wallet2.Accoun
 
 func (a *WalletAdaptor) GetUnspentOutputs(req *wallet2.UnspentOutputsRequest) (*wallet2.UnspentOutputsResponse, error) {
 	address := req.Address
-	// todo 缺少一下参数
-	//cursor:= req.Cursor
-	//limit := req.Limit
-	//coinType := req.CoinType
+	cursor := req.Cursor
+	limit := req.Limit
+	coinType := req.CoinType
 
-	coins, err := a.getClient().GetCoins(address, "", 0, 50)
+	coins, err := a.getClient().GetCoins(address, coinType, cursor, limit)
 	if err != nil {
 		return &wallet2.UnspentOutputsResponse{
-			Code:           common.ReturnCode_ERROR,
-			Msg:            err.Error(),
-			UnspentOutputs: nil,
+			Code: common.ReturnCode_ERROR,
+			Msg:  "get unspentOutputs fail",
 		}, err
 	}
-	//var unspentOutputList []*wallet2.UnspentOutput
+	var unspentOutputList []*wallet2.UnspentOutput
 	for _, value := range coins.Data {
-		fmt.Println(value)
 		//value.
-		//unspentOutput := &wallet2.UnspentOutput{
-		//	Script: value.CoinIdentifier.Identifier,
-		//	Value:  stringToInt(value.Amount.Value).Uint64(),
-		//}
-		//unspentOutputList = append(unspentOutputList, unspentOutput)
+		unspentOutput := &wallet2.UnspentOutput{
+			Script: value.Digest,
+			Value:  stringToInt(value.Balance).Uint64(),
+		}
+		unspentOutputList = append(unspentOutputList, unspentOutput)
 	}
-
-	panic("implement me")
+	return &wallet2.UnspentOutputsResponse{
+		Code:           common.ReturnCode_SUCCESS,
+		Msg:            "get unspentOutputs success",
+		UnspentOutputs: unspentOutputList,
+	}, nil
 }
 
 func (a *WalletAdaptor) GetUtxo(req *wallet2.UtxoRequest) (*wallet2.UtxoResponse, error) {
@@ -210,4 +209,13 @@ func (a *WalletAdaptor) ABIJSONToBin(req *wallet2.ABIJSONToBinRequest) (*wallet2
 
 func (a *WalletAdaptor) getTxMessage(suiTransaction models.SuiTransactionBlockResponse) (*wallet2.TxMessage, error) {
 	panic("implement me")
+}
+
+func stringToInt(amount string) *big.Int {
+	log.Info("string to Int", "amount", amount)
+	intAmount, success := big.NewInt(0).SetString(amount, 0)
+	if !success {
+		return nil
+	}
+	return intAmount
 }
