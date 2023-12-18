@@ -9,7 +9,7 @@ require (
 	// github.com/multiversx/mx-sdk-go v0.0.0-00010101000000-000000000000
 	github.com/armon/go-metrics v0.4.1
 	github.com/btcsuite/btcd v0.22.1
-	github.com/btcsuite/btcd/chaincfg/chainhash v1.0.1
+	github.com/btcsuite/btcd/chaincfg/chainhash v1.1.0
 	github.com/btcsuite/btcutil v1.0.3-0.20201208143702-a53e38424cce
 	github.com/cosmos/cosmos-sdk v0.40.0
 	github.com/eoscanada/eos-go v0.10.2
