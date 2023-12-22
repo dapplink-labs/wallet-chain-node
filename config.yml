@@ -38,7 +38,7 @@ fullnode:
     tp_api_key: 'DCIEZ5TQSFY88QUTHQBKYG92I828A44ZRN'
   bsc:
     rpcs:
-      - rpc_url: 'https://api.zan.top/node/v1/bsc/mainnet/public'
+      - rpc_url: 'https://bsc-pokt.nodies.app'
     confirmations: 4
     tp_api_url: 'https://api.bscscan.com/api?'
     tp_api_key: 'MH55R6KFBHAJA9AV26FIAMZQGX8MY57C5Y'
