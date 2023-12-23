@@ -2,6 +2,7 @@ package sui
 
 import (
 	"context"
+	"encoding/json"
 	"log"
 
 	"github.com/block-vision/sui-go-sdk/models"
@@ -161,22 +162,19 @@ func (c *suiClient) GetAllCoins(address string, cursor string,
 	return allCoins, nil
 }
 
-func (c *suiClient) SendTx(sender, gas, gasBudget string,
-	compiledModules, dependencies []string) (models.TxnMetaData, error) {
+func (c *suiClient) SendTx(txStr string) (*models.TxnMetaData, error) {
 	ctx := context.Background()
-	req := models.PublishRequest{
-		Sender:          sender,
-		CompiledModules: compiledModules,
-		Dependencies:    dependencies,
-		Gas:             gas,
-		GasBudget:       gasBudget,
+	var req models.PublishRequest
+	jsonErr := json.Unmarshal([]byte(txStr), &req)
+	if jsonErr != nil {
+		return nil, jsonErr
 	}
 	publish, err := c.client.Publish(ctx, req)
 	if err != nil {
 		log.Printf("publish tx  Error: %+v\n", err)
 		panic(err)
 	}
-	return publish, nil
+	return &publish, nil
 }
 
 func (c *suiClient) GetLatestBlockHeight() (int64, error) {

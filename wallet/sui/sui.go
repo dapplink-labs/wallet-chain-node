@@ -96,28 +96,57 @@ func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balanc
 func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
 
 	cursor := req.Cursor
-	_, err := a.getClient().GetTxListByAddress(req.Address, cursor, req.Pagesize)
+	txList, err := a.getClient().GetTxListByAddress(req.Address, cursor, req.Pagesize)
 	if err != nil {
 		return &wallet2.TxAddressResponse{
 			Code: common.ReturnCode_ERROR,
 			Msg:  "get transactions fail",
 		}, err
 	}
-
-	// todo 这里需要处理一下返回的数据
-	return nil, nil
-	panic("implement me")
+	// todo sui 专有的交易结构，直接放到value中，前端自定义获取解析
+	var tx_list []*wallet2.TxMessage
+	for _, tx := range txList.Data {
+		message, _ := a.getTxMessage(tx)
+		tx_list = append(tx_list, message)
+	}
+	return &wallet2.TxAddressResponse{
+		Code: common.ReturnCode_SUCCESS,
+		Msg:  "get transactions success",
+		Tx:   tx_list,
+	}, nil
 }
 
 func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {
-	_, err := a.getClient().GetTxDetailByDigest(req.Hash)
+	txDetail, err := a.getClient().GetTxDetailByDigest(req.Hash)
 	if err != nil {
 		return &wallet2.TxHashResponse{
 			Code: common.ReturnCode_ERROR,
 			Msg:  "get transaction fail",
 		}, err
 	}
-	panic("implement me")
+
+	message, _ := a.getTxMessage(txDetail)
+
+	return &wallet2.TxHashResponse{
+		Code: common.ReturnCode_SUCCESS,
+		Msg:  "get transaction success",
+		Tx:   message,
+	}, nil
+}
+
+func (a *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxResponse, error) {
+	_, err := a.getClient().SendTx(req.RawTx)
+	if err != nil {
+		return &wallet2.SendTxResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  err.Error(),
+		}, err
+	}
+	return &wallet2.SendTxResponse{
+		Code:   common.ReturnCode_SUCCESS,
+		Msg:    "send tx success",
+		TxHash: "",
+	}, nil
 }
 
 func (a *WalletAdaptor) GetAccount(req *wallet2.AccountRequest) (*wallet2.AccountResponse, error) {
@@ -220,7 +249,34 @@ func (a *WalletAdaptor) ABIJSONToBin(req *wallet2.ABIJSONToBinRequest) (*wallet2
 }
 
 func (a *WalletAdaptor) getTxMessage(suiTransaction models.SuiTransactionBlockResponse) (*wallet2.TxMessage, error) {
-	panic("implement me")
+	var from_addrs []*wallet2.Address
+	var to_addrs []*wallet2.Address
+	var value_list []*wallet2.Value
+	totalAmount := big.NewInt(0)
+	toAmount := big.NewInt(0)
+	for _, bc := range suiTransaction.BalanceChanges {
+		if bc.Owner.AddressOwner != "" {
+			from_addrs = append(from_addrs, &wallet2.Address{Address: bc.Owner.AddressOwner})
+			totalAmount = new(big.Int).Add(totalAmount, stringToInt(bc.Amount))
+		} else {
+			to_addrs = append(to_addrs, &wallet2.Address{Address: bc.Owner.ObjectOwner})
+			toAmount = new(big.Int).Add(toAmount, stringToInt(bc.Amount))
+			value_list = append(value_list, &wallet2.Value{Value: bc.Amount})
+		}
+	}
+	totalAmount = new(big.Int).Abs(totalAmount)
+	fee := new(big.Int).Sub(totalAmount, toAmount).String()
+	return &wallet2.TxMessage{
+		Hash:     suiTransaction.Digest,
+		Height:   suiTransaction.Checkpoint,
+		Status:   wallet2.TxStatus_Success,
+		Type:     0,
+		Datetime: suiTransaction.TimestampMs,
+		Froms:    from_addrs,
+		Tos:      to_addrs,
+		Values:   value_list,
+		Fee:      fee,
+	}, nil
 }
 
 func stringToInt(amount string) *big.Int {

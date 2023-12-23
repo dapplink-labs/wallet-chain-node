@@ -42,7 +42,7 @@ func TestSuiClient_GetTxListByAddress(t *testing.T) {
 func TestSuiClient_GetTxDetailByDigest(t *testing.T) {
 	client := getClient()
 
-	txDetail, err := client.GetTxDetailByDigest("Tgc2M6cBMGoYidew1gC2LYwfqQzEBpK2jSAwhCWRCtJ")
+	txDetail, err := client.GetTxDetailByDigest("Hwnr4uGvrGemm2CmhpHnW3MZKcZpWD3BaBv3b1RAL1cJ")
 	if err != nil {
 		panic(err)
 	}
