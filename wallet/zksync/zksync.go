@@ -29,7 +29,7 @@ import (
 )
 
 const (
-	ChainName = "Zksync"
+	ChainName = "ZksyncEra"
 	Coin      = "ETH"
 )
 
