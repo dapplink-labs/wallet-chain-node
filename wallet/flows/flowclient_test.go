@@ -1,4 +1,4 @@
-package flow
+package flows
 
 import (
 	"encoding/json"
@@ -35,7 +35,7 @@ func TestFlowClient_GetLatestBlockHeight(t *testing.T) {
 
 func TestFlowClient_GetTxDetailByHash(t *testing.T) {
 	client := getClient()
-	txDetail, err := client.GetTxDetailByHash("e046155b8eb0a9bd7bd6f89021112b9929a8079220fa729fe20e6c45340589c0")
+	txDetail, err := client.GetTxDetailByHash("736466a1261e3caddbd6fc0e143aad0c543235733a58740273a5dac5bfefc031")
 	if err != nil {
 		panic(err)
 	}
@@ -66,5 +66,6 @@ func TestFlowClient_GetTxListByAddress(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
+	//utils.PrettyPrint(address)
 	printJsonStr(address)
 }

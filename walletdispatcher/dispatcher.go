@@ -2,6 +2,8 @@ package walletdispatcher
 
 import (
 	"context"
+	"github.com/savour-labs/wallet-chain-node/wallet/flows"
+	"github.com/savour-labs/wallet-chain-node/wallet/sui"
 	"runtime/debug"
 	"strings"
 
@@ -72,11 +74,14 @@ func New(conf *config.Config) (*WalletDispatcher, error) {
 		xrp.ChainName:       xrp.NewChainAdaptor,
 		eosio.ChainName:     eosio.NewChainAdaptor,
 		ada.ChainName:       ada.NewChainAdaptor,
+		sui.ChainName:       sui.NewChainAdaptor,
+		flows.ChainName:     flows.NewChainAdaptor,
 	}
 	supportedChains := []string{
 		bitcoin.ChainName, ethereum.ChainName, solana.ChainName, arbitrum.ChainName, base.ChainName, linea.ChainName,
 		mantle.ChainName, tron.ChainName, zksync.ChainName, optimism.ChainName, polygon.ChainName, binance.ChainName,
 		heco.ChainName, avalanche.ChainName, evmos.ChainName, near.ChainName, xrp.ChainName, eosio.ChainName, ada.ChainName,
+		sui.ChainName, flows.ChainName,
 	}
 	for _, c := range conf.Chains {
 		if factory, ok := walletAdaptorFactoryMap[c]; ok {

@@ -2,6 +2,7 @@ package sui
 
 import (
 	"context"
+	"encoding/json"
 	"log"
 
 	"github.com/block-vision/sui-go-sdk/models"
@@ -61,7 +62,7 @@ func (c *suiClient) GetAllAccountBalance(owner string) (models.CoinAllBalanceRes
 	return balance, nil
 }
 
-func (c *suiClient) GetTxListByAddress(address string, cursor interface{}, limit uint64) (models.SuiXQueryTransactionBlocksResponse, error) {
+func (c *suiClient) GetTxListByAddress(address string, cursor string, limit uint32) (models.SuiXQueryTransactionBlocksResponse, error) {
 	ctx := context.Background()
 	req := models.SuiXQueryTransactionBlocksRequest{
 		SuiTransactionBlockResponseQuery: models.SuiTransactionBlockResponseQuery{
@@ -78,7 +79,7 @@ func (c *suiClient) GetTxListByAddress(address string, cursor interface{}, limit
 			},
 		},
 		Cursor:          cursor,
-		Limit:           limit,
+		Limit:           uint64(limit),
 		DescendingOrder: false,
 	}
 	txList, err := c.client.SuiXQueryTransactionBlocks(ctx, req)
@@ -120,7 +121,7 @@ func (c *suiClient) GetGasPrice() (uint64, error) {
 	return price, nil
 }
 
-func (c *suiClient) GetCoins(address, coinType string, cursor interface{}, limit uint64) (models.PaginatedCoinsResponse, error) {
+func (c *suiClient) GetCoins(address, coinType string, cursor string, limit uint64) (models.PaginatedCoinsResponse, error) {
 	ctx := context.Background()
 	if coinType == "" {
 		coinType = SuiCoinType
@@ -128,9 +129,12 @@ func (c *suiClient) GetCoins(address, coinType string, cursor interface{}, limit
 	req := models.SuiXGetCoinsRequest{
 		Owner:    address,
 		Limit:    limit,
-		Cursor:   cursor,
 		CoinType: coinType,
 	}
+	if cursor != "" {
+		req.Cursor = cursor
+	}
+
 	coins, err := c.client.SuiXGetCoins(ctx, req)
 	if err != nil {
 		log.Printf("get coins Error: %+v\n", err)
@@ -139,14 +143,17 @@ func (c *suiClient) GetCoins(address, coinType string, cursor interface{}, limit
 	return coins, nil
 }
 
-func (c *suiClient) GetAllCoins(address string, cursor interface{},
+func (c *suiClient) GetAllCoins(address string, cursor string,
 	limit uint64) (models.PaginatedCoinsResponse, error) {
 	ctx := context.Background()
 	coinsRequest := models.SuiXGetAllCoinsRequest{
-		Owner:  address,
-		Limit:  limit,
-		Cursor: cursor,
+		Owner: address,
+		Limit: limit,
 	}
+	if cursor != "" {
+		coinsRequest.Cursor = cursor
+	}
+
 	allCoins, err := c.client.SuiXGetAllCoins(ctx, coinsRequest)
 	if err != nil {
 		log.Printf("get all coins Error: %+v\n", err)
@@ -155,22 +162,19 @@ func (c *suiClient) GetAllCoins(address string, cursor interface{},
 	return allCoins, nil
 }
 
-func (c *suiClient) SendTx(sender, gas, gasBudget string,
-	compiledModules, dependencies []string) (models.TxnMetaData, error) {
+func (c *suiClient) SendTx(txStr string) (*models.TxnMetaData, error) {
 	ctx := context.Background()
-	req := models.PublishRequest{
-		Sender:          sender,
-		CompiledModules: compiledModules,
-		Dependencies:    dependencies,
-		Gas:             gas,
-		GasBudget:       gasBudget,
+	var req models.PublishRequest
+	jsonErr := json.Unmarshal([]byte(txStr), &req)
+	if jsonErr != nil {
+		return nil, jsonErr
 	}
 	publish, err := c.client.Publish(ctx, req)
 	if err != nil {
 		log.Printf("publish tx  Error: %+v\n", err)
 		panic(err)
 	}
-	return publish, nil
+	return &publish, nil
 }
 
 func (c *suiClient) GetLatestBlockHeight() (int64, error) {

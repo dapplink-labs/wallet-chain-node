@@ -42,11 +42,18 @@ func TestSuiClient_GetTxListByAddress(t *testing.T) {
 func TestSuiClient_GetTxDetailByDigest(t *testing.T) {
 	client := getClient()
 
-	txDetail, err := client.GetTxDetailByDigest("Tgc2M6cBMGoYidew1gC2LYwfqQzEBpK2jSAwhCWRCtJ")
+	txDetail, err := client.GetTxDetailByDigest("Hwnr4uGvrGemm2CmhpHnW3MZKcZpWD3BaBv3b1RAL1cJ")
 	if err != nil {
 		panic(err)
 	}
 	utils.PrettyPrint(txDetail)
+}
+
+func TestSuiClient_GetCoins(t *testing.T) {
+	client := getClient()
+	coins, _ := client.GetAllCoins("0x00878369f475a454939af7b84cdd981515b1329f159a1aeb9bf0f8899e00083a", "", 50)
+	utils.PrettyPrint(coins)
+
 }
 
 func TestSuiClient_GetGasPrice(t *testing.T) {

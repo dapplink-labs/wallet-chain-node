@@ -1,4 +1,4 @@
-package flow
+package flows
 
 import (
 	"context"
@@ -12,9 +12,9 @@ import (
 	flow_http "github.com/onflow/flow-go-sdk/access/http"
 
 	"github.com/savour-labs/wallet-chain-node/config"
-	"github.com/savour-labs/wallet-chain-node/wallet/flow/subgraph"
-	"github.com/savour-labs/wallet-chain-node/wallet/flow/subgraph/transaction_detail"
-	"github.com/savour-labs/wallet-chain-node/wallet/flow/subgraph/transactions"
+	"github.com/savour-labs/wallet-chain-node/wallet/flows/subgraph"
+	"github.com/savour-labs/wallet-chain-node/wallet/flows/subgraph/transaction_detail"
+	"github.com/savour-labs/wallet-chain-node/wallet/flows/subgraph/transactions"
 )
 
 var errSubGraphHTTPError = errors.New("SubGraph http error")
@@ -54,7 +54,7 @@ func NewFlowClient(conf *config.Config) ([]*flowClient, error) {
 	return clients, nil
 }
 
-func (f *flowClient) GetBalance(address string, proposerKeyIndex uint64) (int64, int64, error) {
+func (f *flowClient) GetBalance(address string, proposerKeyIndex uint64) (int64, uint64, error) {
 	ctx := context.Background()
 	flowAddress := flow.HexToAddress(address)
 	account, err := f.client.GetAccountAtLatestBlock(ctx, flowAddress)
@@ -63,7 +63,7 @@ func (f *flowClient) GetBalance(address string, proposerKeyIndex uint64) (int64,
 		log.Printf("GetBalance  Error: %+v\n", err)
 		panic(err)
 	}
-	return int64(account.Balance), int64(sequenceNumber), nil
+	return int64(account.Balance), sequenceNumber, nil
 }
 
 func (f *flowClient) GetTxListByAddress(address string, limit, offset uint64) (*transactions.FlowTransactionsResp, error) {
@@ -103,7 +103,7 @@ func (f *flowClient) SendTx(txStr string) error {
 	var txReq flow.Transaction
 	unmarshalErr := json.Unmarshal([]byte(txStr), &txReq)
 	if unmarshalErr != nil {
-		log.Printf("flow tx unmarshal  Error: %+v\n", unmarshalErr)
+		log.Printf("flows tx unmarshal  Error: %+v\n", unmarshalErr)
 		panic(unmarshalErr)
 	}
 	err := f.client.SendTransaction(ctx, txReq)
