@@ -24,7 +24,7 @@ jobs:
         run: |
           echo "::set-output name=commit_sha::$(git rev-parse --short=7 HEAD)"
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v3
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::942583694543:role/github_assume_role
           aws-region: ${{ env.AWS_REGION }}
