@@ -4,7 +4,7 @@ FROM golang:1.19.3-alpine as builder
 RUN apk add --no-cache make gcc musl-dev linux-headers
 
 ADD . /savour-core
-RUN cd /wallet-chain-node && build/env.sh go build
+RUN cd /savour-core && build/env.sh go build
 
 # Pull wallet-chain-node into a second stage deploy alpine container
 FROM alpine:latest
