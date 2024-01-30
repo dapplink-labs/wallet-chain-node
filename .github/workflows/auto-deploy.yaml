@@ -2,7 +2,7 @@ name: Acorus Image Build Only
 on:
   push:
     branches:
-      - main
+      - develop
 env:
   AWS_REGION : "ap-southeast-1"
   app: wallet-chain-node
