@@ -1,4 +1,4 @@
-name: Acorus Image Build Only
+name: eniac-x-labs auto deployment
 on:
   push:
     branches:
