@@ -17,6 +17,6 @@ ARG CONFIG=config.yml
 COPY --from=builder /savour-core/wallet-chain-node /usr/local/bin/
 COPY --from=builder /savour-core/${CONFIG} /etc/savour-core/config.yml
 
-EXPOSE 8888
+EXPOSE 8189
 ENTRYPOINT ["wallet-chain-node"]
 CMD ["-c", "/etc/savour-core/config.yml"]
