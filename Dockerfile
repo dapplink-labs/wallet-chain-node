@@ -14,9 +14,9 @@ RUN mkdir /etc/wallet-chain-node
 
 ARG CONFIG=config.yml
 
-COPY --from=builder /savour-core/savour-core /usr/local/bin/
+COPY --from=builder /savour-core/wallet-chain-node /usr/local/bin/
 COPY --from=builder /savour-core/${CONFIG} /etc/savour-core/config.yml
 
 EXPOSE 8888
-ENTRYPOINT ["savour-core"]
+ENTRYPOINT ["wallet-chain-node"]
 CMD ["-c", "/etc/savour-core/config.yml"]
