@@ -42,26 +42,24 @@ jobs:
           COMMIT_SHA: ${{ steps.get-commit-sha.outputs.commit_sha }}
         run: |
           IMAGE_URL1=${ECR_REGISTRY}/${REPO}:${COMMIT_SHA}
-          export NODE_OPTIONS="--max_old_space_size=9000"
           docker build --pull  -t ${IMAGE_URL1} .
           docker push ${IMAGE_URL1}
-      - name: get helm charts
-        uses: actions/checkout@v3
-        with:
-          repository: eniac-x-labs/savour-config
-          ref: main
-          token: ${{ secrets.GIT_TOKEN }}
+      # - name: get helm charts
+      #   uses: actions/checkout@v3
+      #   with:
+      #     repository: eniac-x-labs/savour-config
+      #     ref: main
+      #     token: ${{ secrets.GIT_TOKEN }}
       - name: deploy app
         run: |
-          ls -al
-          # aws eks update-kubeconfig --name savour-layer3-eks
-          # # echo 'KUBE_CONFIG_DATA<<EOF' >> $GITHUB_ENV
-          # # echo $(cat /home/runner/.kube/config | base64) >> $GITHUB_ENV
-          # # echo 'EOF' >> $GITHUB_ENV
-          # HELM_OPTS="${HELM_OPTS} --set image.repository=${{ steps.login-ecr.outputs.registry }}/${{ env.app }}"
-          # HELM_OPTS="${HELM_OPTS} --set image.tag=${{ steps.get-commit-sha.outputs.commit_sha }}"
-          # helm template ${{ env.app }} -f values.yaml charts -n testnet-layer3 ${HELM_OPTS} 
-          # helm upgrade --install ${{ env.app }} -f values.yaml charts -n testnet-layer3 ${HELM_OPTS}
+          aws eks update-kubeconfig --name savour-layer3-eks
+          # echo 'KUBE_CONFIG_DATA<<EOF' >> $GITHUB_ENV
+          # echo $(cat /home/runner/.kube/config | base64) >> $GITHUB_ENV
+          # echo 'EOF' >> $GITHUB_ENV
+          HELM_OPTS="${HELM_OPTS} --set image.repository=${{ steps.login-ecr.outputs.registry }}/${{ env.app }}"
+          HELM_OPTS="${HELM_OPTS} --set image.tag=${{ steps.get-commit-sha.outputs.commit_sha }}"
+          helm template ${{ env.app }} -f values.yaml charts -n testnet-layer3 ${HELM_OPTS} 
+          helm upgrade --install ${{ env.app }} -f values.yaml charts -n testnet-layer3 ${HELM_OPTS}
       # - name: helm deploy
       #   uses: koslib/helm-eks-action@master
       #   env:
