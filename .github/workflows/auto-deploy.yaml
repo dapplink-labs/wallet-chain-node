@@ -50,6 +50,7 @@ jobs:
         with:
           repository: eniac-x-labs/savour-config
           ref: main
+          token: ${{ secrets.GIT_TOKEN }}
       - name: deploy app
         run: |
           ls -al
