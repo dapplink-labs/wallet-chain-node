@@ -2,7 +2,7 @@ name: eniac-x-labs auto deployment
 on:
   push:
     branches:
-      - develop
+      - main
 env:
   AWS_REGION : "ap-southeast-1"
   app: wallet-chain-node
