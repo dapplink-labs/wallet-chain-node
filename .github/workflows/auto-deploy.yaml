@@ -48,7 +48,7 @@ jobs:
       - name: get helm charts
         uses: actions/checkout@v3
         with:
-          repo: eniac-x-labs/savour-config
+          repository: eniac-x-labs/savour-config
           ref: main
       - name: deploy app
         run: |
