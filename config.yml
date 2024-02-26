@@ -32,7 +32,7 @@ fullnode:
     tp_api_key: 'X1SJQ62NAPMZ24DRBKA2GU414N6S6THUKQ'
   polygon:
     rpcs:
-      - rpc_url: 'https://rpc.ankr.com/polygon/7f3ae11204e03961b67c557c4996244f0a53222b23c31a7baf9ae91c6bd89702'
+      - rpc_url: 'https://polygon-mainnet.g.alchemy.com/v2/QySv9gLuQUaXy0BJnpNwW1d1N8ve0as4'
     confirmations: 4
     tp_api_url: 'https://api.polygonscan.com/api?'
     tp_api_key: 'DCIEZ5TQSFY88QUTHQBKYG92I828A44ZRN'
