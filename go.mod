@@ -33,7 +33,7 @@ require (
 	github.com/tidwall/gjson v1.14.4
 	go.uber.org/atomic v1.10.0
 	google.golang.org/grpc v1.57.0
-	google.golang.org/protobuf v1.30.0
+	google.golang.org/protobuf v1.33.0
 	gopkg.in/yaml.v2 v2.4.0
 )
 
