@@ -30,7 +30,7 @@ require (
 	github.com/shopspring/decimal v1.3.1
 	github.com/stretchr/testify v1.8.2
 	github.com/syndtr/goleveldb v1.0.1-0.20220614013038-64ee5596c38a
-	github.com/tidwall/gjson v1.14.4
+	github.com/tidwall/gjson v1.17.1
 	go.uber.org/atomic v1.10.0
 	google.golang.org/grpc v1.57.0
 	google.golang.org/protobuf v1.30.0
