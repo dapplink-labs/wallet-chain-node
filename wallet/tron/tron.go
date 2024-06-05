@@ -232,7 +232,7 @@ func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHash
 	if len(depositList) == 0 {
 		return &wallet2.TxHashResponse{
 			Code: common.ReturnCode_SUCCESS,
-			Msg:  "get tx by hash successs",
+			Msg:  "get tx by hash successes",
 			Tx: &wallet2.TxMessage{
 				Hash:   req.Hash,
 				Froms:  from_addrs,
@@ -247,7 +247,7 @@ func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHash
 	} else {
 		return &wallet2.TxHashResponse{
 			Code: common.ReturnCode_SUCCESS,
-			Msg:  "get tx by hash successs",
+			Msg:  "get tx by hash successes",
 			Tx: &wallet2.TxMessage{
 				Hash:            req.Hash,
 				Froms:           from_addrs,
