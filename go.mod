@@ -5,8 +5,6 @@ go 1.18
 require (
 	cosmossdk.io/api v0.2.4
 	emperror.dev/errors v0.8.1
-	github.com/algorand/go-algorand-sdk v0.0.0-00010101000000-000000000000
-	// github.com/multiversx/mx-sdk-go v0.0.0-00010101000000-000000000000
 	github.com/armon/go-metrics v0.4.1
 	github.com/btcsuite/btcd v0.22.1
 	github.com/btcsuite/btcd/chaincfg/chainhash v1.0.1
@@ -296,8 +294,6 @@ require (
 	lukechampine.com/blake3 v1.1.7 // indirect
 )
 
-replace github.com/algorand/go-algorand-sdk => ../go-algorand-sdk
 
-replace github.com/multiversx/mx-sdk-go => ../mx-sdk-go
 
 replace github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1

@@ -14,7 +14,7 @@ fullnode:
     confirmations: 1
   eth:
     rpcs:
-      - rpc_url: 'https://rpc.ankr.com/eth/7f3ae11204e03961b67c557c4996244f0a53222b23c31a7baf9ae91c6bd89702'
+      - rpc_url: 'https://eth-mainnet.nodereal.io/v1/1659dfb40aa24bbb8153a677b98064d7'
     confirmations: 4
     tp_api_url: 'https://api.etherscan.io/api?'
     tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
