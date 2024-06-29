@@ -1,6 +1,8 @@
 module github.com/savour-labs/wallet-chain-node
 
-go 1.18
+go 1.22.1
+
+toolchain go1.22.2
 
 require (
 	cosmossdk.io/api v0.2.4
@@ -31,12 +33,13 @@ require (
 	github.com/tidwall/gjson v1.14.4
 	go.uber.org/atomic v1.10.0
 	google.golang.org/grpc v1.57.0
-	google.golang.org/protobuf v1.30.0
+	google.golang.org/protobuf v1.34.1
 	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (
 	github.com/algorand/go-algorand-sdk v1.24.0
+	github.com/aviate-labs/agent-go v0.4.5
 	github.com/block-vision/sui-go-sdk v1.0.5
 	github.com/btcsuite/btcd/btcec/v2 v2.3.0
 	github.com/coinbase/rosetta-sdk-go v0.8.3
@@ -57,6 +60,8 @@ require (
 	github.com/StackExchange/wmi v1.2.1 // indirect
 	github.com/akavel/rsrc v0.8.0 // indirect
 	github.com/algorand/go-codec/codec v1.1.10 // indirect
+	github.com/aviate-labs/leb128 v0.3.0 // indirect
+	github.com/aviate-labs/secp256k1 v0.0.0-5e6736a // indirect
 	github.com/benbjohnson/clock v1.3.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bgentry/speakeasy v0.1.0 // indirect
@@ -110,7 +115,7 @@ require (
 	github.com/filecoin-project/specs-actors/v6 v6.0.2 // indirect
 	github.com/filecoin-project/specs-actors/v7 v7.0.1 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
-	github.com/fxamacker/cbor/v2 v2.4.1-0.20230228173756-c0c9f774e40c // indirect
+	github.com/fxamacker/cbor/v2 v2.6.0 // indirect
 	github.com/fxamacker/circlehash v0.3.0 // indirect
 	github.com/gbrlsnchs/jwt/v3 v3.0.1 // indirect
 	github.com/go-kit/kit v0.12.0 // indirect
@@ -144,6 +149,7 @@ require (
 	github.com/hannahhoward/go-pubsub v0.0.0-20200423002714-8d62886cc36e // indirect
 	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
+	github.com/herumi/bls-go-binary v1.34.0 // indirect
 	github.com/holiman/uint256 v1.2.3 // indirect
 	github.com/icza/backscanner v0.0.0-20210726202459-ac2ffc679f94 // indirect
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect

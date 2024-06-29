@@ -35,53 +35,38 @@ type SolanaNode struct {
 	FeeAccountPriKey string `yaml:"FeeAccountPriKey"`
 }
 
-// https://dashboard.internetcomputer.org/canister/74zq4-iqaaa-aaaam-ab53a-cai
-type IcpControllersNode struct {
-	RegistryCanister      string
-	GovernanceCanister    string
-	LedgerCanister        string
-	NnsRootCanister       string
-	CyclesMintingCanister string
-	LifelineCanister      string
-	GenesisTokenCanister  string
-	SnsWasmCanister       string
-	IdentityCanister      string
-	NnsUiCanister         string
-}
-
 // Fullnode define
 type Fullnode struct {
-	Btc      Node               `yaml:"btc"`
-	Eth      Node               `yaml:"eth"`
-	Arbi     Node               `yaml:"arbi"`
-	Op       Node               `yaml:"op"`
-	Zksync   Node               `yaml:"zksync"`
-	Bsc      Node               `yaml:"bsc"`
-	Heco     Node               `yaml:"heco"`
-	Avax     Node               `yaml:"avax"`
-	Evmos    Node               `yaml:"evmos"`
-	Polygon  Node               `yaml:"polygon"`
-	Trx      Node               `yaml:"trx"`
-	Near     Node               `yaml:"near"`
-	Algo     Node               `yaml:"alog"`
-	Xrp      Node               `yaml:"xrp"`
-	Sol      SolanaNode         `yaml:"solana"`
-	Cosmos   Node               `yaml:"cosmos"`
-	FileCoin Node               `yaml:"filecoin"`
-	Dot      Node               `yaml:"dot"`
-	Eos      Node               `yaml:"eos"`
-	Oasis    Node               `yaml:"oasis"`
-	Tezos    Node               `yaml:"tezos"`
-	Aptos    Node               `yaml:"aptos"`
-	Egld     Node               `yaml:"egld"`
-	Mantle   Node               `yaml:"mantle"`
-	Scroll   Node               `yaml:"scroll"`
-	Base     Node               `yaml:"base"`
-	Linea    Node               `yaml:"linea"`
-	Ada      Node               `yaml:"ada"`
-	Sui      Node               `yaml:"sui"`
-	Flow     Node               `yaml:"flow"`
-	Icp      IcpControllersNode `yaml:"icp"`
+	Btc      Node       `yaml:"btc"`
+	Eth      Node       `yaml:"eth"`
+	Arbi     Node       `yaml:"arbi"`
+	Op       Node       `yaml:"op"`
+	Zksync   Node       `yaml:"zksync"`
+	Bsc      Node       `yaml:"bsc"`
+	Heco     Node       `yaml:"heco"`
+	Avax     Node       `yaml:"avax"`
+	Evmos    Node       `yaml:"evmos"`
+	Polygon  Node       `yaml:"polygon"`
+	Trx      Node       `yaml:"trx"`
+	Near     Node       `yaml:"near"`
+	Algo     Node       `yaml:"alog"`
+	Xrp      Node       `yaml:"xrp"`
+	Sol      SolanaNode `yaml:"solana"`
+	Cosmos   Node       `yaml:"cosmos"`
+	FileCoin Node       `yaml:"filecoin"`
+	Dot      Node       `yaml:"dot"`
+	Eos      Node       `yaml:"eos"`
+	Oasis    Node       `yaml:"oasis"`
+	Tezos    Node       `yaml:"tezos"`
+	Aptos    Node       `yaml:"aptos"`
+	Egld     Node       `yaml:"egld"`
+	Mantle   Node       `yaml:"mantle"`
+	Scroll   Node       `yaml:"scroll"`
+	Base     Node       `yaml:"base"`
+	Linea    Node       `yaml:"linea"`
+	Ada      Node       `yaml:"ada"`
+	Sui      Node       `yaml:"sui"`
+	Flow     Node       `yaml:"flow"`
 }
 
 // Config instance define
