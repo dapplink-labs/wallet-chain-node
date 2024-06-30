@@ -39,13 +39,13 @@ require (
 
 require (
 	github.com/algorand/go-algorand-sdk v1.24.0
-	github.com/aviate-labs/agent-go v0.4.5
+	github.com/aviate-labs/agent-go v0.3.0
 	github.com/block-vision/sui-go-sdk v1.0.5
 	github.com/btcsuite/btcd/btcec/v2 v2.3.0
 	github.com/coinbase/rosetta-sdk-go v0.8.3
 	github.com/coinbase/rosetta-sdk-go/types v1.0.0
 	github.com/fbsobreira/gotron-sdk v0.0.0-20230907131216-1e824406fe8c
-	github.com/onflow/flow-go-sdk v0.44.0
+	github.com/onflow/flow-go-sdk v0.40.0
 )
 
 require (
@@ -115,7 +115,7 @@ require (
 	github.com/filecoin-project/specs-actors/v6 v6.0.2 // indirect
 	github.com/filecoin-project/specs-actors/v7 v7.0.1 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
-	github.com/fxamacker/cbor/v2 v2.6.0 // indirect
+	github.com/fxamacker/cbor/v2 v2.4.1-0.20220515183430-ad2eae63303f // indirect
 	github.com/fxamacker/circlehash v0.3.0 // indirect
 	github.com/gbrlsnchs/jwt/v3 v3.0.1 // indirect
 	github.com/go-kit/kit v0.12.0 // indirect
@@ -219,7 +219,7 @@ require (
 	github.com/multiformats/go-varint v0.0.6 // indirect
 	github.com/nkovacs/streamquote v1.0.0 // indirect
 	github.com/onflow/atree v0.6.0 // indirect
-	github.com/onflow/cadence v0.41.1 // indirect
+	github.com/onflow/cadence v0.38.1 // indirect
 	github.com/onflow/crypto v0.24.9 // indirect
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
 	github.com/pborman/uuid v1.2.1 // indirect
