@@ -39,7 +39,7 @@ require (
 
 require (
 	github.com/algorand/go-algorand-sdk v1.24.0
-	github.com/aviate-labs/agent-go v0.3.0
+	github.com/aviate-labs/agent-go v0.4.5
 	github.com/block-vision/sui-go-sdk v1.0.5
 	github.com/btcsuite/btcd/btcec/v2 v2.3.0
 	github.com/coinbase/rosetta-sdk-go v0.8.3
@@ -115,7 +115,7 @@ require (
 	github.com/filecoin-project/specs-actors/v6 v6.0.2 // indirect
 	github.com/filecoin-project/specs-actors/v7 v7.0.1 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
-	github.com/fxamacker/cbor/v2 v2.4.1-0.20220515183430-ad2eae63303f // indirect
+	github.com/fxamacker/cbor/v2 v2.6.0 // indirect
 	github.com/fxamacker/circlehash v0.3.0 // indirect
 	github.com/gbrlsnchs/jwt/v3 v3.0.1 // indirect
 	github.com/go-kit/kit v0.12.0 // indirect
