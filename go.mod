@@ -195,7 +195,6 @@ require (
 	github.com/libp2p/go-msgio v0.2.0 // indirect
 	github.com/libp2p/go-openssl v0.1.0 // indirect
 	github.com/logrusorgru/aurora v2.0.3+incompatible // indirect
-	github.com/logrusorgru/aurora/v4 v4.0.0 // indirect
 	github.com/magefile/mage v1.9.0 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/mattn/go-isatty v0.0.18 // indirect
@@ -220,7 +219,7 @@ require (
 	github.com/nkovacs/streamquote v1.0.0 // indirect
 	github.com/onflow/atree v0.6.0 // indirect
 	github.com/onflow/cadence v0.38.1 // indirect
-	github.com/onflow/crypto v0.24.9 // indirect
+	github.com/onflow/flow-go/crypto v0.24.7 // indirect
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
 	github.com/pborman/uuid v1.2.1 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
