@@ -4,6 +4,8 @@ import (
 	"context"
 	"github.com/savour-labs/wallet-chain-node/wallet/flows"
 	"github.com/savour-labs/wallet-chain-node/wallet/sui"
+	"github.com/savour-labs/wallet-chain-node/wallet/ton"
+	"github.com/savour-labs/wallet-chain-node/wallet/zksync"
 	"runtime/debug"
 	"strings"
 
@@ -35,7 +37,6 @@ import (
 	"github.com/savour-labs/wallet-chain-node/wallet/solana"
 	"github.com/savour-labs/wallet-chain-node/wallet/tron"
 	"github.com/savour-labs/wallet-chain-node/wallet/xrp"
-	"github.com/savour-labs/wallet-chain-node/wallet/zksync"
 )
 
 type CommonRequest interface {
@@ -76,12 +77,13 @@ func New(conf *config.Config) (*WalletDispatcher, error) {
 		ada.ChainName:       ada.NewChainAdaptor,
 		sui.ChainName:       sui.NewChainAdaptor,
 		flows.ChainName:     flows.NewChainAdaptor,
+		ton.ChainName:       ton.NewChainAdaptor,
 	}
 	supportedChains := []string{
 		bitcoin.ChainName, ethereum.ChainName, solana.ChainName, arbitrum.ChainName, base.ChainName, linea.ChainName,
 		mantle.ChainName, tron.ChainName, zksync.ChainName, optimism.ChainName, polygon.ChainName, binance.ChainName,
 		heco.ChainName, avalanche.ChainName, evmos.ChainName, near.ChainName, xrp.ChainName, eosio.ChainName, ada.ChainName,
-		sui.ChainName, flows.ChainName,
+		sui.ChainName, flows.ChainName, ton.ChainName,
 	}
 	for _, c := range conf.Chains {
 		if factory, ok := walletAdaptorFactoryMap[c]; ok {
@@ -218,6 +220,7 @@ func (d *WalletDispatcher) SendTx(ctx context.Context, request *wallet2.SendTxRe
 }
 
 func (d *WalletDispatcher) GetBalance(ctx context.Context, request *wallet2.BalanceRequest) (*wallet2.BalanceResponse, error) {
+	log.Info("GetBalance11", "req", request)
 	resp := d.preHandler(request)
 	if resp != nil {
 		return &wallet2.BalanceResponse{

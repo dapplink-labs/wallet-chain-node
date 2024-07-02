@@ -1003,6 +1003,8 @@ type GasPriceRequest struct {
 	Chain         string `protobuf:"bytes,2,opt,name=chain,proto3" json:"chain,omitempty"`
 	Coin          string `protobuf:"bytes,3,opt,name=coin,proto3" json:"coin,omitempty"`
 	Network       string `protobuf:"bytes,4,opt,name=network,proto3" json:"network,omitempty"`
+	RawTx         string `protobuf:"bytes,5,opt,name=raw_tx,json=rawTx,proto3" json:"raw_tx,omitempty"`
+	Address       string `protobuf:"bytes,6,opt,name=address,proto3" json:"address,omitempty"`
 }
 
 func (x *GasPriceRequest) Reset() {
@@ -1058,9 +1060,24 @@ func (x *GasPriceRequest) GetCoin() string {
 	return ""
 }
 
+
 func (x *GasPriceRequest) GetNetwork() string {
 	if x != nil {
 		return x.Network
+	}
+	return ""
+}
+
+func (x *GasPriceRequest) GetAddress() string {
+	if x != nil {
+		return x.Address
+	}
+	return ""
+}
+
+func (x *GasPriceRequest) GetRawTx() string {
+	if x != nil {
+		return x.RawTx
 	}
 	return ""
 }
