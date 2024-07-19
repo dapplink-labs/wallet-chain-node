@@ -11,7 +11,7 @@
 
 ### 2.1. Calculation of handling fees
 
-At present, staking.tranfer transfers transaction transfer gas, but it does not actually consume
+At present, staking.transfer transfers transaction transfer gas, but it does not actually consume
 A word of caution: staking your ROSE is a different transaction than sending them! When you stake your tokens (stake.escrow transaction), you can withdraw them at any time. staking.Transfer On the other hand, sending your tokens (transaction) means that the recipient will own the tokens and you cannot get them back yourself.
 
 ### 2.2. About the role of fee and Gas
