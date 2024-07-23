@@ -151,6 +151,6 @@ func getClient() *tonClient {
 	var f = flag.String("c", "../../config.yml", "config path")
 	flag.Parse()
 	conf, _ := config.New(*f)
-	var clinets, _ = newTonClients(conf)
-	return clinets[0]
+	var clients, _ = newTonClients(conf)
+	return clients[0]
 }

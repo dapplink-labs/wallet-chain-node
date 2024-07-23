@@ -266,7 +266,7 @@ func (a *WalletAdaptor) GetUnspentOutputs(req *wallet2.UnspentOutputsRequest) (*
 	}
 	return &wallet2.UnspentOutputsResponse{
 		Code:           common.ReturnCode_SUCCESS,
-		Msg:            "get unspent outputs succcess",
+		Msg:            "get unspent outputs success",
 		UnspentOutputs: unspentOutputList,
 	}, err
 }
