@@ -9,8 +9,8 @@ import (
 	"strings"
 
 	"github.com/btcsuite/btcd/btcec/v2"
-	etherscan "github.com/nanmu42/etherscan-api"
 	"github.com/shopspring/decimal"
+	etherscan "github.com/the-web3/etherscan-api"
 
 	"github.com/ethereum/go-ethereum"
 	ethcommon "github.com/ethereum/go-ethereum/common"

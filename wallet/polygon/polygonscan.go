@@ -3,7 +3,7 @@ package polygon
 import (
 	"time"
 
-	etherscan "github.com/nanmu42/etherscan-api"
+	etherscan "github.com/the-web3/etherscan-api"
 )
 
 func NewEtherscanClient(apiURL string, Key string) *etherscan.Client {

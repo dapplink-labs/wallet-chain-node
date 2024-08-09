@@ -21,7 +21,6 @@ require (
 	github.com/hashicorp/golang-lru v0.5.5-0.20210104140557-80c98217689d
 	github.com/lib/pq v1.10.7
 	github.com/mr-tron/base58 v1.2.0
-	github.com/nanmu42/etherscan-api v1.9.0
 	github.com/near/borsh-go v0.3.2-0.20220516180422-1ff87d108454
 	github.com/pkg/errors v0.9.1
 	github.com/portto/solana-go-sdk v1.22.1
@@ -43,6 +42,7 @@ require (
 	github.com/coinbase/rosetta-sdk-go/types v1.0.0
 	github.com/fbsobreira/gotron-sdk v0.0.0-20230907131216-1e824406fe8c
 	github.com/onflow/flow-go-sdk v0.44.0
+	github.com/the-web3/etherscan-api v0.0.0-20240809065728-f0d82be36448
 	github.com/xssnick/tonutils-go v1.9.8
 )
 
