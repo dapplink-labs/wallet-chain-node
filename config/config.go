@@ -29,7 +29,8 @@ type Node struct {
 }
 
 type SolanaNode struct {
-	PublicUrl        string `yaml:"public_url"`
+	RPCs             []*RPC `yaml:"rpcs"`
+	TpApiUrl         string `yaml:"tp_api_url"`
 	NetWork          string `yaml:"network"`
 	NonceAccountAddr string `yaml:"NonceAccountAddr"`
 	FeeAccountPriKey string `yaml:"FeeAccountPriKey"`

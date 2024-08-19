@@ -8,7 +8,6 @@ import (
 	wallet2 "github.com/savour-labs/wallet-chain-node/rpc/wallet"
 	"github.com/savour-labs/wallet-chain-node/wallet"
 	"github.com/savour-labs/wallet-chain-node/wallet/fallback"
-	"github.com/savour-labs/wallet-chain-node/wallet/multiclient"
 )
 
 const (
@@ -19,7 +18,7 @@ const (
 
 type WalletAdaptor struct {
 	fallback.WalletAdaptor
-	clients *multiclient.MultiClient
+	client *SolanaClient
 }
 
 func (a *WalletAdaptor) GetBlock(req *wallet2.BlockRequest) (*wallet2.BlockResponse, error) {
@@ -98,7 +97,7 @@ func (a *WalletAdaptor) VerifyUtxoSignedTx(req *wallet2.VerifySignedTxRequest) (
 }
 
 func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.BalanceResponse, error) {
-	balance, err := a.getClient().GetBalance(req.Address)
+	balance, err := a.client.GetBalance(req.Address)
 	if err != nil {
 		log.Error("get balance error", "err", err)
 		return &wallet2.BalanceResponse{
@@ -116,7 +115,7 @@ func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balanc
 }
 
 func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
-	txs, err := a.getClient().GetTxByAddress(req.Address, req.Page, req.Pagesize)
+	txs, err := a.client.GetTxByAddress(req.Address, req.Page, req.Pagesize)
 	list := make([]*wallet2.TxMessage, 0, len(txs))
 	for i := 0; i < len(txs); i++ {
 		list = append(list, &wallet2.TxMessage{
@@ -148,7 +147,7 @@ func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.
 }
 
 func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {
-	tx, err := a.getClient().GetTxByHash(req.Hash)
+	tx, err := a.client.GetTxByHash(req.Hash)
 	if err != nil {
 		return &wallet2.TxHashResponse{
 			Code: common.ReturnCode_ERROR,
@@ -179,7 +178,7 @@ func (a *WalletAdaptor) GetAccount(req *wallet2.AccountRequest) (*wallet2.Accoun
 }
 
 func (a *WalletAdaptor) GetMinRent(req *wallet2.MinRentRequest) (*wallet2.MinRentResponse, error) {
-	value, err := a.getClient().GetMinRent()
+	value, err := a.client.GetMinRent()
 	if err != nil {
 		log.Error("get GetMinRent error", "err", err)
 		return &wallet2.MinRentResponse{
@@ -197,25 +196,21 @@ func (a *WalletAdaptor) GetMinRent(req *wallet2.MinRentRequest) (*wallet2.MinRen
 }
 
 func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
-	clients, err := newSolanaClients(conf)
+	cli, err := NewSolanaClients(conf)
 	if err != nil {
 		return nil, err
 	}
-	clis := make([]multiclient.Client, len(clients))
-	for i, client := range clients {
-		clis[i] = client
-	}
 	return &WalletAdaptor{
-		clients: multiclient.New(clis),
+		client: cli,
 	}, nil
 }
 
-func (a *WalletAdaptor) getClient() *solanaClient {
-	return a.clients.BestClient().(*solanaClient)
+func (a *WalletAdaptor) getClient() *SolanaClient {
+	return a.client
 }
 
 func (w *WalletAdaptor) GetNonce(req *wallet2.NonceRequest) (*wallet2.NonceResponse, error) {
-	value, err := w.getClient().GetNonce()
+	value, err := w.getClient().GetNonce(req.Address)
 	if err != nil {
 		log.Error("get GetNonce error", "err", err)
 		return &wallet2.NonceResponse{
@@ -233,14 +228,10 @@ func (w *WalletAdaptor) GetNonce(req *wallet2.NonceRequest) (*wallet2.NonceRespo
 
 }
 
-func newWalletAdaptor(client *solanaClient) wallet.WalletAdaptor {
+func newWalletAdaptor(client *SolanaClient) wallet.WalletAdaptor {
 	return &WalletAdaptor{
-		clients: multiclient.New([]multiclient.Client{client}),
+		client: client,
 	}
-}
-
-func NewLocalWalletAdaptor(network config.NetWorkType) wallet.WalletAdaptor {
-	return newWalletAdaptor(newLocalSolanaClient(network))
 }
 
 func (w *WalletAdaptor) GetSupportCoins(req *wallet2.SupportCoinsRequest) (*wallet2.SupportCoinsResponse, error) {

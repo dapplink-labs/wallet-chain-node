@@ -107,7 +107,6 @@ func NewLocal(network config.NetWorkType) *WalletDispatcher {
 	walletAdaptorFactoryMap := map[string]func(network config.NetWorkType) wallet.WalletAdaptor{
 		bitcoin.ChainName:   bitcoin.NewLocalChainAdaptor,
 		ethereum.ChainName:  ethereum.NewLocalWalletAdaptor,
-		solana.ChainName:    solana.NewLocalWalletAdaptor,
 		arbitrum.ChainName:  arbitrum.NewLocalWalletAdaptor,
 		zksync.ChainName:    zksync.NewLocalWalletAdaptor,
 		optimism.ChainName:  optimism.NewLocalWalletAdaptor,

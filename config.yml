@@ -106,7 +106,10 @@ fullnode:
     apiToken: 1
 
   solana:
-    public_api: 'https://public-api.solscan.io'
+    rpcs:
+      - rpc_url: 'https://docs-demo.solana-mainnet.quiknode.pro'
+    tp_api_url: 'https://public-api.solscan.io'
+    network: "mainnet"
     NonceAccountAddr: DJyNpXgggw1WGgjTVzFsNjb3fuQZVMqhoakvSBfX9LYx
     FeeAccountPriKey: 4TMFNY9ntAn3CHzguSAvDNLPRoQTaK3sWbQQXdDXaE6KWRBLufGL6PJdsD2koiEe3gGmMdRK3aAw7sikGNksHJrN
 
