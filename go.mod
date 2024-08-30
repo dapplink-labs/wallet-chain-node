@@ -37,7 +37,7 @@ require (
 require (
 	github.com/algorand/go-algorand-sdk v1.24.0
 	github.com/block-vision/sui-go-sdk v1.0.5
-	github.com/btcsuite/btcd/btcec/v2 v2.3.0
+	github.com/btcsuite/btcd/btcec/v2 v2.3.4
 	github.com/coinbase/rosetta-sdk-go v0.8.3
 	github.com/coinbase/rosetta-sdk-go/types v1.0.0
 	github.com/fbsobreira/gotron-sdk v0.0.0-20230907131216-1e824406fe8c
