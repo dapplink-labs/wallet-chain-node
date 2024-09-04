@@ -2,9 +2,18 @@ package walletdispatcher
 
 import (
 	"context"
+	"github.com/savour-labs/wallet-chain-node/wallet/ada"
+	"github.com/savour-labs/wallet-chain-node/wallet/arweave"
+	"github.com/savour-labs/wallet-chain-node/wallet/base"
+	"github.com/savour-labs/wallet-chain-node/wallet/eosio"
 	"github.com/savour-labs/wallet-chain-node/wallet/flows"
+	"github.com/savour-labs/wallet-chain-node/wallet/linea"
+	"github.com/savour-labs/wallet-chain-node/wallet/mantle"
+	"github.com/savour-labs/wallet-chain-node/wallet/near"
 	"github.com/savour-labs/wallet-chain-node/wallet/sui"
 	"github.com/savour-labs/wallet-chain-node/wallet/ton"
+	"github.com/savour-labs/wallet-chain-node/wallet/tron"
+	"github.com/savour-labs/wallet-chain-node/wallet/xrp"
 	"github.com/savour-labs/wallet-chain-node/wallet/zksync"
 	"runtime/debug"
 	"strings"
@@ -19,24 +28,16 @@ import (
 	"github.com/savour-labs/wallet-chain-node/rpc/common"
 	wallet2 "github.com/savour-labs/wallet-chain-node/rpc/wallet"
 	"github.com/savour-labs/wallet-chain-node/wallet"
-	"github.com/savour-labs/wallet-chain-node/wallet/ada"
 	"github.com/savour-labs/wallet-chain-node/wallet/arbitrum"
 	"github.com/savour-labs/wallet-chain-node/wallet/avalanche"
-	"github.com/savour-labs/wallet-chain-node/wallet/base"
 	"github.com/savour-labs/wallet-chain-node/wallet/binance"
 	"github.com/savour-labs/wallet-chain-node/wallet/bitcoin"
-	"github.com/savour-labs/wallet-chain-node/wallet/eosio"
 	"github.com/savour-labs/wallet-chain-node/wallet/ethereum"
 	"github.com/savour-labs/wallet-chain-node/wallet/evmos"
 	"github.com/savour-labs/wallet-chain-node/wallet/heco"
-	"github.com/savour-labs/wallet-chain-node/wallet/linea"
-	"github.com/savour-labs/wallet-chain-node/wallet/mantle"
-	"github.com/savour-labs/wallet-chain-node/wallet/near"
 	"github.com/savour-labs/wallet-chain-node/wallet/optimism"
 	"github.com/savour-labs/wallet-chain-node/wallet/polygon"
 	"github.com/savour-labs/wallet-chain-node/wallet/solana"
-	"github.com/savour-labs/wallet-chain-node/wallet/tron"
-	"github.com/savour-labs/wallet-chain-node/wallet/xrp"
 )
 
 type CommonRequest interface {
@@ -78,12 +79,13 @@ func New(conf *config.Config) (*WalletDispatcher, error) {
 		sui.ChainName:       sui.NewChainAdaptor,
 		flows.ChainName:     flows.NewChainAdaptor,
 		ton.ChainName:       ton.NewChainAdaptor,
+		arweave.ChainName:   arweave.NewChainAdaptor,
 	}
 	supportedChains := []string{
 		bitcoin.ChainName, ethereum.ChainName, solana.ChainName, arbitrum.ChainName, base.ChainName, linea.ChainName,
 		mantle.ChainName, tron.ChainName, zksync.ChainName, optimism.ChainName, polygon.ChainName, binance.ChainName,
 		heco.ChainName, avalanche.ChainName, evmos.ChainName, near.ChainName, xrp.ChainName, eosio.ChainName, ada.ChainName,
-		sui.ChainName, flows.ChainName, ton.ChainName,
+		sui.ChainName, flows.ChainName, ton.ChainName, arweave.ChainName,
 	}
 	for _, c := range conf.Chains {
 		if factory, ok := walletAdaptorFactoryMap[c]; ok {
