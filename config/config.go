@@ -69,6 +69,7 @@ type Fullnode struct {
 	Sui      Node       `yaml:"sui"`
 	Flow     Node       `yaml:"flow"`
 	Ton      Node       `yaml:"ton"`
+	Ar       Node       `yaml:"ar"`
 }
 
 // Config instance define
