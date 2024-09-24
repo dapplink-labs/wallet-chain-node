@@ -1,15 +1,15 @@
-name: App Image Build And Deploy
+name: MantaIndex Image Build Only
 on:
   workflow_dispatch:
     inputs:
       environment:
         type: choice
         description: environment to choice
-        options:
-          - testnet
-          - mainnet
+        options: 
+        - testnet
+        - mainnet
 env:
-  AWS_REGION: "ap-southeast-1"
+  AWS_REGION : "ap-southeast-1"
   app: wallet-chain-node
 permissions:
   id-token: write
@@ -24,8 +24,6 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-        with:
-          submodules: true
       - name: Get Commit Sha
         id: get-commit-sha
         run: |
@@ -37,11 +35,11 @@ jobs:
           appname="wallet-chain-node"
           tag_name="${registry}/${namespace}/${appname}"
           docker login --username=100003588471 -p dapplink@go hkccr.ccs.tencentyun.com
-          docker build --pull  -t ${tag_name}:v0.0.1 .
-          docker push ${tag_name}:v0.0.1
-        
+          docker build --pull  -t ${tag_name}:v1 .
+          docker push ${tag_name}:v1
+          
           HELM_OPTS="${HELM_OPTS} --set image.repository=${tag_name}"
-          HELM_OPTS="${HELM_OPTS} --set image.tag=v0.0.1"
+          HELM_OPTS="${HELM_OPTS} --set image.tag=v1"
           if [ ${{github.event.inputs.environment }} == "testnet" ]; then
             helm template ${{ env.app }} -f values.yaml charts ${HELM_OPTS} 
             helm upgrade --install ${{ env.app }} -f values.yaml charts ${HELM_OPTS}
@@ -49,5 +47,4 @@ jobs:
             helm template ${{ env.app }} -f values.yaml charts -n mainnet ${HELM_OPTS} 
             helm upgrade --install ${{ env.app }} -f values.yaml charts -n mainnet ${HELM_OPTS}
           fi
-        
-          
+            
