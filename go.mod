@@ -2,8 +2,6 @@ module github.com/savour-labs/wallet-chain-node
 
 go 1.21.0
 
-toolchain go1.22.5
-
 require (
 	cosmossdk.io/api v0.2.4
 	emperror.dev/errors v0.8.1
@@ -87,6 +85,7 @@ require (
 	github.com/crate-crypto/go-kzg-4844 v1.0.0 // indirect
 	github.com/daaku/go.zipexe v1.0.0 // indirect
 	github.com/danieljoos/wincred v1.1.2 // indirect
+	github.com/dapplink-labs/chain-explorer-api v0.0.1-alpha // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/deckarep/golang-set v1.8.0 // indirect
 	github.com/deckarep/golang-set/v2 v2.6.0 // indirect
