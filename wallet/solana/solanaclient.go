@@ -3,14 +3,9 @@ package solana
 import (
 	"context"
 	"encoding/base64"
-	"encoding/json"
-	"fmt"
 	"github.com/mr-tron/base58"
-	"io"
-	"io/ioutil"
 	"log"
 	"math/big"
-	"net/http"
 	"strconv"
 
 	"github.com/portto/solana-go-sdk/client"
@@ -80,31 +75,6 @@ type GetTxByAddressTx struct {
 	Status              string `json:"status"`
 	Decimals            int    `json:"decimals"`
 	TxNumberSolTransfer int    `json:"txNumberSolTransfer"`
-}
-
-func (sol *SolanaClient) GetTxByAddress(address string, page uint32, size uint32) ([]GetTxByAddressTx, error) {
-	offset := (page - 1) * size
-	url := sol.solanaConfig.TpApiUrl + "/account/solTransfers?limit=" + strconv.FormatInt(int64(size), 10) + "&account=" + address + "&offset=" + strconv.FormatInt(int64(offset), 10)
-	resp, err := http.Get(url)
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-	fmt.Println("resp==", resp)
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
-		if err != nil {
-			return
-		}
-	}(resp.Body)
-	body, _ := ioutil.ReadAll(resp.Body)
-	var res GetTxByAddressRes
-	err = json.Unmarshal(body, &res)
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
-	return res.Data, nil
 }
 
 func (sol *SolanaClient) GetAccount() (string, string, error) {
