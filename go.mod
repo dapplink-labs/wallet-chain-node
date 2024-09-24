@@ -10,7 +10,7 @@ require (
 	github.com/btcsuite/btcd/chaincfg/chainhash v1.0.1
 	github.com/btcsuite/btcutil v1.0.3-0.20201208143702-a53e38424cce
 	github.com/cosmos/cosmos-sdk v0.40.0
-	github.com/dapplink-labs/chain-explorer-api v0.0.0
+	github.com/dapplink-labs/chain-explorer-api v0.0.1-beta
 	github.com/eoscanada/eos-go v0.10.2
 	github.com/ethereum/go-ethereum v1.14.8
 	github.com/filecoin-project/go-address v1.0.0
@@ -85,7 +85,6 @@ require (
 	github.com/crate-crypto/go-kzg-4844 v1.0.0 // indirect
 	github.com/daaku/go.zipexe v1.0.0 // indirect
 	github.com/danieljoos/wincred v1.1.2 // indirect
-	github.com/dapplink-labs/chain-explorer-api v0.0.1-alpha // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/deckarep/golang-set v1.8.0 // indirect
 	github.com/deckarep/golang-set/v2 v2.6.0 // indirect
