@@ -12,7 +12,7 @@ permissions:
 run-name: Build Image For Repo
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     outputs:
       commit_sha: ${{ steps.get-commit-sha.outputs.commit_sha }}
       ecr_registry: ${{ steps.login-ecr.outputs.registry }}
@@ -25,51 +25,24 @@ jobs:
         id: get-commit-sha
         run: |
           echo "::set-output name=commit_sha::$(git rev-parse --short=7 HEAD)"
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v3
-        with:
-          role-to-assume: arn:aws:iam::942583694543:role/github_assume_role
-          aws-region: ${{ env.AWS_REGION }}
-          role-session-name: samplerolesession
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-      - name: Build Docker Image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPO: ${{ env.app }}
-          #REF: ${{ github.event.inputs.ref }}
-          COMMIT_SHA: ${{ steps.get-commit-sha.outputs.commit_sha }}
-        run: |
-          IMAGE_URL1=${ECR_REGISTRY}/${REPO}:${COMMIT_SHA}
-          docker build --pull  -t ${IMAGE_URL1} .
-          docker push ${IMAGE_URL1}
-      # - name: get helm charts
-      #   uses: actions/checkout@v3
-      #   with:
-      #     repository: eniac-x-labs/savour-config
-      #     ref: main
-      #     token: ${{ secrets.GIT_TOKEN }}
       - name: deploy app
         run: |
-          aws eks update-kubeconfig --name savour-layer3-eks
-          # echo 'KUBE_CONFIG_DATA<<EOF' >> $GITHUB_ENV
-          # echo $(cat /home/runner/.kube/config | base64) >> $GITHUB_ENV
-          # echo 'EOF' >> $GITHUB_ENV
-          HELM_OPTS="${HELM_OPTS} --set image.repository=${{ steps.login-ecr.outputs.registry }}/${{ env.app }}"
-          HELM_OPTS="${HELM_OPTS} --set image.tag=${{ steps.get-commit-sha.outputs.commit_sha }}"
-          helm template ${{ env.app }} -f values.yaml charts -n testnet-layer3 ${HELM_OPTS} 
-          helm upgrade --install ${{ env.app }} -f values.yaml charts -n testnet-layer3 ${HELM_OPTS}
-      # - name: helm deploy
-      #   uses: koslib/helm-eks-action@master
-      #   env:
-      #     KUBE_CONFIG_DATA: ${{ env.KUBE_CONFIG_DATA }}
-      #   with:
-      #     command: |
-      #       HELM_OPTS="${HELM_OPTS} --set image.repository=${{ steps.login-ecr.outputs.registry }}/${{ env.app }}"
-      #       HELM_OPTS="${HELM_OPTS} --set image.tag=${{ steps.get-commit-sha.outputs.commit_sha }}"
-      #       helm template ${{ env.app }} -f values.yaml charts -n testnet-layer3 ${HELM_OPTS} 
-      #       helm upgrade --install ${{ env.app }} -f values.yaml charts -n testnet-layer3 ${HELM_OPTS}
-            
+          registry="hkccr.ccs.tencentyun.com"
+          namespace="dapplink"
+          appname="wallet-chain-node"
+          tag_name="${registry}/${namespace}/${appname}"
+          docker login --username=100003588471 -p dapplink@go hkccr.ccs.tencentyun.com
+          docker build --pull  -t ${tag_name}:v0.0.1 .
+          docker push ${tag_name}:v0.0.1
+        
+          HELM_OPTS="${HELM_OPTS} --set image.repository=${tag_name}"
+          HELM_OPTS="${HELM_OPTS} --set image.tag=v0.0.1"
+          if [ ${{github.event.inputs.environment }} == "testnet" ]; then
+            helm template ${{ env.app }} -f values.yaml charts ${HELM_OPTS} 
+            helm upgrade --install ${{ env.app }} -f values.yaml charts ${HELM_OPTS}
+          else
+            helm template ${{ env.app }} -f values.yaml charts -n mainnet ${HELM_OPTS} 
+            helm upgrade --install ${{ env.app }} -f values.yaml charts -n mainnet ${HELM_OPTS}
+          fi
         
           

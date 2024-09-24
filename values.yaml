@@ -33,13 +33,14 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: ClusterIP
+  type: NodePort
 
 ports:
- - name: http
-   portNumber: 8189
- # - name: metrics
- #   portNumber: 8081
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
+    nodePort: 30006
+
 ingress:
   enabled: false
   className: ""
