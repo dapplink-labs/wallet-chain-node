@@ -66,7 +66,7 @@ fullnode:
     confirmations: 4
     tp_api_url: ''
     tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
-  trx:
+  tron:
     rpcs:
       - rpc_url: '34.237.210.82:50051'
     confirmations: 4

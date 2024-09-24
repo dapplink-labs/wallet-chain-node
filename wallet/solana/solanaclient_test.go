@@ -2,7 +2,11 @@ package solana
 
 import (
 	"fmt"
+	"github.com/dapplink-labs/chain-explorer-api/common/account"
+	"github.com/dapplink-labs/chain-explorer-api/common/chain"
+	"github.com/dapplink-labs/chain-explorer-api/explorer/solscan"
 	"testing"
+	"time"
 
 	"github.com/savour-labs/wallet-chain-node/config"
 )
@@ -16,9 +20,11 @@ func newTestClient() *SolanaClient {
 	client, _ := NewSolanaClients(&config.Config{
 		Fullnode: config.Fullnode{
 			Sol: config.SolanaNode{
-				RPCs:     rpcList,
-				TpApiUrl: "https://public-api.solscan.io",
-				NetWork:  "mainnet",
+				RPCs:               rpcList,
+				NetWork:            "mainnet",
+				SolScanBaseTimeout: 20 * time.Second,
+				SolScanBaseUrl:     "https://pro-api.solscan.io",
+				SolScanApiKey:      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVkQXQiOjE3MjQwNjIxMzk5MDYsImVtYWlsIjoiemFja2d1by5ndW9AZ21haWwuY29tIiwiYWN0aW9uIjoidG9rZW4tYXBpIiwiYXBpVmVyc2lvbiI6InYxIiwiaWF0IjoxNzI0MDYyMTM5fQ.EaWDC25lyGNx_LqRL5sAYYKLMbq10brnexKnAz9C3UY",
 			},
 		},
 	})
@@ -48,9 +54,20 @@ func TestSolanaClient_GetTxByHash(t *testing.T) {
 }
 
 func TestSolanaClient_GetTransferHistory(t *testing.T) {
-	client := newTestClient()
-	balance, _ := client.GetTxByAddress("4Y19AR3cQ76UmLPeEYsvwkUXaiS8GEfivyggcYSmL4M6", 1, 10)
-	fmt.Println(balance)
+	sol, err := solscan.NewChainExplorerAdaptor("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVkQXQiOjE3MjQwNjIxMzk5MDYsImVtYWlsIjoiemFja2d1by5ndW9AZ21haWwuY29tIiwiYWN0aW9uIjoidG9rZW4tYXBpIiwiYXBpVmVyc2lvbiI6InYxIiwiaWF0IjoxNzI0MDYyMTM5fQ.EaWDC25lyGNx_LqRL5sAYYKLMbq10brnexKnAz9C3UY", "https://pro-api.solscan.io", true, time.Second*20)
+	if err == nil {
+		request := account.AccountTxRequest{
+			PageRequest: chain.PageRequest{
+				Page:  1,
+				Limit: 50,
+			},
+			Address: "4Y19AR3cQ76UmLPeEYsvwkUXaiS8GEfivyggcYSmL4M6",
+		}
+		resp, _ := sol.GetTxByAddress(&request)
+		fmt.Println(resp)
+	} else {
+		fmt.Println(err)
+	}
 }
 
 func TestSolanaClient_GetAccount(t *testing.T) {

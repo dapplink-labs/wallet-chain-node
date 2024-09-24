@@ -1,11 +1,11 @@
 package config
 
 import (
+	"github.com/ethereum/go-ethereum/log"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
-
-	"github.com/ethereum/go-ethereum/log"
+	"time"
 )
 
 // Server prot
@@ -29,11 +29,13 @@ type Node struct {
 }
 
 type SolanaNode struct {
-	RPCs             []*RPC `yaml:"rpcs"`
-	TpApiUrl         string `yaml:"tp_api_url"`
-	NetWork          string `yaml:"network"`
-	NonceAccountAddr string `yaml:"NonceAccountAddr"`
-	FeeAccountPriKey string `yaml:"FeeAccountPriKey"`
+	RPCs               []*RPC        `yaml:"rpcs"`
+	NetWork            string        `yaml:"network"`
+	NonceAccountAddr   string        `yaml:"NonceAccountAddr"`
+	FeeAccountPriKey   string        `yaml:"FeeAccountPriKey"`
+	SolScanApiKey      string        `yaml:"solScanApiKey"`
+	SolScanBaseUrl     string        `yaml:"solScanBaseUrl"`
+	SolScanBaseTimeout time.Duration `yaml:"solScanBaseTimeout"`
 }
 
 // Fullnode define
@@ -48,7 +50,7 @@ type Fullnode struct {
 	Avax     Node       `yaml:"avax"`
 	Evmos    Node       `yaml:"evmos"`
 	Polygon  Node       `yaml:"polygon"`
-	Trx      Node       `yaml:"trx"`
+	Tron     Node       `yaml:"tron"`
 	Near     Node       `yaml:"near"`
 	Algo     Node       `yaml:"alog"`
 	Xrp      Node       `yaml:"xrp"`
@@ -71,6 +73,11 @@ type Fullnode struct {
 	Ton      Node       `yaml:"ton"`
 	Ar       Node       `yaml:"ar"`
 }
+type OkLink struct {
+	OkLinkBaseUrl string        `yaml:"okLinkBaseUrl"`
+	OkLinkApiKey  string        `yaml:"okLinkApiKey"`
+	OkLinkTimeout time.Duration `yaml:"okLinkTimeout"`
+}
 
 // Config instance define
 type Config struct {
@@ -78,6 +85,7 @@ type Config struct {
 	Fullnode Fullnode `yaml:"fullnode"`
 	NetWork  string   `yaml:"network"`
 	Chains   []string `yaml:"chains"`
+	OkLink   OkLink   `yaml:"okLink"`
 }
 
 type NetWorkType int
@@ -92,8 +100,8 @@ const (
 func New(path string) (*Config, error) {
 	// config global config instance
 	var config = new(Config)
-	h := log.StreamHandler(os.Stdout, log.TerminalFormat(true))
-	log.Root().SetHandler(h)
+	h := log.NewTerminalHandler(os.Stdout, true)
+	log.SetDefault(log.NewLogger(h))
 
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
@@ -104,7 +112,6 @@ func New(path string) (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return config, nil
 }
 

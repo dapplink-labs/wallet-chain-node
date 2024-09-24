@@ -1,7 +1,10 @@
 package tron
 
 import (
+	"github.com/ethereum/go-ethereum/params"
 	"github.com/pkg/errors"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"math/big"
 	"net"
 	"strings"
@@ -32,12 +35,21 @@ type tronClient struct {
 // newTronClient init the tron client
 func newTronClients(conf *config.Config) ([]*tronClient, error) {
 	var clients []*tronClient
-	log.Info("tron client setup", "network", conf.NetWork)
-	for _, rpc := range conf.Fullnode.Trx.RPCs {
-		var client tronClient
-		client.confirmations = conf.Fullnode.Trx.Confirmations
+	chainConfig := params.SepoliaChainConfig
+	if conf.NetWork == "mainnet" {
+		chainConfig = params.MainnetChainConfig
+	} else if conf.NetWork == "regtest" {
+		chainConfig = params.AllCliqueProtocolChanges
+	}
+	log.Info("eth client setup", "chain_id", chainConfig.ChainID.Int64(), "network", conf.NetWork)
 
-		rpcURL := rpc.RPCURL
+	for _, rpc := range conf.Fullnode.Tron.RPCs {
+
+		var client tronClient
+		client.confirmations = conf.Fullnode.Tron.Confirmations
+
+		rpcURL := strings.Split(rpc.RPCURL, "=")[0]
+
 		domain := strings.TrimPrefix(rpc.RPCURL, "http://")
 		domain = strings.TrimPrefix(domain, "https://")
 		if strings.Contains(domain, ":") {
@@ -49,12 +61,11 @@ func newTronClients(conf *config.Config) ([]*tronClient, error) {
 				continue
 			}
 			log.Info("tronclient setup client", "ip", ipAddr)
-
 			rpcURL = strings.Replace(rpc.RPCURL, words[0], ipAddr.String(), 1)
 		}
-		log.Info("rpcURL is", rpcURL)
 		c := tclient.NewGrpcClient(rpcURL)
-		if err := c.Start(); err != nil {
+		if err := c.Start(grpc.WithTransportCredentials(insecure.NewCredentials())); err != nil {
+			log.Error("tron client start failed", "url", rpc.RPCURL, "err", err)
 			continue
 		}
 

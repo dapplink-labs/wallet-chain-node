@@ -5,6 +5,9 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"github.com/dapplink-labs/chain-explorer-api/common/account"
+	"github.com/dapplink-labs/chain-explorer-api/common/chain"
+	"github.com/dapplink-labs/chain-explorer-api/explorer/oklink"
 	"math/big"
 	"strconv"
 	"strings"
@@ -47,6 +50,7 @@ const (
 type WalletAdaptor struct {
 	fallback.WalletAdaptor
 	clients *multiclient.MultiClient
+	ok      *oklink.ChainExplorerAdaptor
 }
 
 func (a *WalletAdaptor) GetBlock(req *wallet2.BlockRequest) (*wallet2.BlockResponse, error) {
@@ -64,8 +68,14 @@ func NewWalletAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
 	for i, client := range clients {
 		clis[i] = client
 	}
+
+	ok, err := oklink.NewChainExplorerAdaptor(conf.OkLink.OkLinkApiKey, conf.OkLink.OkLinkBaseUrl, false, conf.OkLink.OkLinkTimeout)
+	if err != nil {
+		return nil, err
+	}
 	return &WalletAdaptor{
 		clients: multiclient.New(clis),
+		ok:      ok,
 	}, nil
 }
 
@@ -143,8 +153,39 @@ func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balanc
 }
 
 func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	request := &account.AccountTxRequest{
+		ChainShortName: "Tron",
+		ExplorerName:   oklink.ChainExplorerName,
+		Action:         account.OkLinkActionNormal,
+		Address:        "THfTJMWpcM6tmQsevN8zeCys5iohHWSQtF",
+		PageRequest: chain.PageRequest{
+			Page:  1,
+			Limit: 10,
+		},
+	}
+	resp, err := a.ok.GetTxByAddress(request)
+	if err != nil {
+		return nil, err
+	}
+
+	var tx_list []*wallet2.TxMessage
+	for _, tx := range resp.TransactionList {
+		tx_list = append(tx_list, &wallet2.TxMessage{
+			Hash:     tx.TxId,
+			Froms:    []*wallet2.Address{{Address: tx.From}},
+			Tos:      []*wallet2.Address{{Address: tx.To}},
+			Fee:      tx.TxFee,
+			Values:   []*wallet2.Value{{Value: tx.Amount}},
+			Status:   wallet2.TxStatus_Success,
+			Datetime: tx.TransactionTime,
+			Height:   tx.Height,
+		})
+	}
+	return &wallet2.TxAddressResponse{
+		Code: common.ReturnCode_SUCCESS,
+		Msg:  "get transactions fail",
+		Tx:   tx_list,
+	}, err
 }
 
 func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {

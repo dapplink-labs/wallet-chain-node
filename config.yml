@@ -9,8 +9,6 @@ fullnode:
   btc:
     rpcs:
       - rpc_url: 'https://btc.getblock.io/7350dbd9-4f17-4917-9555-bfadbc6b8a21/mainnet/'
-        rpc_user:
-        rpc_pass:
     confirmations: 1
   eth:
     rpcs:
@@ -84,9 +82,10 @@ fullnode:
     confirmations: 4
     tp_api_url: ''
     tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
-  trx:
+
+  tron:
     rpcs:
-      - rpc_url: 'https://api.trongrid.io/'
+      - rpc_url: 'https://tron.drpc.org'
     confirmations: 4
     tp_api_url: ''
     tp_api_key: ''
@@ -112,7 +111,9 @@ fullnode:
     network: "mainnet"
     NonceAccountAddr: DJyNpXgggw1WGgjTVzFsNjb3fuQZVMqhoakvSBfX9LYx
     FeeAccountPriKey: 4TMFNY9ntAn3CHzguSAvDNLPRoQTaK3sWbQQXdDXaE6KWRBLufGL6PJdsD2koiEe3gGmMdRK3aAw7sikGNksHJrN
-
+    solScanApiKey: ''
+    solScanBaseUrl: 'https://pro-api.solscan.io'
+    solScanBaseTimeout: 20s
   dot:
     rpcs:
       - rpc_url: 'https://mainnet-api.algonode.cloud'
@@ -124,50 +125,37 @@ fullnode:
   cosmos:
     rpcs:
       - rpc_url: ''
-        rpc_user:
-        rpc_pass:
     confirmations: 1
 
   filecoin:
     rpcs:
       - rpc_url: ''
-        rpc_user:
-        rpc_pass:
     confirmations: 1
 
   eos:
     rpcs:
       - rpc_url: 'https://eos.greymass.com:443'
-        rpc_user:
-        rpc_pass:
     confirmations: 1
   ada:
     rpcs:
       - rpc_url: 'https://go.getblock.io/c9e1612aba7244ac80167f48c783fd72'
-        rpc_user:
-        rpc_pass:
   sui:
     rpcs:
       - rpc_url: 'https://sui-mainnet-endpoint.blockvision.org'
-        rpc_user:
-        rpc_pass:
   flow:
     rpcs:
       - rpc_url: 'https://rest-mainnet.onflow.org/v1'
-        rpc_user:
-        rpc_pass:
   ton:
     rpcs:
       - rpc_url: 'https://toncenter.com/api/v3'
-        rpc_user:
-        rpc_pass:
 
   ar:
     rpcs:
       - rpc_url: 'https://arweave.net'
-        rpc_user:
-        rpc_pass:
 
-chains: [Bitcoin, Ethereum, Arbitrum, Optimism, BscChain, Heco, Polygon, Mantle, Base, Linea, NEAR, XRP, EOS, Solana, Ada,Flow,Sui,Ton, Arweave]
+okLink:
+  okLinkBaseUrl: 'https://www.oklink.com'
+  okLinkApiKey: ''
+  okLinkTimeout: 20s
 
-
+chains: [ Bitcoin, Ethereum, Arbitrum, Optimism, BscChain, Heco, Polygon, Mantle, Base, Linea, NEAR, XRP, EOS, Solana, Ada,Flow,Sui,Ton, Arweave, Tron ]
