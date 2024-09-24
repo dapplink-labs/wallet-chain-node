@@ -3,15 +3,13 @@ package ethereum
 import (
 	"context"
 	"fmt"
+	"github.com/the-web3/etherscan-api"
 	"math"
 	"math/big"
 	"strconv"
 	"strings"
 
 	"github.com/btcsuite/btcd/btcec/v2"
-	"github.com/nanmu42/etherscan-api"
-	"github.com/shopspring/decimal"
-
 	"github.com/ethereum/go-ethereum"
 	ethcommon "github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -19,6 +17,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/shopspring/decimal"
 
 	"github.com/savour-labs/wallet-chain-node/config"
 	"github.com/savour-labs/wallet-chain-node/rpc/common"
@@ -42,6 +41,11 @@ type WalletAdaptor struct {
 	fallback.WalletAdaptor
 	clients      *multiclient.MultiClient
 	etherscanCli *etherscan.Client
+}
+
+func (a *WalletAdaptor) GetBlock(req *wallet2.BlockRequest) (*wallet2.BlockResponse, error) {
+	//TODO implement me
+	panic("implement me")
 }
 
 func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
@@ -138,8 +142,8 @@ func (wa *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balan
 
 func (wa *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
 	var tx_list []*wallet2.TxMessage
-	if req.ContractAddress != "0x00" {
-		txs, err := wa.etherscanCli.ERC20Transfers(&req.ContractAddress, &req.Address, &Startblock, &Endblock, int(req.Page), int(req.Pagesize), true)
+	if req.ContractAddress == "0x00" {
+		txs, err := wa.etherscanCli.NormalTxByAddress(req.Address, &Startblock, &Endblock, int(req.Page), int(req.Pagesize), true)
 		if err != nil {
 			return &wallet2.TxAddressResponse{
 				Code: common.ReturnCode_ERROR,
@@ -147,7 +151,9 @@ func (wa *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2
 			}, err
 		}
 		for _, ktx := range txs {
-			fmt.Println("ktx:", ktx.Value.Int())
+			if ktx.Value.Int().String() == "0" {
+				continue
+			}
 			var from_addrs []*wallet2.Address
 			var to_addrs []*wallet2.Address
 			var value_list []*wallet2.Value
@@ -164,6 +170,42 @@ func (wa *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2
 			} else {
 				direction = 1 // 转入
 			}
+			fmt.Println("ktx.Input===", ktx.Input)
+			tx := &wallet2.TxMessage{
+				Hash:            ktx.Hash,
+				Froms:           from_addrs,
+				Tos:             to_addrs,
+				Values:          value_list,
+				Fee:             strconv.FormatInt(tx_fee, 10),
+				Status:          wallet2.TxStatus_Success,
+				Type:            direction,
+				Height:          strconv.Itoa(ktx.BlockNumber),
+				ContractAddress: ktx.ContractAddress,
+				Datetime:        datetime,
+			}
+			tx_list = append(tx_list, tx)
+		}
+	} else if req.ContractAddress == "0xSwap" {
+		txs, err := wa.etherscanCli.SwapTransactions(req.Address, &Startblock, &Endblock, int(req.Page), int(req.Pagesize), true)
+		if err != nil {
+			return &wallet2.TxAddressResponse{
+				Code: common.ReturnCode_ERROR,
+				Msg:  err.Error(),
+			}, err
+		}
+		for _, ktx := range txs {
+			var from_addrs []*wallet2.Address
+			var to_addrs []*wallet2.Address
+			var value_list []*wallet2.Value
+			var direction int32
+			from_addrs = append(from_addrs, &wallet2.Address{Address: ktx.From})
+			to_addrs = append(to_addrs, &wallet2.Address{Address: ktx.To})
+			value_list = append(value_list, &wallet2.Value{Value: "0"})
+			bigIntGasUsed := int64(ktx.GasUsed)
+			bigIntGasPrice := big.NewInt(ktx.GasPrice.Int().Int64())
+			tx_fee := bigIntGasPrice.Int64() * bigIntGasUsed
+			datetime := ktx.TimeStamp.Time().Format("2006-01-02 15:04:05")
+			direction = 3
 			tx := &wallet2.TxMessage{
 				Hash:            ktx.Hash,
 				Froms:           from_addrs,
@@ -179,7 +221,7 @@ func (wa *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2
 			tx_list = append(tx_list, tx)
 		}
 	} else {
-		txs, err := wa.etherscanCli.NormalTxByAddress(req.Address, &Startblock, &Endblock, int(req.Page), int(req.Pagesize), true)
+		txs, err := wa.etherscanCli.ERC20Transfers(&req.ContractAddress, &req.Address, &Startblock, &Endblock, int(req.Page), int(req.Pagesize), true)
 		if err != nil {
 			return &wallet2.TxAddressResponse{
 				Code: common.ReturnCode_ERROR,
@@ -187,9 +229,7 @@ func (wa *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2
 			}, err
 		}
 		for _, ktx := range txs {
-			if ktx.Value.Int().String() == "0" {
-				continue
-			}
+			fmt.Println("ktx:", ktx.Value.Int())
 			var from_addrs []*wallet2.Address
 			var to_addrs []*wallet2.Address
 			var value_list []*wallet2.Value

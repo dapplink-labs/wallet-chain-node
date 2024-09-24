@@ -10,10 +10,10 @@ import (
 
 	authv1beta1 "cosmossdk.io/api/cosmos/auth/v1beta1"
 
-	"github.com/cosmos/cosmos-sdk/codec"
 	ed255192 "github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	"github.com/cosmos/cosmos-sdk/types"
+	query "github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/cosmos/cosmos-sdk/types/tx"
 	"github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -29,7 +29,7 @@ type Client struct {
 
 func NewClient(rpcTarget string) (*Client, error) {
 	grpcConn, err := grpc.Dial(rpcTarget, grpc.WithInsecure(),
-		grpc.WithDefaultCallOptions(grpc.ForceCodec(codec.NewProtoCodec(nil).GRPCCodec())))
+		grpc.WithDefaultCallOptions(grpc.ForceCodec(nil)))
 	if err != nil {
 		return nil, err
 	}
@@ -105,8 +105,10 @@ func (c *Client) GetTxByEvent(ctx context.Context, event []string, page, limit u
 
 	tmp := &tx.GetTxsEventRequest{
 		Events: eventTmp,
-		Page:   page,
-		Limit:  limit,
+		Pagination: &query.PageRequest{
+			Offset: page,
+			Limit:  limit,
+		},
 	}
 
 	return c.txServiceClient.GetTxsEvent(ctx, tmp)
@@ -133,10 +135,6 @@ func (c *Client) SendTx(ctx context.Context, fromAddr, toAddr, coin string, amou
 	}
 
 	msg := banktypes.NewMsgSend(fromAddress, toAddress, types.NewCoins(types.NewInt64Coin(coin, amount)))
-	if err := c.bankKeeper.IsSendEnabledCoins(newCtx, msg.Amount...); err != nil {
-		return nil, err
-	}
-
 	if err := c.bankKeeper.SendCoins(newCtx, fromAddress, toAddress, msg.Amount); err != nil {
 		return nil, err
 	}

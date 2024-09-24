@@ -2,6 +2,19 @@ package walletdispatcher
 
 import (
 	"context"
+	"github.com/savour-labs/wallet-chain-node/wallet/ada"
+	"github.com/savour-labs/wallet-chain-node/wallet/arweave"
+	"github.com/savour-labs/wallet-chain-node/wallet/base"
+	"github.com/savour-labs/wallet-chain-node/wallet/eosio"
+	"github.com/savour-labs/wallet-chain-node/wallet/flows"
+	"github.com/savour-labs/wallet-chain-node/wallet/linea"
+	"github.com/savour-labs/wallet-chain-node/wallet/mantle"
+	"github.com/savour-labs/wallet-chain-node/wallet/near"
+	"github.com/savour-labs/wallet-chain-node/wallet/sui"
+	"github.com/savour-labs/wallet-chain-node/wallet/ton"
+	"github.com/savour-labs/wallet-chain-node/wallet/tron"
+	"github.com/savour-labs/wallet-chain-node/wallet/xrp"
+	"github.com/savour-labs/wallet-chain-node/wallet/zksync"
 	"runtime/debug"
 	"strings"
 
@@ -15,25 +28,16 @@ import (
 	"github.com/savour-labs/wallet-chain-node/rpc/common"
 	wallet2 "github.com/savour-labs/wallet-chain-node/rpc/wallet"
 	"github.com/savour-labs/wallet-chain-node/wallet"
-	"github.com/savour-labs/wallet-chain-node/wallet/ada"
 	"github.com/savour-labs/wallet-chain-node/wallet/arbitrum"
 	"github.com/savour-labs/wallet-chain-node/wallet/avalanche"
-	"github.com/savour-labs/wallet-chain-node/wallet/base"
 	"github.com/savour-labs/wallet-chain-node/wallet/binance"
 	"github.com/savour-labs/wallet-chain-node/wallet/bitcoin"
-	"github.com/savour-labs/wallet-chain-node/wallet/eosio"
 	"github.com/savour-labs/wallet-chain-node/wallet/ethereum"
 	"github.com/savour-labs/wallet-chain-node/wallet/evmos"
 	"github.com/savour-labs/wallet-chain-node/wallet/heco"
-	"github.com/savour-labs/wallet-chain-node/wallet/linea"
-	"github.com/savour-labs/wallet-chain-node/wallet/mantle"
-	"github.com/savour-labs/wallet-chain-node/wallet/near"
 	"github.com/savour-labs/wallet-chain-node/wallet/optimism"
 	"github.com/savour-labs/wallet-chain-node/wallet/polygon"
 	"github.com/savour-labs/wallet-chain-node/wallet/solana"
-	"github.com/savour-labs/wallet-chain-node/wallet/tron"
-	"github.com/savour-labs/wallet-chain-node/wallet/xrp"
-	"github.com/savour-labs/wallet-chain-node/wallet/zksync"
 )
 
 type CommonRequest interface {
@@ -72,11 +76,16 @@ func New(conf *config.Config) (*WalletDispatcher, error) {
 		xrp.ChainName:       xrp.NewChainAdaptor,
 		eosio.ChainName:     eosio.NewChainAdaptor,
 		ada.ChainName:       ada.NewChainAdaptor,
+		sui.ChainName:       sui.NewChainAdaptor,
+		flows.ChainName:     flows.NewChainAdaptor,
+		ton.ChainName:       ton.NewChainAdaptor,
+		arweave.ChainName:   arweave.NewChainAdaptor,
 	}
 	supportedChains := []string{
 		bitcoin.ChainName, ethereum.ChainName, solana.ChainName, arbitrum.ChainName, base.ChainName, linea.ChainName,
 		mantle.ChainName, tron.ChainName, zksync.ChainName, optimism.ChainName, polygon.ChainName, binance.ChainName,
 		heco.ChainName, avalanche.ChainName, evmos.ChainName, near.ChainName, xrp.ChainName, eosio.ChainName, ada.ChainName,
+		sui.ChainName, flows.ChainName, ton.ChainName, arweave.ChainName,
 	}
 	for _, c := range conf.Chains {
 		if factory, ok := walletAdaptorFactoryMap[c]; ok {
@@ -100,7 +109,6 @@ func NewLocal(network config.NetWorkType) *WalletDispatcher {
 	walletAdaptorFactoryMap := map[string]func(network config.NetWorkType) wallet.WalletAdaptor{
 		bitcoin.ChainName:   bitcoin.NewLocalChainAdaptor,
 		ethereum.ChainName:  ethereum.NewLocalWalletAdaptor,
-		solana.ChainName:    solana.NewLocalWalletAdaptor,
 		arbitrum.ChainName:  arbitrum.NewLocalWalletAdaptor,
 		zksync.ChainName:    zksync.NewLocalWalletAdaptor,
 		optimism.ChainName:  optimism.NewLocalWalletAdaptor,
@@ -166,6 +174,17 @@ func (d *WalletDispatcher) GetSupportCoins(ctx context.Context, request *wallet2
 	return d.registry[request.Chain].GetSupportCoins(request)
 }
 
+func (d *WalletDispatcher) GetBlock(ctx context.Context, request *wallet2.BlockRequest) (*wallet2.BlockResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.BlockResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "get block number fail",
+		}, nil
+	}
+	return d.registry[request.Chain].GetBlock(request)
+}
+
 func (d *WalletDispatcher) GetNonce(ctx context.Context, request *wallet2.NonceRequest) (*wallet2.NonceResponse, error) {
 	resp := d.preHandler(request)
 	if resp != nil {
@@ -202,6 +221,7 @@ func (d *WalletDispatcher) SendTx(ctx context.Context, request *wallet2.SendTxRe
 }
 
 func (d *WalletDispatcher) GetBalance(ctx context.Context, request *wallet2.BalanceRequest) (*wallet2.BalanceResponse, error) {
+	log.Info("GetBalance11", "req", request)
 	resp := d.preHandler(request)
 	if resp != nil {
 		return &wallet2.BalanceResponse{

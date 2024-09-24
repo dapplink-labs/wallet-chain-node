@@ -21,6 +21,11 @@ type WalletAdaptor struct {
 	clients *multiclient.MultiClient
 }
 
+func (w *WalletAdaptor) GetBlock(req *wallet2.BlockRequest) (*wallet2.BlockResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (w *WalletAdaptor) getClient() *Client {
 	return w.clients.BestClient().(*Client)
 }

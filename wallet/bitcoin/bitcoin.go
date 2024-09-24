@@ -48,6 +48,11 @@ type WalletAdaptor struct {
 	oklClient *OkLinkClient
 }
 
+func (a *WalletAdaptor) GetBlock(req *wallet2.BlockRequest) (*wallet2.BlockResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
 	clients, err := newBtcClients(conf)
 	if err != nil {
@@ -261,7 +266,7 @@ func (a *WalletAdaptor) GetUnspentOutputs(req *wallet2.UnspentOutputsRequest) (*
 	}
 	return &wallet2.UnspentOutputsResponse{
 		Code:           common.ReturnCode_SUCCESS,
-		Msg:            "get unspent outputs succcess",
+		Msg:            "get unspent outputs success",
 		UnspentOutputs: unspentOutputList,
 	}, err
 }

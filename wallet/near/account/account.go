@@ -66,7 +66,7 @@ func (a *Account) SignTransaction(
 	return hash, signedTransaction, nil
 }
 
-// SignAndSendTransaction creates, signs and sends a tranaction for the supplied actions.
+// SignAndSendTransaction creates, signs and sends a transaction for the supplied actions.
 func (a *Account) SignAndSendTransaction(
 	ctx context.Context,
 	client nearrpc.RpcClient,

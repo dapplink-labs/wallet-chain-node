@@ -2,57 +2,37 @@ package solana
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
+	"encoding/base64"
+	"github.com/mr-tron/base58"
 	"log"
 	"math/big"
-	"net/http"
 	"strconv"
-	"sync"
-
-	"github.com/ethereum/go-ethereum/params"
-	"github.com/mr-tron/base58"
 
 	"github.com/portto/solana-go-sdk/client"
-	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/memoprog"
-	"github.com/portto/solana-go-sdk/program/sysprog"
 	"github.com/portto/solana-go-sdk/rpc"
 	"github.com/portto/solana-go-sdk/types"
 
 	"github.com/savour-labs/wallet-chain-node/config"
 )
 
-type solanaClient struct {
-	RpcClient        rpc.RpcClient
-	Client           client.Client
-	solanaConfig     config.SolanaNode
-	chainConfig      *params.ChainConfig
-	cacheBlockNumber *big.Int
-	cacheTime        int64
-	rw               sync.RWMutex
-	confirmations    uint64
-	local            bool
+type SolanaClient struct {
+	RpcClient    rpc.RpcClient
+	Client       *client.Client
+	solanaConfig config.SolanaNode
 }
 
-func newLocalSolanaClient(network config.NetWorkType) *solanaClient {
-	var endpoint string
-	switch network {
-	case config.MainNet:
-		endpoint = rpc.MainnetRPCEndpoint
-	case config.TestNet:
-		endpoint = rpc.TestnetRPCEndpoint
-	default:
-		panic("unsupported network type")
-	}
+func NewSolanaClients(conf *config.Config) (*SolanaClient, error) {
+	endpoint := conf.Fullnode.Sol.RPCs[0].RPCURL
 	rpcClient := rpc.NewRpcClient(endpoint)
-	return &solanaClient{
-		RpcClient: rpcClient,
-	}
+	clientNew := client.NewClient(endpoint)
+	return &SolanaClient{
+		RpcClient:    rpcClient,
+		Client:       clientNew,
+		solanaConfig: conf.Fullnode.Sol,
+	}, nil
 }
 
-func (sol *solanaClient) GetLatestBlockHeight() (int64, error) {
+func (sol *SolanaClient) GetLatestBlockHeight() (int64, error) {
 	res, err := sol.RpcClient.GetBlockHeight(context.Background())
 	if err != nil {
 		return 0, err
@@ -60,23 +40,7 @@ func (sol *solanaClient) GetLatestBlockHeight() (int64, error) {
 	return int64(res.Result), nil
 }
 
-func newSolanaClients(conf *config.Config) ([]*solanaClient, error) {
-	endpoint := rpc.DevnetRPCEndpoint
-	if conf.NetWork == "testnet" {
-		endpoint = rpc.TestnetRPCEndpoint
-	} else if conf.NetWork == "mainnet" {
-		endpoint = rpc.MainnetRPCEndpoint
-	}
-	var clients []*solanaClient
-	rpcClient := rpc.NewRpcClient(endpoint)
-	clients = append(clients, &solanaClient{
-		RpcClient:    rpcClient,
-		solanaConfig: conf.Fullnode.Sol,
-	})
-	return clients, nil
-}
-
-func (sol *solanaClient) GetBalance(address string) (string, error) {
+func (sol *SolanaClient) GetBalance(address string) (string, error) {
 	balance, err := sol.RpcClient.GetBalanceWithConfig(
 		context.TODO(),
 		address,
@@ -85,13 +49,13 @@ func (sol *solanaClient) GetBalance(address string) (string, error) {
 		},
 	)
 	if err != nil {
-		log.Fatalf("failed to get balance with cfg, err: %v", err)
 		return "", err
 	}
 
 	var lamportsOnAccount = new(big.Float).SetUint64(balance.Result.Value)
-	// Convert lamports to sol:
+
 	var solBalance = new(big.Float).Quo(lamportsOnAccount, new(big.Float).SetUint64(1000000000))
+
 	return solBalance.String(), nil
 }
 
@@ -113,26 +77,7 @@ type GetTxByAddressTx struct {
 	TxNumberSolTransfer int    `json:"txNumberSolTransfer"`
 }
 
-func (sol *solanaClient) GetTxByAddress(address string, page uint32, size uint32) ([]GetTxByAddressTx, error) {
-	offset := (page - 1) * size
-	url := sol.solanaConfig.PublicUrl + "/account/solTransfers?limit=" + strconv.FormatInt(int64(size), 10) + "&account=" + address + "&offset=" + strconv.FormatInt(int64(offset), 10)
-	resp, err := http.Get(url)
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-	defer resp.Body.Close()
-	body, _ := ioutil.ReadAll(resp.Body)
-	var res GetTxByAddressRes
-	err = json.Unmarshal(body, &res)
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
-	return res.Data, nil
-}
-
-func (sol *solanaClient) GetAccount() (string, string, error) {
+func (sol *SolanaClient) GetAccount() (string, string, error) {
 	account := types.NewAccount()
 	address := account.PublicKey.ToBase58()
 	private := base58.Encode(account.PrivateKey)
@@ -171,9 +116,9 @@ type TxMessage struct {
 	Height string
 }
 
-func (sol *solanaClient) GetTxByHash(hash string) (*TxMessage, error) {
+func (sol *SolanaClient) GetTxByHash(hash string) (*TxMessage, error) {
 	out, err := sol.RpcClient.GetTransaction(
-		context.TODO(),
+		context.Background(),
 		hash,
 	)
 	if err != nil {
@@ -246,7 +191,7 @@ func getPreTokenBalance(preTokenBalance []rpc.TransactionMetaTokenBalance, accou
 	}
 	return nil
 }
-func (sol *solanaClient) RequestAirdrop(address string) (string, error) {
+func (sol *SolanaClient) RequestAirdrop(address string) (string, error) {
 	c := client.NewClient(rpc.DevnetRPCEndpoint)
 	sig, err := c.RequestAirdrop(
 		context.TODO(),
@@ -260,49 +205,25 @@ func (sol *solanaClient) RequestAirdrop(address string) (string, error) {
 	return sig, nil
 }
 
-func (sol *solanaClient) SendTx(pri string) (string, error) {
-
-	nonceAccountPubkey := common.PublicKeyFromString(sol.solanaConfig.NonceAccountAddr)
-	nonceAccount, err := sol.Client.GetNonceAccount(context.Background(), nonceAccountPubkey.ToBase58())
+func (sol *SolanaClient) SendTx(rawTx string) (string, error) {
+	res, err := sol.RpcClient.SendTransactionWithConfig(
+		context.Background(),
+		base64.StdEncoding.EncodeToString([]byte(rawTx)),
+		rpc.SendTransactionConfig{
+			Encoding: rpc.SendTransactionConfigEncodingBase64,
+		},
+	)
 	if err != nil {
-		log.Fatalf("failed to get nonce account, err: %v", err)
 		return "", err
 	}
-	var feePayer, _ = types.AccountFromBase58(sol.solanaConfig.FeeAccountPriKey)
-	var userAccount, _ = types.AccountFromBase58(pri)
-
-	tx, err := types.NewTransaction(types.NewTransactionParam{
-		Signers: []types.Account{feePayer, userAccount},
-		Message: types.NewMessage(types.NewMessageParam{
-			FeePayer:        feePayer.PublicKey,
-			RecentBlockhash: nonceAccount.Nonce.ToBase58(),
-			Instructions: []types.Instruction{
-				sysprog.AdvanceNonceAccount(sysprog.AdvanceNonceAccountParam{
-					Nonce: nonceAccountPubkey,
-					Auth:  userAccount.PublicKey,
-				}),
-				memoprog.BuildMemo(memoprog.BuildMemoParam{
-					Memo: []byte("use nonce"),
-				}),
-			},
-		}),
-	})
-	if err != nil {
-		log.Fatalf("failed to new a transaction, err: %v", err)
-		return "", err
+	if res.Error != nil {
+		return "", res.Error
 	}
-
-	sig, err := sol.Client.SendTransaction(context.Background(), tx)
-	if err != nil {
-		log.Fatalf("failed to send tx, err: %v", err)
-		return "", err
-	}
-
-	return sig, nil
+	return res.Result, nil
 }
 
-func (sol *solanaClient) GetNonce() (string, error) {
-	nonce, err := sol.Client.GetNonceFromNonceAccount(context.Background(), sol.solanaConfig.NonceAccountAddr)
+func (sol *SolanaClient) GetNonce(nonceAccountAddr string) (string, error) {
+	nonce, err := sol.Client.GetNonceFromNonceAccount(context.Background(), nonceAccountAddr)
 	if err != nil {
 		log.Fatalf("failed to get nonce account, err: %v", err)
 		return "", err
@@ -310,7 +231,7 @@ func (sol *solanaClient) GetNonce() (string, error) {
 	return nonce, nil
 }
 
-func (sol *solanaClient) GetMinRent() (string, error) {
+func (sol *SolanaClient) GetMinRent() (string, error) {
 	bal, err := sol.RpcClient.GetMinimumBalanceForRentExemption(context.Background(), 100)
 	if err != nil {
 		log.Fatalf("failed to get GetMinimumBalanceForRentExemption , err: %v", err)

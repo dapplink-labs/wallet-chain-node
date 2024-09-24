@@ -6,6 +6,8 @@ import (
 
 type WalletAdaptor interface {
 	GetSupportCoins(req *wallet2.SupportCoinsRequest) (*wallet2.SupportCoinsResponse, error)
+	GetBlock(req *wallet2.BlockRequest) (*wallet2.BlockResponse, error)
+
 	ConvertAddress(req *wallet2.ConvertAddressRequest) (*wallet2.ConvertAddressResponse, error)
 	ValidAddress(req *wallet2.ValidAddressRequest) (*wallet2.ValidAddressResponse, error)
 

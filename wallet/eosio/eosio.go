@@ -27,6 +27,11 @@ type WalletAdaptor struct {
 	client *EosClient
 }
 
+func (w *WalletAdaptor) GetBlock(req *wallet2.BlockRequest) (*wallet2.BlockResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
 	client, err := newClient(conf.Fullnode.Eos.RPCs[0].RPCURL)
 	if err != nil {

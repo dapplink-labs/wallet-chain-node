@@ -9,36 +9,34 @@ fullnode:
   btc:
     rpcs:
       - rpc_url: 'https://btc.getblock.io/7350dbd9-4f17-4917-9555-bfadbc6b8a21/mainnet/'
-        rpc_user:
-        rpc_pass:
     confirmations: 1
   eth:
     rpcs:
-      - rpc_url: 'https://eth-mainnet.nodereal.io/v1/1659dfb40aa24bbb8153a677b98064d7'
+      - rpc_url: 'https://rpc.flashbots.net'
     confirmations: 4
     tp_api_url: 'https://api.etherscan.io/api?'
-    tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
+    tp_api_key: 'HZEZGEPJJDA633N421AYW9NE8JFNZZC7JT'
   arbi:
     rpcs:
-      - rpc_url: 'https://rpc.ankr.com/arbitrum'
+      - rpc_url: 'https://rpc.ankr.com/arbitrum/7f3ae11204e03961b67c557c4996244f0a53222b23c31a7baf9ae91c6bd89702'
     confirmations: 4
     tp_api_url: 'https://api.arbiscan.io/api?'
     tp_api_key: '6P1K37SEYSN8VMWFVYGC8W6K5ZEQ5CDA7Y'
   op:
     rpcs:
-      - rpc_url: 'https://mainnet.optimism.io'
+      - rpc_url: 'https://rpc.ankr.com/optimism/7f3ae11204e03961b67c557c4996244f0a53222b23c31a7baf9ae91c6bd89702'
     confirmations: 4
     tp_api_url: 'https://api-optimistic.etherscan.io/api?'
     tp_api_key: 'X1SJQ62NAPMZ24DRBKA2GU414N6S6THUKQ'
   polygon:
     rpcs:
-      - rpc_url: 'https://polygon-bor.publicnode.com'
+      - rpc_url: 'https://polygon-mainnet.g.alchemy.com/v2/QySv9gLuQUaXy0BJnpNwW1d1N8ve0as4'
     confirmations: 4
     tp_api_url: 'https://api.polygonscan.com/api?'
     tp_api_key: 'DCIEZ5TQSFY88QUTHQBKYG92I828A44ZRN'
   bsc:
     rpcs:
-      - rpc_url: 'https://api.zan.top/node/v1/bsc/mainnet/public'
+      - rpc_url: 'https://bsc-pokt.nodies.app'
     confirmations: 4
     tp_api_url: 'https://api.bscscan.com/api?'
     tp_api_key: 'MH55R6KFBHAJA9AV26FIAMZQGX8MY57C5Y'
@@ -50,13 +48,13 @@ fullnode:
     tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
   mantle:
     rpcs:
-      - rpc_url: 'https://mantle-mainnet.public.blastapi.io'
+      - rpc_url: 'https://rpc.ankr.com/mantle/7f3ae11204e03961b67c557c4996244f0a53222b23c31a7baf9ae91c6bd89702'
     confirmations: 4
     tp_api_url: ''
     tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
   base:
     rpcs:
-      - rpc_url: 'https://base.publicnode.com'
+      - rpc_url: 'https://rpc.ankr.com/base/7f3ae11204e03961b67c557c4996244f0a53222b23c31a7baf9ae91c6bd89702'
     confirmations: 4
     tp_api_url: 'https://api.basescan.org/api?'
     tp_api_key: '1WKZ9C3XGTYYM1YXSR3DJHT2C2DDYVV4XA'
@@ -84,9 +82,10 @@ fullnode:
     confirmations: 4
     tp_api_url: ''
     tp_api_key: 'W972DC11QYVEWRSWCRYHTT4H362PK43P8N'
-  trx:
+
+  tron:
     rpcs:
-      - rpc_url: 'https://api.trongrid.io/'
+      - rpc_url: 'https://tron.drpc.org'
     confirmations: 4
     tp_api_url: ''
     tp_api_key: ''
@@ -106,10 +105,15 @@ fullnode:
     apiToken: 1
 
   solana:
-    public_api: 'https://public-api.solscan.io'
+    rpcs:
+      - rpc_url: 'https://docs-demo.solana-mainnet.quiknode.pro'
+    tp_api_url: 'https://public-api.solscan.io'
+    network: "mainnet"
     NonceAccountAddr: DJyNpXgggw1WGgjTVzFsNjb3fuQZVMqhoakvSBfX9LYx
     FeeAccountPriKey: 4TMFNY9ntAn3CHzguSAvDNLPRoQTaK3sWbQQXdDXaE6KWRBLufGL6PJdsD2koiEe3gGmMdRK3aAw7sikGNksHJrN
-
+    solScanApiKey: ''
+    solScanBaseUrl: 'https://pro-api.solscan.io'
+    solScanBaseTimeout: 20s
   dot:
     rpcs:
       - rpc_url: 'https://mainnet-api.algonode.cloud'
@@ -121,29 +125,37 @@ fullnode:
   cosmos:
     rpcs:
       - rpc_url: ''
-        rpc_user:
-        rpc_pass:
     confirmations: 1
 
   filecoin:
     rpcs:
       - rpc_url: ''
-        rpc_user:
-        rpc_pass:
     confirmations: 1
 
   eos:
     rpcs:
       - rpc_url: 'https://eos.greymass.com:443'
-        rpc_user:
-        rpc_pass:
     confirmations: 1
   ada:
     rpcs:
       - rpc_url: 'https://go.getblock.io/c9e1612aba7244ac80167f48c783fd72'
-        rpc_user:
-        rpc_pass:
+  sui:
+    rpcs:
+      - rpc_url: 'https://sui-mainnet-endpoint.blockvision.org'
+  flow:
+    rpcs:
+      - rpc_url: 'https://rest-mainnet.onflow.org/v1'
+  ton:
+    rpcs:
+      - rpc_url: 'https://toncenter.com/api/v3'
 
-chains: [Bitcoin, Ethereum, Arbitrum, Optimism, BscChain, Heco, Polygon, Mantle, Base, Linea, NEAR, XRP, EOS, Solana, Ada]
+  ar:
+    rpcs:
+      - rpc_url: 'https://arweave.net'
 
+okLink:
+  okLinkBaseUrl: 'https://www.oklink.com'
+  okLinkApiKey: ''
+  okLinkTimeout: 20s
 
+chains: [ Bitcoin, Ethereum, Arbitrum, Optimism, BscChain, Heco, Polygon, Mantle, Base, Linea, NEAR, XRP, EOS, Solana, Ada,Flow,Sui,Ton, Arweave, Tron ]
