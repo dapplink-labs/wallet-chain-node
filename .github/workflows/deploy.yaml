@@ -1,4 +1,4 @@
-name: MantaIndex Image Build Only
+name: WalletChainNode Image Build Only
 on:
   workflow_dispatch:
     inputs:
