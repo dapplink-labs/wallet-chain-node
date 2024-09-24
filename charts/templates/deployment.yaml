@@ -35,9 +35,9 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             {{- range $index, $val := .Values.ports }}
-            - name: {{ $val.name }}
-              containerPort: {{ $val.portNumber }}
-              protocol: TCP
+            - name: http
+              containerPort: {{ $val.targetPort }}
+              protocol:  {{ $val.protocol }}
             {{- end }}
           {{- with .Values.livenessProbe }}
           livenessProbe:

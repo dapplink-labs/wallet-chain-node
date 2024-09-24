@@ -8,10 +8,10 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     {{- range $index, $val := .Values.ports }}
-    - port: {{ $val.portNumber }}
-      targetPort: {{ $val.portNumber }}
-      protocol: TCP
-      name: {{  $val.name }}
+    - nodePort: {{ $val.nodePort }}
+      targetPort: {{ $val.targetPort }}
+      protocol: {{ $val.protocol }}
+      port: {{  $val.port }}
     {{- end }}
   selector:
     {{- include "app.selectorLabels" . | nindent 4 }}
