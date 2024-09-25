@@ -23,7 +23,7 @@ type SolScan struct {
 func NewSolScanClient(baseUrl, apiKey string, timeout time.Duration) (*SolScan, error) {
 	solCli, err := solscan.NewChainExplorerAdaptor(apiKey, baseUrl, false, time.Duration(timeout))
 	if err != nil {
-		log.Error("Mock oklink client fail", "err", err)
+		log.Error("New solscan client fail", "err", err)
 		return nil, err
 	}
 	return &SolScan{SolScanCli: solCli}, err
