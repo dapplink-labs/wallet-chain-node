@@ -25,7 +25,7 @@ func NewTronScanClient(baseUrl, apiKey string, timeout time.Duration) (*TronScan
 
 func (ts *TronScan) GetTxByAddress(page, pagesize uint64, address string) (*account.TransactionResponse[account.AccountTxResponse], error) {
 	request := &account.AccountTxRequest{
-		ChainShortName: "Tron",
+		ChainShortName: ChainName,
 		ExplorerName:   oklink.ChainExplorerName,
 		Action:         account.OkLinkActionNormal,
 		Address:        address,

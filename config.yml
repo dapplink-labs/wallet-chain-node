@@ -85,7 +85,7 @@ fullnode:
 
   tron:
     rpcs:
-      - rpc_url: 'https://tron.drpc.org'
+      - rpc_url: 'https://grpc.trongrid.io:50051'
     confirmations: 4
     tp_api_url: ''
     tp_api_key: ''

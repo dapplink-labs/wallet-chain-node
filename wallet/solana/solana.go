@@ -24,6 +24,11 @@ type WalletAdaptor struct {
 	sol    *SolScan
 }
 
+func (a *WalletAdaptor) GetBlockHeaderByNumber(req *wallet2.BlockHeaderRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (a *WalletAdaptor) GetBlock(req *wallet2.BlockRequest) (*wallet2.BlockResponse, error) {
 	//TODO implement me
 	panic("implement me")
@@ -203,7 +208,7 @@ func (a *WalletAdaptor) GetMinRent(req *wallet2.MinRentRequest) (*wallet2.MinRen
 func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
 	cli, err := NewSolanaClients(conf)
 
-	sol, err := NewSolScanClient(conf.Fullnode.Sol.SolScanApiKey, conf.Fullnode.Sol.SolScanBaseUrl, conf.Fullnode.Sol.SolScanBaseTimeout)
+	sol, err := NewSolScanClient(conf.Fullnode.Sol.SolScanBaseUrl, conf.Fullnode.Sol.SolScanApiKey, conf.Fullnode.Sol.SolScanBaseTimeout)
 	if err != nil {
 		return nil, err
 	}

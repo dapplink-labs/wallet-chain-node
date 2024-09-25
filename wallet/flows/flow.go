@@ -28,6 +28,11 @@ type WalletAdaptor struct {
 	clients *multiclient.MultiClient
 }
 
+func (w *WalletAdaptor) GetBlockHeaderByNumber(req *wallet2.BlockHeaderRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (w *WalletAdaptor) ConvertAddress(req *wallet2.ConvertAddressRequest) (*wallet2.ConvertAddressResponse, error) {
 	//TODO implement me
 	panic("implement me")

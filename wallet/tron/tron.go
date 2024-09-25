@@ -49,6 +49,11 @@ type WalletAdaptor struct {
 	tronScan *TronScan
 }
 
+func (a *WalletAdaptor) GetBlockHeaderByNumber(req *wallet2.BlockHeaderRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (a *WalletAdaptor) GetBlock(req *wallet2.BlockRequest) (*wallet2.BlockResponse, error) {
 	//TODO implement me
 	panic("implement me")
@@ -65,7 +70,7 @@ func NewWalletAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
 		clis[i] = client
 	}
 
-	tronScan, err := NewTronScanClient(conf.OkLink.OkLinkApiKey, conf.OkLink.OkLinkBaseUrl, conf.OkLink.OkLinkTimeout)
+	tronScan, err := NewTronScanClient(conf.OkLink.OkLinkBaseUrl, conf.OkLink.OkLinkApiKey, conf.OkLink.OkLinkTimeout)
 	if err != nil {
 		return nil, err
 	}
@@ -120,6 +125,7 @@ func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balanc
 	} else {
 		acc, err := grpcClient.GetAccount(req.Address)
 		if err != nil {
+			fmt.Println("sssss", err)
 			return &wallet2.BalanceResponse{
 				Code: common.ReturnCode_ERROR,
 				Msg:  "get balance fail",

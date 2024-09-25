@@ -38,4 +38,6 @@ type WalletAdaptor interface {
 
 	ABIBinToJSON(req *wallet2.ABIBinToJSONRequest) (*wallet2.ABIBinToJSONResponse, error)
 	ABIJSONToBin(req *wallet2.ABIJSONToBinRequest) (*wallet2.ABIJSONToBinResponse, error)
+	// GetBlockHeaderByNumber 根据区块高度获取区块头
+	GetBlockHeaderByNumber(req *wallet2.BlockHeaderRequest) (*wallet2.BlockHeaderResponse, error)
 }
