@@ -1,6 +1,7 @@
 package bitcoin
 
 import (
+	"errors"
 	"fmt"
 	"testing"
 )
@@ -9,6 +10,22 @@ const (
 	testBaseUrl = "https://blockchain.info/"
 	testAddress = "bc1ql49ydapnjafl5t2cp9zqpjwe6pdgmxy98859v2"
 )
+
+var errBlockChainURLEmpty = errors.New("blockchain URL cannot be empty")
+
+func TestNewBlockChainClient_EmptyURL(t *testing.T) {
+	url := ""
+
+	client, err := NewBlockChainClient(url)
+
+	if client != nil {
+		t.Fatalf("Expected client to be nil when URL is empty, but got %v", client)
+	}
+
+	if err == nil || err.Error() != errBlockChainURLEmpty.Error() {
+		t.Fatalf("Expected error: %v, but got: %v", errBlockChainURLEmpty, err)
+	}
+}
 
 func TestBcClient_GetAccountBalance(t *testing.T) {
 	client, err := NewBlockChainClient(testBaseUrl)
