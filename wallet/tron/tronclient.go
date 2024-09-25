@@ -41,7 +41,7 @@ func newTronClients(conf *config.Config) ([]*tronClient, error) {
 	} else if conf.NetWork == "regtest" {
 		chainConfig = params.AllCliqueProtocolChanges
 	}
-	log.Info("eth client setup", "chain_id", chainConfig.ChainID.Int64(), "network", conf.NetWork)
+	log.Info("tron client setup", "chain_id", chainConfig.ChainID.Int64(), "network", conf.NetWork)
 
 	for _, rpc := range conf.Fullnode.Tron.RPCs {
 
