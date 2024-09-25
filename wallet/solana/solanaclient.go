@@ -3,10 +3,11 @@ package solana
 import (
 	"context"
 	"encoding/base64"
-	"github.com/mr-tron/base58"
 	"log"
 	"math/big"
 	"strconv"
+
+	"github.com/mr-tron/base58"
 
 	"github.com/portto/solana-go-sdk/client"
 	"github.com/portto/solana-go-sdk/rpc"

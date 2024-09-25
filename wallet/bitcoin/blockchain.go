@@ -20,6 +20,11 @@ type BcClient struct {
 }
 
 func NewBlockChainClient(url string) (*BcClient, error) {
+	// validate if blockchain url is provided or not
+	if url == "" {
+		return nil, fmt.Errorf("blockchain URL cannot be empty")
+	}
+
 	client := gresty.New()
 	client.SetHostURL(url)
 	client.OnAfterResponse(func(c *gresty.Client, r *gresty.Response) error {
