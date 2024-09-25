@@ -1,13 +1,13 @@
 package solana
 
 import (
-	"github.com/dapplink-labs/chain-explorer-api/common/chain"
 	"time"
 
 	"github.com/ethereum/go-ethereum/log"
 
 	"github.com/dapplink-labs/chain-explorer-api/common/account"
-	"github.com/dapplink-labs/chain-explorer-api/explorer/oklink"
+	"github.com/dapplink-labs/chain-explorer-api/common/chain"
+	"github.com/dapplink-labs/chain-explorer-api/explorer/solscan"
 )
 
 var (
@@ -16,30 +16,30 @@ var (
 	OkTimeout     = time.Second * 20
 )
 
-type SolanaExplorer struct {
-	OkLinkCli *oklink.ChainExplorerAdaptor
+type SolScan struct {
+	SolScanCli *solscan.ChainExplorerAdaptor
 }
 
-func NewScanClient(baseUrl, apiKey string, timeout time.Duration) (*SolanaExplorer, error) {
-	oklinkCli, err := oklink.NewChainExplorerAdaptor(apiKey, baseUrl, false, time.Duration(timeout))
+func NewSolScanClient(baseUrl, apiKey string, timeout time.Duration) (*SolScan, error) {
+	solCli, err := solscan.NewChainExplorerAdaptor(apiKey, baseUrl, false, time.Duration(timeout))
 	if err != nil {
 		log.Error("Mock oklink client fail", "err", err)
 		return nil, err
 	}
-	return &SolanaExplorer{OkLinkCli: oklinkCli}, err
+	return &SolScan{SolScanCli: solCli}, err
 }
 
-func (se *SolanaExplorer) GetTxByAddress() {
+func (ss *SolScan) GetTxByAddress(page, pagesize uint64, address string) (*account.TransactionResponse[account.AccountTxResponse], error) {
 	request := &account.AccountTxRequest{
-		ChainShortName: "ETH",
-		ExplorerName:   oklink.ChainExplorerName,
-		Action:         account.OkLinkActionNormal,
-		Address:        "0x4838B106FCe9647Bdf1E7877BF73cE8B0BAD5f97",
-		IsFromOrTo:     string(account.From),
 		PageRequest: chain.PageRequest{
-			Page:  1,
-			Limit: 10,
+			Page:  page,
+			Limit: pagesize,
 		},
+		Address: address,
 	}
-	se.OkLinkCli.GetTxByAddress(request)
+	txData, err := ss.SolScanCli.GetTxByAddress(request)
+	if err != nil {
+		return nil, err
+	}
+	return txData, nil
 }

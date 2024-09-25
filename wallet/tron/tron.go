@@ -5,9 +5,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"github.com/dapplink-labs/chain-explorer-api/common/account"
-	"github.com/dapplink-labs/chain-explorer-api/common/chain"
-	"github.com/dapplink-labs/chain-explorer-api/explorer/oklink"
 	"math/big"
 	"strconv"
 	"strings"
@@ -22,7 +19,6 @@ import (
 	"github.com/fbsobreira/gotron-sdk/pkg/proto/api"
 	"github.com/fbsobreira/gotron-sdk/pkg/proto/core"
 
-	"github.com/savour-labs/wallet-chain-node/cache"
 	"github.com/savour-labs/wallet-chain-node/config"
 	"github.com/savour-labs/wallet-chain-node/rpc/common"
 	wallet2 "github.com/savour-labs/wallet-chain-node/rpc/wallet"
@@ -49,8 +45,8 @@ const (
 
 type WalletAdaptor struct {
 	fallback.WalletAdaptor
-	clients *multiclient.MultiClient
-	ok      *oklink.ChainExplorerAdaptor
+	clients  *multiclient.MultiClient
+	tronScan *TronScan
 }
 
 func (a *WalletAdaptor) GetBlock(req *wallet2.BlockRequest) (*wallet2.BlockResponse, error) {
@@ -69,13 +65,13 @@ func NewWalletAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
 		clis[i] = client
 	}
 
-	ok, err := oklink.NewChainExplorerAdaptor(conf.OkLink.OkLinkApiKey, conf.OkLink.OkLinkBaseUrl, false, conf.OkLink.OkLinkTimeout)
+	tronScan, err := NewTronScanClient(conf.OkLink.OkLinkApiKey, conf.OkLink.OkLinkBaseUrl, conf.OkLink.OkLinkTimeout)
 	if err != nil {
 		return nil, err
 	}
 	return &WalletAdaptor{
-		clients: multiclient.New(clis),
-		ok:      ok,
+		clients:  multiclient.New(clis),
+		tronScan: tronScan,
 	}, nil
 }
 
@@ -95,8 +91,6 @@ func (a *WalletAdaptor) getClient() *tronClient {
 
 func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.BalanceResponse, error) {
 	log.Info("GetBalance", "req", req)
-	key := strings.Join([]string{req.Chain, req.Coin, req.Address}, ":")
-	balanceCache := cache.GetBalanceCache()
 
 	grpcClient := a.getClient().grpcClient
 
@@ -144,7 +138,7 @@ func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balanc
 			}
 		}
 	}
-	balanceCache.Add(key, result)
+
 	return &wallet2.BalanceResponse{
 		Code:    common.ReturnCode_SUCCESS,
 		Msg:     "get balance success",
@@ -153,17 +147,7 @@ func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balanc
 }
 
 func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
-	request := &account.AccountTxRequest{
-		ChainShortName: "Tron",
-		ExplorerName:   oklink.ChainExplorerName,
-		Action:         account.OkLinkActionNormal,
-		Address:        "THfTJMWpcM6tmQsevN8zeCys5iohHWSQtF",
-		PageRequest: chain.PageRequest{
-			Page:  1,
-			Limit: 10,
-		},
-	}
-	resp, err := a.ok.GetTxByAddress(request)
+	resp, err := a.tronScan.GetTxByAddress(uint64(req.Page), uint64(req.Pagesize), req.Address)
 	if err != nil {
 		return nil, err
 	}
