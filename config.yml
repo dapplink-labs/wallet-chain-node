@@ -111,7 +111,7 @@ fullnode:
     network: "mainnet"
     NonceAccountAddr: DJyNpXgggw1WGgjTVzFsNjb3fuQZVMqhoakvSBfX9LYx
     FeeAccountPriKey: 4TMFNY9ntAn3CHzguSAvDNLPRoQTaK3sWbQQXdDXaE6KWRBLufGL6PJdsD2koiEe3gGmMdRK3aAw7sikGNksHJrN
-    solScanApiKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVkQXQiOjE3MjQwNjIxMzk5MDYsImVtYWlsIjoiemFja2d1by5ndW9AZ21haWwuY29tIiwiYWN0aW9uIjoidG9rZW4tYXBpIiwiYXBpVmVyc2lvbiI6InYxIiwiaWF0IjoxNzI0MDYyMTM5fQ.EaWDC25lyGNx_LqRL5sAYYKLMbq10brnexKnAz9C3UY'
+    solScanApiKey: ''
     solScanBaseUrl: 'https://pro-api.solscan.io'
     solScanBaseTimeout: 20s
   dot:
@@ -155,7 +155,7 @@ fullnode:
 
 okLink:
   okLinkBaseUrl: 'https://www.oklink.com'
-  okLinkApiKey: '5181d535-b68f-41cf-bbc6-25905e46b6a6'
+  okLinkApiKey: ''
   okLinkTimeout: 20s
 
 chains: [ Bitcoin, Ethereum, Arbitrum, Optimism, BscChain, Heco, Polygon, Mantle, Base, Linea, NEAR, XRP, EOS, Solana, Ada,Flow,Sui,Ton, Arweave, Tron ]

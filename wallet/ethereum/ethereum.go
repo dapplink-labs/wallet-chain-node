@@ -764,24 +764,19 @@ func (a *WalletAdaptor) GetAccount(req *wallet2.AccountRequest) (*wallet2.Accoun
 	}, nil
 }
 
-// GetBlockHeaderByNumber 根据区块号获取区块头
-func (a *WalletAdaptor) GetBlockHeaderByNumber(req *wallet2.BlockHeaderRequest) (*wallet2.BlockHeaderResponse, error) {
-	h := req.GetHeight()
-	var (
-		num *big.Int
-	)
-	if h != "" {
-		n, bol := big.NewInt(0).SetString(h, 10)
-		if bol != true {
-			return &wallet2.BlockHeaderResponse{
-				Code: common.ReturnCode_ERROR,
-				Msg:  "height is not number",
-			}, nil
-		} else {
+func stringToBigInt(s string) (num *big.Int) {
+	if s != "" {
+		n, bol := big.NewInt(0).SetString(s, 10)
+		if bol == true {
 			num = n
 		}
 	}
-	header, err := a.getClient().HeaderByNumber(context.Background(), num)
+	return
+}
+
+// GetBlockHeaderByNumber 根据区块号获取区块头
+func (a *WalletAdaptor) GetBlockHeaderByNumber(req *wallet2.BlockHeaderRequest) (*wallet2.BlockHeaderResponse, error) {
+	header, err := a.getClient().HeaderByNumber(context.Background(), stringToBigInt(req.GetHeight()))
 	if err != nil {
 		return &wallet2.BlockHeaderResponse{
 			Code: common.ReturnCode_ERROR,
@@ -805,6 +800,21 @@ func (a *WalletAdaptor) GetBlockHeaderByNumber(req *wallet2.BlockHeaderRequest) 
 		MixDigest:       header.MixDigest.Hex(),
 		BaseFee:         header.BaseFee.String(),
 		WithdrawalsHash: header.WithdrawalsHash.Hex(),
+	}, nil
+}
+
+// GetBlockByNumber 根据区块号获取区块
+func (a *WalletAdaptor) GetBlockByNumber(req *wallet2.BlockInfoRequest) (*wallet2.BlockInfoResponse, error) {
+	_, err := a.getClient().BlockByNumber(context.Background(), stringToBigInt(req.GetHeight()))
+	if err != nil {
+		return &wallet2.BlockInfoResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  err.Error(),
+		}, nil
+	}
+	return &wallet2.BlockInfoResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Don't support",
 	}, nil
 }
 

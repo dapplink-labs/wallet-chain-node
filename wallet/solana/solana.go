@@ -25,6 +25,11 @@ type WalletAdaptor struct {
 	sol    *SolScan
 }
 
+func (a *WalletAdaptor) GetBlockByNumber(req *wallet2.BlockInfoRequest) (*wallet2.BlockInfoResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (a *WalletAdaptor) GetBlockHeaderByNumber(req *wallet2.BlockHeaderRequest) (*wallet2.BlockHeaderResponse, error) {
 	//TODO implement me
 	panic("implement me")
@@ -126,7 +131,8 @@ func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balanc
 func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
 	var resp *account.TransactionResponse[account.AccountTxResponse]
 	var err error
-	if req.ContractAddress != "0x00" {
+	fmt.Println("req.ContractAddress", req.ContractAddress)
+	if req.ContractAddress != "0x00" && req.ContractAddress != "" {
 		log.Info("Spl token transfer record")
 		resp, err = a.sol.GetTxByAddress(uint64(req.Page), uint64(req.Pagesize), req.Address, "spl")
 	} else {

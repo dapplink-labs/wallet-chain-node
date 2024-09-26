@@ -26,6 +26,11 @@ type WalletAdaptor struct {
 	clients *multiclient.MultiClient
 }
 
+func (a *WalletAdaptor) GetBlockByNumber(req *wallet2.BlockInfoRequest) (*wallet2.BlockInfoResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (a *WalletAdaptor) GetBlockHeaderByNumber(req *wallet2.BlockHeaderRequest) (*wallet2.BlockHeaderResponse, error) {
 	//TODO implement me
 	panic("implement me")

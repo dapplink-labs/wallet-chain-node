@@ -24,6 +24,7 @@ const (
 	WalletService_ValidAddress_FullMethodName               = "/savour_rpc.wallet.WalletService/validAddress"
 	WalletService_GetBlock_FullMethodName                   = "/savour_rpc.wallet.WalletService/getBlock"
 	WalletService_GetBlockHeaderByNumber_FullMethodName     = "/savour_rpc.wallet.WalletService/getBlockHeaderByNumber"
+	WalletService_GetBlockInfoByNumber_FullMethodName       = "/savour_rpc.wallet.WalletService/getBlockInfoByNumber"
 	WalletService_GetNonce_FullMethodName                   = "/savour_rpc.wallet.WalletService/getNonce"
 	WalletService_GetGasPrice_FullMethodName                = "/savour_rpc.wallet.WalletService/getGasPrice"
 	WalletService_GetBalance_FullMethodName                 = "/savour_rpc.wallet.WalletService/getBalance"
@@ -58,6 +59,7 @@ type WalletServiceClient interface {
 	ValidAddress(ctx context.Context, in *ValidAddressRequest, opts ...grpc.CallOption) (*ValidAddressResponse, error)
 	GetBlock(ctx context.Context, in *BlockRequest, opts ...grpc.CallOption) (*BlockResponse, error)
 	GetBlockHeaderByNumber(ctx context.Context, in *BlockHeaderRequest, opts ...grpc.CallOption) (*BlockHeaderResponse, error)
+	GetBlockInfoByNumber(ctx context.Context, in *BlockInfoRequest, opts ...grpc.CallOption) (*BlockInfoResponse, error)
 	GetNonce(ctx context.Context, in *NonceRequest, opts ...grpc.CallOption) (*NonceResponse, error)
 	GetGasPrice(ctx context.Context, in *GasPriceRequest, opts ...grpc.CallOption) (*GasPriceResponse, error)
 	GetBalance(ctx context.Context, in *BalanceRequest, opts ...grpc.CallOption) (*BalanceResponse, error)
@@ -135,6 +137,16 @@ func (c *walletServiceClient) GetBlockHeaderByNumber(ctx context.Context, in *Bl
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(BlockHeaderResponse)
 	err := c.cc.Invoke(ctx, WalletService_GetBlockHeaderByNumber_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) GetBlockInfoByNumber(ctx context.Context, in *BlockInfoRequest, opts ...grpc.CallOption) (*BlockInfoResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BlockInfoResponse)
+	err := c.cc.Invoke(ctx, WalletService_GetBlockInfoByNumber_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -380,6 +392,7 @@ type WalletServiceServer interface {
 	ValidAddress(context.Context, *ValidAddressRequest) (*ValidAddressResponse, error)
 	GetBlock(context.Context, *BlockRequest) (*BlockResponse, error)
 	GetBlockHeaderByNumber(context.Context, *BlockHeaderRequest) (*BlockHeaderResponse, error)
+	GetBlockInfoByNumber(context.Context, *BlockInfoRequest) (*BlockInfoResponse, error)
 	GetNonce(context.Context, *NonceRequest) (*NonceResponse, error)
 	GetGasPrice(context.Context, *GasPriceRequest) (*GasPriceResponse, error)
 	GetBalance(context.Context, *BalanceRequest) (*BalanceResponse, error)
@@ -426,6 +439,9 @@ func (UnimplementedWalletServiceServer) GetBlock(context.Context, *BlockRequest)
 }
 func (UnimplementedWalletServiceServer) GetBlockHeaderByNumber(context.Context, *BlockHeaderRequest) (*BlockHeaderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBlockHeaderByNumber not implemented")
+}
+func (UnimplementedWalletServiceServer) GetBlockInfoByNumber(context.Context, *BlockInfoRequest) (*BlockInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBlockInfoByNumber not implemented")
 }
 func (UnimplementedWalletServiceServer) GetNonce(context.Context, *NonceRequest) (*NonceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetNonce not implemented")
@@ -602,6 +618,24 @@ func _WalletService_GetBlockHeaderByNumber_Handler(srv interface{}, ctx context.
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(WalletServiceServer).GetBlockHeaderByNumber(ctx, req.(*BlockHeaderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_GetBlockInfoByNumber_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BlockInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).GetBlockInfoByNumber(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WalletService_GetBlockInfoByNumber_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).GetBlockInfoByNumber(ctx, req.(*BlockInfoRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1046,6 +1080,10 @@ var WalletService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getBlockHeaderByNumber",
 			Handler:    _WalletService_GetBlockHeaderByNumber_Handler,
+		},
+		{
+			MethodName: "getBlockInfoByNumber",
+			Handler:    _WalletService_GetBlockInfoByNumber_Handler,
 		},
 		{
 			MethodName: "getNonce",

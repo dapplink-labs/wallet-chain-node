@@ -2,6 +2,10 @@ module github.com/savour-labs/wallet-chain-node
 
 go 1.21.0
 
+//replace (
+//	github.com/dapplink-labs/chain-explorer-api  => ../chain-explorer-api
+//)
+
 require (
 	cosmossdk.io/api v0.2.4
 	emperror.dev/errors v0.8.1
@@ -10,7 +14,7 @@ require (
 	github.com/btcsuite/btcd/chaincfg/chainhash v1.0.1
 	github.com/btcsuite/btcutil v1.0.3-0.20201208143702-a53e38424cce
 	github.com/cosmos/cosmos-sdk v0.40.0
-	github.com/dapplink-labs/chain-explorer-api v0.0.1-beta.0.20240925111453-95d4400b1729
+	github.com/dapplink-labs/chain-explorer-api v0.0.1-beta.0.20240926051634-98ba1d09ea5f
 	github.com/eoscanada/eos-go v0.10.2
 	github.com/ethereum/go-ethereum v1.14.8
 	github.com/filecoin-project/go-address v1.0.0

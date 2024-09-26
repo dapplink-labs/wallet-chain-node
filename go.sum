@@ -283,8 +283,8 @@ github.com/daaku/go.zipexe v1.0.0/go.mod h1:z8IiR6TsVLEYKwXAoE/I+8ys/sDkgTzSL0CL
 github.com/danieljoos/wincred v1.0.2/go.mod h1:SnuYRW9lp1oJrZX/dXJqr0cPK5gYXqx3EJbmjhLdK9U=
 github.com/danieljoos/wincred v1.1.2 h1:QLdCxFs1/Yl4zduvBdcHB8goaYk9RARS2SgLLRuAyr0=
 github.com/danieljoos/wincred v1.1.2/go.mod h1:GijpziifJoIBfYh+S7BbkdUTU4LfM+QnGqR5Vl2tAx0=
-github.com/dapplink-labs/chain-explorer-api v0.0.1-beta.0.20240925111453-95d4400b1729 h1:QeTy1DKSTTtDL9iEwua41t8UIMZUytOk0pcIAF0zjJw=
-github.com/dapplink-labs/chain-explorer-api v0.0.1-beta.0.20240925111453-95d4400b1729/go.mod h1:NN+abomqO9hKDmuegTSUKz2YpLd2KaGA2YsjHzfbwi4=
+github.com/dapplink-labs/chain-explorer-api v0.0.1-beta.0.20240926051634-98ba1d09ea5f h1:iV4989X8Kh2vuC+DEhqZz4A41pZjEZpOMkkFZtiFPXk=
+github.com/dapplink-labs/chain-explorer-api v0.0.1-beta.0.20240926051634-98ba1d09ea5f/go.mod h1:NN+abomqO9hKDmuegTSUKz2YpLd2KaGA2YsjHzfbwi4=
 github.com/davecgh/go-spew v0.0.0-20171005155431-ecdeabc65495/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

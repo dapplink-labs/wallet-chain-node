@@ -52,6 +52,17 @@ type WalletDispatcher struct {
 	registry map[ChainType]wallet.WalletAdaptor
 }
 
+func (d *WalletDispatcher) GetBlockInfoByNumber(ctx context.Context, request *wallet2.BlockInfoRequest) (*wallet2.BlockInfoResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.BlockInfoResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "get block height by number fail",
+		}, nil
+	}
+	return d.registry[request.Chain].GetBlockByNumber(request)
+}
+
 func (d *WalletDispatcher) GetBlockHeaderByNumber(ctx context.Context, request *wallet2.BlockHeaderRequest) (*wallet2.BlockHeaderResponse, error) {
 	resp := d.preHandler(request)
 	if resp != nil {
