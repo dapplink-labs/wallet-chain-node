@@ -14,7 +14,7 @@ RUN mkdir /etc/wallet-chain-node
 
 ARG CONFIG=config.yml
 
-COPY --from=builder /wallet-chain-node/wallet-chain-node /usr/local/bin/
+COPY --from=builder /wallet-chain-node /usr/local/bin/
 COPY --from=builder /wallet-chain-node/${CONFIG} /etc/wallet-chain-node/config.yml
 
 EXPOSE 8189
