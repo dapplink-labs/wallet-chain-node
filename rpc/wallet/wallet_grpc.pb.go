@@ -19,35 +19,45 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	WalletService_GetSupportCoins_FullMethodName            = "/savour_rpc.wallet.WalletService/getSupportCoins"
-	WalletService_ConvertAddress_FullMethodName             = "/savour_rpc.wallet.WalletService/convertAddress"
-	WalletService_ValidAddress_FullMethodName               = "/savour_rpc.wallet.WalletService/validAddress"
-	WalletService_GetBlock_FullMethodName                   = "/savour_rpc.wallet.WalletService/getBlock"
-	WalletService_GetBlockHeaderByNumber_FullMethodName     = "/savour_rpc.wallet.WalletService/getBlockHeaderByNumber"
-	WalletService_GetBlockInfoByNumber_FullMethodName       = "/savour_rpc.wallet.WalletService/getBlockInfoByNumber"
-	WalletService_GetNonce_FullMethodName                   = "/savour_rpc.wallet.WalletService/getNonce"
-	WalletService_GetGasPrice_FullMethodName                = "/savour_rpc.wallet.WalletService/getGasPrice"
-	WalletService_GetBalance_FullMethodName                 = "/savour_rpc.wallet.WalletService/getBalance"
-	WalletService_GetAccount_FullMethodName                 = "/savour_rpc.wallet.WalletService/getAccount"
-	WalletService_GetMinRent_FullMethodName                 = "/savour_rpc.wallet.WalletService/getMinRent"
-	WalletService_SendTx_FullMethodName                     = "/savour_rpc.wallet.WalletService/SendTx"
-	WalletService_GetTxByAddress_FullMethodName             = "/savour_rpc.wallet.WalletService/getTxByAddress"
-	WalletService_GetTxByHash_FullMethodName                = "/savour_rpc.wallet.WalletService/getTxByHash"
-	WalletService_GetUtxo_FullMethodName                    = "/savour_rpc.wallet.WalletService/getUtxo"
-	WalletService_GetUnspentOutputs_FullMethodName          = "/savour_rpc.wallet.WalletService/getUnspentOutputs"
-	WalletService_GetUtxoInsFromData_FullMethodName         = "/savour_rpc.wallet.WalletService/getUtxoInsFromData"
-	WalletService_GetAccountTxFromData_FullMethodName       = "/savour_rpc.wallet.WalletService/getAccountTxFromData"
-	WalletService_GetUtxoTxFromData_FullMethodName          = "/savour_rpc.wallet.WalletService/getUtxoTxFromData"
-	WalletService_GetAccountTxFromSignedData_FullMethodName = "/savour_rpc.wallet.WalletService/getAccountTxFromSignedData"
-	WalletService_GetUtxoTxFromSignedData_FullMethodName    = "/savour_rpc.wallet.WalletService/GetUtxoTxFromSignedData"
-	WalletService_CreateAccountSignedTx_FullMethodName      = "/savour_rpc.wallet.WalletService/createAccountSignedTx"
-	WalletService_CreateAccountTx_FullMethodName            = "/savour_rpc.wallet.WalletService/createAccountTx"
-	WalletService_CreateUtxoSignedTx_FullMethodName         = "/savour_rpc.wallet.WalletService/createUtxoSignedTx"
-	WalletService_CreateUtxoTx_FullMethodName               = "/savour_rpc.wallet.WalletService/createUtxoTx"
-	WalletService_VerifyAccountSignedTx_FullMethodName      = "/savour_rpc.wallet.WalletService/verifyAccountSignedTx"
-	WalletService_VerifyUtxoSignedTx_FullMethodName         = "/savour_rpc.wallet.WalletService/verifyUtxoSignedTx"
-	WalletService_ABIBinToJSON_FullMethodName               = "/savour_rpc.wallet.WalletService/ABIBinToJSON"
-	WalletService_ABIJSONToBin_FullMethodName               = "/savour_rpc.wallet.WalletService/ABIJSONToBin"
+	WalletService_GetSupportCoins_FullMethodName               = "/savour_rpc.wallet.WalletService/getSupportCoins"
+	WalletService_ConvertAddress_FullMethodName                = "/savour_rpc.wallet.WalletService/convertAddress"
+	WalletService_ValidAddress_FullMethodName                  = "/savour_rpc.wallet.WalletService/validAddress"
+	WalletService_GetBlock_FullMethodName                      = "/savour_rpc.wallet.WalletService/getBlock"
+	WalletService_GetBlockHeaderByNumber_FullMethodName        = "/savour_rpc.wallet.WalletService/getBlockHeaderByNumber"
+	WalletService_GetNonce_FullMethodName                      = "/savour_rpc.wallet.WalletService/getNonce"
+	WalletService_GetGasPrice_FullMethodName                   = "/savour_rpc.wallet.WalletService/getGasPrice"
+	WalletService_GetBalance_FullMethodName                    = "/savour_rpc.wallet.WalletService/getBalance"
+	WalletService_GetAccount_FullMethodName                    = "/savour_rpc.wallet.WalletService/getAccount"
+	WalletService_GetMinRent_FullMethodName                    = "/savour_rpc.wallet.WalletService/getMinRent"
+	WalletService_SendTx_FullMethodName                        = "/savour_rpc.wallet.WalletService/SendTx"
+	WalletService_GetTxByAddress_FullMethodName                = "/savour_rpc.wallet.WalletService/getTxByAddress"
+	WalletService_GetTxByHash_FullMethodName                   = "/savour_rpc.wallet.WalletService/getTxByHash"
+	WalletService_GetUtxo_FullMethodName                       = "/savour_rpc.wallet.WalletService/getUtxo"
+	WalletService_GetUnspentOutputs_FullMethodName             = "/savour_rpc.wallet.WalletService/getUnspentOutputs"
+	WalletService_GetUtxoInsFromData_FullMethodName            = "/savour_rpc.wallet.WalletService/getUtxoInsFromData"
+	WalletService_GetAccountTxFromData_FullMethodName          = "/savour_rpc.wallet.WalletService/getAccountTxFromData"
+	WalletService_GetUtxoTxFromData_FullMethodName             = "/savour_rpc.wallet.WalletService/getUtxoTxFromData"
+	WalletService_GetAccountTxFromSignedData_FullMethodName    = "/savour_rpc.wallet.WalletService/getAccountTxFromSignedData"
+	WalletService_GetUtxoTxFromSignedData_FullMethodName       = "/savour_rpc.wallet.WalletService/GetUtxoTxFromSignedData"
+	WalletService_CreateAccountSignedTx_FullMethodName         = "/savour_rpc.wallet.WalletService/createAccountSignedTx"
+	WalletService_CreateAccountTx_FullMethodName               = "/savour_rpc.wallet.WalletService/createAccountTx"
+	WalletService_CreateUtxoSignedTx_FullMethodName            = "/savour_rpc.wallet.WalletService/createUtxoSignedTx"
+	WalletService_CreateUtxoTx_FullMethodName                  = "/savour_rpc.wallet.WalletService/createUtxoTx"
+	WalletService_VerifyAccountSignedTx_FullMethodName         = "/savour_rpc.wallet.WalletService/verifyAccountSignedTx"
+	WalletService_VerifyUtxoSignedTx_FullMethodName            = "/savour_rpc.wallet.WalletService/verifyUtxoSignedTx"
+	WalletService_ABIBinToJSON_FullMethodName                  = "/savour_rpc.wallet.WalletService/ABIBinToJSON"
+	WalletService_ABIJSONToBin_FullMethodName                  = "/savour_rpc.wallet.WalletService/ABIJSONToBin"
+	WalletService_GetBlockByNumber_FullMethodName              = "/savour_rpc.wallet.WalletService/getBlockByNumber"
+	WalletService_GetLatestSafeBlockHeader_FullMethodName      = "/savour_rpc.wallet.WalletService/getLatestSafeBlockHeader"
+	WalletService_GetLatestFinalizedBlockHeader_FullMethodName = "/savour_rpc.wallet.WalletService/getLatestFinalizedBlockHeader"
+	WalletService_GetBlockHeaderByHash_FullMethodName          = "/savour_rpc.wallet.WalletService/getBlockHeaderByHash"
+	WalletService_GetBlockHeadersByRange_FullMethodName        = "/savour_rpc.wallet.WalletService/getBlockHeadersByRange"
+	WalletService_GetTxReceiptByHash_FullMethodName            = "/savour_rpc.wallet.WalletService/getTxReceiptByHash"
+	WalletService_GetStorageHash_FullMethodName                = "/savour_rpc.wallet.WalletService/getStorageHash"
+	WalletService_GetFilterLogs_FullMethodName                 = "/savour_rpc.wallet.WalletService/getFilterLogs"
+	WalletService_GetTxCountByAddress_FullMethodName           = "/savour_rpc.wallet.WalletService/getTxCountByAddress"
+	WalletService_GetSuggestGasPrice_FullMethodName            = "/savour_rpc.wallet.WalletService/getSuggestGasPrice"
+	WalletService_GetSuggestGasTipCap_FullMethodName           = "/savour_rpc.wallet.WalletService/getSuggestGasTipCap"
 )
 
 // WalletServiceClient is the client API for WalletService service.
@@ -59,7 +69,6 @@ type WalletServiceClient interface {
 	ValidAddress(ctx context.Context, in *ValidAddressRequest, opts ...grpc.CallOption) (*ValidAddressResponse, error)
 	GetBlock(ctx context.Context, in *BlockRequest, opts ...grpc.CallOption) (*BlockResponse, error)
 	GetBlockHeaderByNumber(ctx context.Context, in *BlockHeaderRequest, opts ...grpc.CallOption) (*BlockHeaderResponse, error)
-	GetBlockInfoByNumber(ctx context.Context, in *BlockInfoRequest, opts ...grpc.CallOption) (*BlockInfoResponse, error)
 	GetNonce(ctx context.Context, in *NonceRequest, opts ...grpc.CallOption) (*NonceResponse, error)
 	GetGasPrice(ctx context.Context, in *GasPriceRequest, opts ...grpc.CallOption) (*GasPriceResponse, error)
 	GetBalance(ctx context.Context, in *BalanceRequest, opts ...grpc.CallOption) (*BalanceResponse, error)
@@ -83,6 +92,17 @@ type WalletServiceClient interface {
 	VerifyUtxoSignedTx(ctx context.Context, in *VerifySignedTxRequest, opts ...grpc.CallOption) (*VerifySignedTxResponse, error)
 	ABIBinToJSON(ctx context.Context, in *ABIBinToJSONRequest, opts ...grpc.CallOption) (*ABIBinToJSONResponse, error)
 	ABIJSONToBin(ctx context.Context, in *ABIJSONToBinRequest, opts ...grpc.CallOption) (*ABIJSONToBinResponse, error)
+	GetBlockByNumber(ctx context.Context, in *BlockInfoRequest, opts ...grpc.CallOption) (*BlockInfoResponse, error)
+	GetLatestSafeBlockHeader(ctx context.Context, in *BasicRequest, opts ...grpc.CallOption) (*BlockHeaderResponse, error)
+	GetLatestFinalizedBlockHeader(ctx context.Context, in *BasicRequest, opts ...grpc.CallOption) (*BlockHeaderResponse, error)
+	GetBlockHeaderByHash(ctx context.Context, in *BlockHeaderByHashRequest, opts ...grpc.CallOption) (*BlockHeaderResponse, error)
+	GetBlockHeadersByRange(ctx context.Context, in *BlockHeadersByRangeRequest, opts ...grpc.CallOption) (*BlockHeadersByRangeResponse, error)
+	GetTxReceiptByHash(ctx context.Context, in *TxReceiptByHashRequest, opts ...grpc.CallOption) (*TxReceiptByHashResponse, error)
+	GetStorageHash(ctx context.Context, in *StorageHashRequest, opts ...grpc.CallOption) (*StorageHashResponse, error)
+	GetFilterLogs(ctx context.Context, in *FilterLogsRequest, opts ...grpc.CallOption) (*FilterLogsResponse, error)
+	GetTxCountByAddress(ctx context.Context, in *TxCountByAddressRequest, opts ...grpc.CallOption) (*TxCountByAddressResponse, error)
+	GetSuggestGasPrice(ctx context.Context, in *SuggestGasPriceRequest, opts ...grpc.CallOption) (*SuggestGasPriceResponse, error)
+	GetSuggestGasTipCap(ctx context.Context, in *SuggestGasPriceRequest, opts ...grpc.CallOption) (*SuggestGasPriceResponse, error)
 }
 
 type walletServiceClient struct {
@@ -137,16 +157,6 @@ func (c *walletServiceClient) GetBlockHeaderByNumber(ctx context.Context, in *Bl
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(BlockHeaderResponse)
 	err := c.cc.Invoke(ctx, WalletService_GetBlockHeaderByNumber_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *walletServiceClient) GetBlockInfoByNumber(ctx context.Context, in *BlockInfoRequest, opts ...grpc.CallOption) (*BlockInfoResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(BlockInfoResponse)
-	err := c.cc.Invoke(ctx, WalletService_GetBlockInfoByNumber_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -383,6 +393,116 @@ func (c *walletServiceClient) ABIJSONToBin(ctx context.Context, in *ABIJSONToBin
 	return out, nil
 }
 
+func (c *walletServiceClient) GetBlockByNumber(ctx context.Context, in *BlockInfoRequest, opts ...grpc.CallOption) (*BlockInfoResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BlockInfoResponse)
+	err := c.cc.Invoke(ctx, WalletService_GetBlockByNumber_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) GetLatestSafeBlockHeader(ctx context.Context, in *BasicRequest, opts ...grpc.CallOption) (*BlockHeaderResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BlockHeaderResponse)
+	err := c.cc.Invoke(ctx, WalletService_GetLatestSafeBlockHeader_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) GetLatestFinalizedBlockHeader(ctx context.Context, in *BasicRequest, opts ...grpc.CallOption) (*BlockHeaderResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BlockHeaderResponse)
+	err := c.cc.Invoke(ctx, WalletService_GetLatestFinalizedBlockHeader_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) GetBlockHeaderByHash(ctx context.Context, in *BlockHeaderByHashRequest, opts ...grpc.CallOption) (*BlockHeaderResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BlockHeaderResponse)
+	err := c.cc.Invoke(ctx, WalletService_GetBlockHeaderByHash_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) GetBlockHeadersByRange(ctx context.Context, in *BlockHeadersByRangeRequest, opts ...grpc.CallOption) (*BlockHeadersByRangeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BlockHeadersByRangeResponse)
+	err := c.cc.Invoke(ctx, WalletService_GetBlockHeadersByRange_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) GetTxReceiptByHash(ctx context.Context, in *TxReceiptByHashRequest, opts ...grpc.CallOption) (*TxReceiptByHashResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TxReceiptByHashResponse)
+	err := c.cc.Invoke(ctx, WalletService_GetTxReceiptByHash_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) GetStorageHash(ctx context.Context, in *StorageHashRequest, opts ...grpc.CallOption) (*StorageHashResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(StorageHashResponse)
+	err := c.cc.Invoke(ctx, WalletService_GetStorageHash_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) GetFilterLogs(ctx context.Context, in *FilterLogsRequest, opts ...grpc.CallOption) (*FilterLogsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(FilterLogsResponse)
+	err := c.cc.Invoke(ctx, WalletService_GetFilterLogs_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) GetTxCountByAddress(ctx context.Context, in *TxCountByAddressRequest, opts ...grpc.CallOption) (*TxCountByAddressResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TxCountByAddressResponse)
+	err := c.cc.Invoke(ctx, WalletService_GetTxCountByAddress_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) GetSuggestGasPrice(ctx context.Context, in *SuggestGasPriceRequest, opts ...grpc.CallOption) (*SuggestGasPriceResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SuggestGasPriceResponse)
+	err := c.cc.Invoke(ctx, WalletService_GetSuggestGasPrice_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *walletServiceClient) GetSuggestGasTipCap(ctx context.Context, in *SuggestGasPriceRequest, opts ...grpc.CallOption) (*SuggestGasPriceResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SuggestGasPriceResponse)
+	err := c.cc.Invoke(ctx, WalletService_GetSuggestGasTipCap_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // WalletServiceServer is the server API for WalletService service.
 // All implementations should embed UnimplementedWalletServiceServer
 // for forward compatibility.
@@ -392,7 +512,6 @@ type WalletServiceServer interface {
 	ValidAddress(context.Context, *ValidAddressRequest) (*ValidAddressResponse, error)
 	GetBlock(context.Context, *BlockRequest) (*BlockResponse, error)
 	GetBlockHeaderByNumber(context.Context, *BlockHeaderRequest) (*BlockHeaderResponse, error)
-	GetBlockInfoByNumber(context.Context, *BlockInfoRequest) (*BlockInfoResponse, error)
 	GetNonce(context.Context, *NonceRequest) (*NonceResponse, error)
 	GetGasPrice(context.Context, *GasPriceRequest) (*GasPriceResponse, error)
 	GetBalance(context.Context, *BalanceRequest) (*BalanceResponse, error)
@@ -416,6 +535,17 @@ type WalletServiceServer interface {
 	VerifyUtxoSignedTx(context.Context, *VerifySignedTxRequest) (*VerifySignedTxResponse, error)
 	ABIBinToJSON(context.Context, *ABIBinToJSONRequest) (*ABIBinToJSONResponse, error)
 	ABIJSONToBin(context.Context, *ABIJSONToBinRequest) (*ABIJSONToBinResponse, error)
+	GetBlockByNumber(context.Context, *BlockInfoRequest) (*BlockInfoResponse, error)
+	GetLatestSafeBlockHeader(context.Context, *BasicRequest) (*BlockHeaderResponse, error)
+	GetLatestFinalizedBlockHeader(context.Context, *BasicRequest) (*BlockHeaderResponse, error)
+	GetBlockHeaderByHash(context.Context, *BlockHeaderByHashRequest) (*BlockHeaderResponse, error)
+	GetBlockHeadersByRange(context.Context, *BlockHeadersByRangeRequest) (*BlockHeadersByRangeResponse, error)
+	GetTxReceiptByHash(context.Context, *TxReceiptByHashRequest) (*TxReceiptByHashResponse, error)
+	GetStorageHash(context.Context, *StorageHashRequest) (*StorageHashResponse, error)
+	GetFilterLogs(context.Context, *FilterLogsRequest) (*FilterLogsResponse, error)
+	GetTxCountByAddress(context.Context, *TxCountByAddressRequest) (*TxCountByAddressResponse, error)
+	GetSuggestGasPrice(context.Context, *SuggestGasPriceRequest) (*SuggestGasPriceResponse, error)
+	GetSuggestGasTipCap(context.Context, *SuggestGasPriceRequest) (*SuggestGasPriceResponse, error)
 }
 
 // UnimplementedWalletServiceServer should be embedded to have
@@ -439,9 +569,6 @@ func (UnimplementedWalletServiceServer) GetBlock(context.Context, *BlockRequest)
 }
 func (UnimplementedWalletServiceServer) GetBlockHeaderByNumber(context.Context, *BlockHeaderRequest) (*BlockHeaderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBlockHeaderByNumber not implemented")
-}
-func (UnimplementedWalletServiceServer) GetBlockInfoByNumber(context.Context, *BlockInfoRequest) (*BlockInfoResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetBlockInfoByNumber not implemented")
 }
 func (UnimplementedWalletServiceServer) GetNonce(context.Context, *NonceRequest) (*NonceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetNonce not implemented")
@@ -511,6 +638,39 @@ func (UnimplementedWalletServiceServer) ABIBinToJSON(context.Context, *ABIBinToJ
 }
 func (UnimplementedWalletServiceServer) ABIJSONToBin(context.Context, *ABIJSONToBinRequest) (*ABIJSONToBinResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ABIJSONToBin not implemented")
+}
+func (UnimplementedWalletServiceServer) GetBlockByNumber(context.Context, *BlockInfoRequest) (*BlockInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBlockByNumber not implemented")
+}
+func (UnimplementedWalletServiceServer) GetLatestSafeBlockHeader(context.Context, *BasicRequest) (*BlockHeaderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetLatestSafeBlockHeader not implemented")
+}
+func (UnimplementedWalletServiceServer) GetLatestFinalizedBlockHeader(context.Context, *BasicRequest) (*BlockHeaderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetLatestFinalizedBlockHeader not implemented")
+}
+func (UnimplementedWalletServiceServer) GetBlockHeaderByHash(context.Context, *BlockHeaderByHashRequest) (*BlockHeaderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBlockHeaderByHash not implemented")
+}
+func (UnimplementedWalletServiceServer) GetBlockHeadersByRange(context.Context, *BlockHeadersByRangeRequest) (*BlockHeadersByRangeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBlockHeadersByRange not implemented")
+}
+func (UnimplementedWalletServiceServer) GetTxReceiptByHash(context.Context, *TxReceiptByHashRequest) (*TxReceiptByHashResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTxReceiptByHash not implemented")
+}
+func (UnimplementedWalletServiceServer) GetStorageHash(context.Context, *StorageHashRequest) (*StorageHashResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetStorageHash not implemented")
+}
+func (UnimplementedWalletServiceServer) GetFilterLogs(context.Context, *FilterLogsRequest) (*FilterLogsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFilterLogs not implemented")
+}
+func (UnimplementedWalletServiceServer) GetTxCountByAddress(context.Context, *TxCountByAddressRequest) (*TxCountByAddressResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTxCountByAddress not implemented")
+}
+func (UnimplementedWalletServiceServer) GetSuggestGasPrice(context.Context, *SuggestGasPriceRequest) (*SuggestGasPriceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSuggestGasPrice not implemented")
+}
+func (UnimplementedWalletServiceServer) GetSuggestGasTipCap(context.Context, *SuggestGasPriceRequest) (*SuggestGasPriceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSuggestGasTipCap not implemented")
 }
 func (UnimplementedWalletServiceServer) testEmbeddedByValue() {}
 
@@ -618,24 +778,6 @@ func _WalletService_GetBlockHeaderByNumber_Handler(srv interface{}, ctx context.
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(WalletServiceServer).GetBlockHeaderByNumber(ctx, req.(*BlockHeaderRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _WalletService_GetBlockInfoByNumber_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BlockInfoRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(WalletServiceServer).GetBlockInfoByNumber(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: WalletService_GetBlockInfoByNumber_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WalletServiceServer).GetBlockInfoByNumber(ctx, req.(*BlockInfoRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1054,6 +1196,204 @@ func _WalletService_ABIJSONToBin_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _WalletService_GetBlockByNumber_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BlockInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).GetBlockByNumber(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WalletService_GetBlockByNumber_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).GetBlockByNumber(ctx, req.(*BlockInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_GetLatestSafeBlockHeader_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BasicRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).GetLatestSafeBlockHeader(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WalletService_GetLatestSafeBlockHeader_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).GetLatestSafeBlockHeader(ctx, req.(*BasicRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_GetLatestFinalizedBlockHeader_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BasicRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).GetLatestFinalizedBlockHeader(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WalletService_GetLatestFinalizedBlockHeader_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).GetLatestFinalizedBlockHeader(ctx, req.(*BasicRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_GetBlockHeaderByHash_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BlockHeaderByHashRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).GetBlockHeaderByHash(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WalletService_GetBlockHeaderByHash_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).GetBlockHeaderByHash(ctx, req.(*BlockHeaderByHashRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_GetBlockHeadersByRange_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BlockHeadersByRangeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).GetBlockHeadersByRange(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WalletService_GetBlockHeadersByRange_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).GetBlockHeadersByRange(ctx, req.(*BlockHeadersByRangeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_GetTxReceiptByHash_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TxReceiptByHashRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).GetTxReceiptByHash(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WalletService_GetTxReceiptByHash_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).GetTxReceiptByHash(ctx, req.(*TxReceiptByHashRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_GetStorageHash_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(StorageHashRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).GetStorageHash(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WalletService_GetStorageHash_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).GetStorageHash(ctx, req.(*StorageHashRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_GetFilterLogs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FilterLogsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).GetFilterLogs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WalletService_GetFilterLogs_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).GetFilterLogs(ctx, req.(*FilterLogsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_GetTxCountByAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TxCountByAddressRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).GetTxCountByAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WalletService_GetTxCountByAddress_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).GetTxCountByAddress(ctx, req.(*TxCountByAddressRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_GetSuggestGasPrice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SuggestGasPriceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).GetSuggestGasPrice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WalletService_GetSuggestGasPrice_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).GetSuggestGasPrice(ctx, req.(*SuggestGasPriceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WalletService_GetSuggestGasTipCap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SuggestGasPriceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).GetSuggestGasTipCap(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WalletService_GetSuggestGasTipCap_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).GetSuggestGasTipCap(ctx, req.(*SuggestGasPriceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // WalletService_ServiceDesc is the grpc.ServiceDesc for WalletService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1080,10 +1420,6 @@ var WalletService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getBlockHeaderByNumber",
 			Handler:    _WalletService_GetBlockHeaderByNumber_Handler,
-		},
-		{
-			MethodName: "getBlockInfoByNumber",
-			Handler:    _WalletService_GetBlockInfoByNumber_Handler,
 		},
 		{
 			MethodName: "getNonce",
@@ -1176,6 +1512,50 @@ var WalletService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ABIJSONToBin",
 			Handler:    _WalletService_ABIJSONToBin_Handler,
+		},
+		{
+			MethodName: "getBlockByNumber",
+			Handler:    _WalletService_GetBlockByNumber_Handler,
+		},
+		{
+			MethodName: "getLatestSafeBlockHeader",
+			Handler:    _WalletService_GetLatestSafeBlockHeader_Handler,
+		},
+		{
+			MethodName: "getLatestFinalizedBlockHeader",
+			Handler:    _WalletService_GetLatestFinalizedBlockHeader_Handler,
+		},
+		{
+			MethodName: "getBlockHeaderByHash",
+			Handler:    _WalletService_GetBlockHeaderByHash_Handler,
+		},
+		{
+			MethodName: "getBlockHeadersByRange",
+			Handler:    _WalletService_GetBlockHeadersByRange_Handler,
+		},
+		{
+			MethodName: "getTxReceiptByHash",
+			Handler:    _WalletService_GetTxReceiptByHash_Handler,
+		},
+		{
+			MethodName: "getStorageHash",
+			Handler:    _WalletService_GetStorageHash_Handler,
+		},
+		{
+			MethodName: "getFilterLogs",
+			Handler:    _WalletService_GetFilterLogs_Handler,
+		},
+		{
+			MethodName: "getTxCountByAddress",
+			Handler:    _WalletService_GetTxCountByAddress_Handler,
+		},
+		{
+			MethodName: "getSuggestGasPrice",
+			Handler:    _WalletService_GetSuggestGasPrice_Handler,
+		},
+		{
+			MethodName: "getSuggestGasTipCap",
+			Handler:    _WalletService_GetSuggestGasTipCap_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

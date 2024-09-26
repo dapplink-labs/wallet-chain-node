@@ -43,6 +43,56 @@ type WalletAdaptor struct {
 	etherscanCli *etherscan.Client
 }
 
+func (a *WalletAdaptor) GetLatestSafeBlockHeader(req *wallet2.BasicRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetLatestFinalizedBlockHeader(req *wallet2.BasicRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetBlockHeaderByHash(req *wallet2.BlockHeaderByHashRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetBlockHeadersByRange(req *wallet2.BlockHeadersByRangeRequest) (*wallet2.BlockHeadersByRangeResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetTxReceiptByHash(req *wallet2.TxReceiptByHashRequest) (*wallet2.TxReceiptByHashResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetStorageHash(req *wallet2.StorageHashRequest) (*wallet2.StorageHashResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetFilterLogs(req *wallet2.FilterLogsRequest) (*wallet2.FilterLogsResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetTxCountByAddress(req *wallet2.TxCountByAddressRequest) (*wallet2.TxCountByAddressResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetSuggestGasPrice(req *wallet2.SuggestGasPriceRequest) (*wallet2.SuggestGasPriceResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetSuggestGasTipCap(req *wallet2.SuggestGasPriceRequest) (*wallet2.SuggestGasPriceResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (a *WalletAdaptor) GetBlock(req *wallet2.BlockRequest) (*wallet2.BlockResponse, error) {
 	return &wallet2.BlockResponse{
 		Code: common.ReturnCode_ERROR,
@@ -785,7 +835,7 @@ func (a *WalletAdaptor) GetBlockHeaderByNumber(req *wallet2.BlockHeaderRequest) 
 	}
 	return &wallet2.BlockHeaderResponse{
 		Code:            common.ReturnCode_SUCCESS,
-		Msg:             "",
+		Msg:             "get block header by number success",
 		ParentHash:      header.ParentHash.Hex(),
 		UncleHash:       header.UncleHash.Hex(),
 		Coinbase:        header.Coinbase.Hex(),
@@ -805,16 +855,26 @@ func (a *WalletAdaptor) GetBlockHeaderByNumber(req *wallet2.BlockHeaderRequest) 
 
 // GetBlockByNumber 根据区块号获取区块
 func (a *WalletAdaptor) GetBlockByNumber(req *wallet2.BlockInfoRequest) (*wallet2.BlockInfoResponse, error) {
-	_, err := a.getClient().BlockByNumber(context.Background(), stringToBigInt(req.GetHeight()))
+	block, err := a.getClient().BlockByNumber(context.Background(), stringToBigInt(req.GetHeight()))
 	if err != nil {
 		return &wallet2.BlockInfoResponse{
 			Code: common.ReturnCode_ERROR,
 			Msg:  err.Error(),
 		}, nil
 	}
+	var transactions []*wallet2.BlockInfoTransactionList
+	for _, transaction := range block.Transactions() {
+		transactions = append(transactions, &wallet2.BlockInfoTransactionList{
+			Hash: transaction.Hash().Hex(),
+			To:   transaction.To().Hex(),
+		})
+	}
 	return &wallet2.BlockInfoResponse{
-		Code: common.ReturnCode_ERROR,
-		Msg:  "Don't support",
+		Code:         common.ReturnCode_SUCCESS,
+		Msg:          "get block by number success",
+		Hash:         block.Hash().Hex(),
+		Transactions: transactions,
+		BaseFee:      block.BaseFee().String(),
 	}, nil
 }
 

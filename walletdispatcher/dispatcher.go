@@ -52,7 +52,57 @@ type WalletDispatcher struct {
 	registry map[ChainType]wallet.WalletAdaptor
 }
 
-func (d *WalletDispatcher) GetBlockInfoByNumber(ctx context.Context, request *wallet2.BlockInfoRequest) (*wallet2.BlockInfoResponse, error) {
+func (d *WalletDispatcher) GetLatestSafeBlockHeader(ctx context.Context, request *wallet2.BasicRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetLatestFinalizedBlockHeader(ctx context.Context, request *wallet2.BasicRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetBlockHeaderByHash(ctx context.Context, request *wallet2.BlockHeaderByHashRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetBlockHeadersByRange(ctx context.Context, request *wallet2.BlockHeadersByRangeRequest) (*wallet2.BlockHeadersByRangeResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetTxReceiptByHash(ctx context.Context, request *wallet2.TxReceiptByHashRequest) (*wallet2.TxReceiptByHashResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetStorageHash(ctx context.Context, request *wallet2.StorageHashRequest) (*wallet2.StorageHashResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetFilterLogs(ctx context.Context, request *wallet2.FilterLogsRequest) (*wallet2.FilterLogsResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetTxCountByAddress(ctx context.Context, request *wallet2.TxCountByAddressRequest) (*wallet2.TxCountByAddressResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetSuggestGasPrice(ctx context.Context, request *wallet2.SuggestGasPriceRequest) (*wallet2.SuggestGasPriceResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetSuggestGasTipCap(ctx context.Context, request *wallet2.SuggestGasPriceRequest) (*wallet2.SuggestGasPriceResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetBlockByNumber(ctx context.Context, request *wallet2.BlockInfoRequest) (*wallet2.BlockInfoResponse, error) {
 	resp := d.preHandler(request)
 	if resp != nil {
 		return &wallet2.BlockInfoResponse{

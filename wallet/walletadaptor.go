@@ -38,8 +38,29 @@ type WalletAdaptor interface {
 
 	ABIBinToJSON(req *wallet2.ABIBinToJSONRequest) (*wallet2.ABIBinToJSONResponse, error)
 	ABIJSONToBin(req *wallet2.ABIJSONToBinRequest) (*wallet2.ABIJSONToBinResponse, error)
+
 	// GetBlockHeaderByNumber 根据区块高度获取区块头
 	GetBlockHeaderByNumber(req *wallet2.BlockHeaderRequest) (*wallet2.BlockHeaderResponse, error)
 	// GetBlockByNumber 根据区块高度获取区块
 	GetBlockByNumber(req *wallet2.BlockInfoRequest) (*wallet2.BlockInfoResponse, error)
+	// GetLatestSafeBlockHeader 获取最新安全区块
+	GetLatestSafeBlockHeader(req *wallet2.BasicRequest) (*wallet2.BlockHeaderResponse, error)
+	// GetLatestFinalizedBlockHeader 获取最新最终确认区块
+	GetLatestFinalizedBlockHeader(req *wallet2.BasicRequest) (*wallet2.BlockHeaderResponse, error)
+	// GetBlockHeaderByHash 根据区块hash获取区块头
+	GetBlockHeaderByHash(req *wallet2.BlockHeaderByHashRequest) (*wallet2.BlockHeaderResponse, error)
+	// GetBlockHeadersByRange 根据区块高度范围获取区块头
+	GetBlockHeadersByRange(req *wallet2.BlockHeadersByRangeRequest) (*wallet2.BlockHeadersByRangeResponse, error)
+	// GetTxReceiptByHash 根据交易hash获取交易收据
+	GetTxReceiptByHash(req *wallet2.TxReceiptByHashRequest) (*wallet2.TxReceiptByHashResponse, error)
+	// GetStorageHash 获取store hash
+	GetStorageHash(req *wallet2.StorageHashRequest) (*wallet2.StorageHashResponse, error)
+	// GetFilterLogs 获取区块内的日志
+	GetFilterLogs(req *wallet2.FilterLogsRequest) (*wallet2.FilterLogsResponse, error)
+	// GetTxCountByAddress 获取指定地址的交易数量
+	GetTxCountByAddress(req *wallet2.TxCountByAddressRequest) (*wallet2.TxCountByAddressResponse, error)
+	// GetSuggestGasPrice 获取建议的gas价格
+	GetSuggestGasPrice(req *wallet2.SuggestGasPriceRequest) (*wallet2.SuggestGasPriceResponse, error)
+	// GetSuggestGasTipCap 获取建议的gas费
+	GetSuggestGasTipCap(req *wallet2.SuggestGasPriceRequest) (*wallet2.SuggestGasPriceResponse, error)
 }

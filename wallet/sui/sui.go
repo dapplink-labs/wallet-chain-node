@@ -26,6 +26,56 @@ type WalletAdaptor struct {
 	clients *multiclient.MultiClient
 }
 
+func (a *WalletAdaptor) GetLatestSafeBlockHeader(req *wallet2.BasicRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetLatestFinalizedBlockHeader(req *wallet2.BasicRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetBlockHeaderByHash(req *wallet2.BlockHeaderByHashRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetBlockHeadersByRange(req *wallet2.BlockHeadersByRangeRequest) (*wallet2.BlockHeadersByRangeResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetTxReceiptByHash(req *wallet2.TxReceiptByHashRequest) (*wallet2.TxReceiptByHashResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetStorageHash(req *wallet2.StorageHashRequest) (*wallet2.StorageHashResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetFilterLogs(req *wallet2.FilterLogsRequest) (*wallet2.FilterLogsResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetTxCountByAddress(req *wallet2.TxCountByAddressRequest) (*wallet2.TxCountByAddressResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetSuggestGasPrice(req *wallet2.SuggestGasPriceRequest) (*wallet2.SuggestGasPriceResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetSuggestGasTipCap(req *wallet2.SuggestGasPriceRequest) (*wallet2.SuggestGasPriceResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (a *WalletAdaptor) GetBlockByNumber(req *wallet2.BlockInfoRequest) (*wallet2.BlockInfoResponse, error) {
 	//TODO implement me
 	panic("implement me")
