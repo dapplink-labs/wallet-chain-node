@@ -126,12 +126,12 @@ func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balanc
 func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
 	var resp *account.TransactionResponse[account.AccountTxResponse]
 	var err error
-	if req.ContractAddress == "0x00" {
+	if req.ContractAddress != "0x00" {
+		log.Info("Spl token transfer record")
+		resp, err = a.sol.GetTxByAddress(uint64(req.Page), uint64(req.Pagesize), req.Address, "spl")
+	} else {
 		log.Info("Sol transfer record")
 		resp, err = a.sol.GetTxByAddress(uint64(req.Page), uint64(req.Pagesize), req.Address, "sol")
-	} else {
-		log.Info("Spl token transfer record")
-		resp, err = a.sol.GetTxByAddress(uint64(req.Page), uint64(req.Pagesize), req.Address, "token")
 	}
 	if err != nil {
 		log.Error("get GetTxByAddress error", "err", err)
