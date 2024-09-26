@@ -10,7 +10,7 @@ on:
         - mainnet
 env:
   AWS_REGION : "ap-southeast-1"
-  app: wallet-chain-node
+  app: walletchainnode
 permissions:
   id-token: write
   contents: read  
@@ -33,7 +33,7 @@ jobs:
           run: |
             registry="hkccr.ccs.tencentyun.com"
             namespace="dapplink"
-            appname="wallet-chain-node"
+            appname="walletchainnode"
             tag_name="${registry}/${namespace}/${appname}"
             docker login --username=100003588471 -p dapplink@go hkccr.ccs.tencentyun.com
             docker build --pull  -t ${tag_name}:v0.0.8 .
