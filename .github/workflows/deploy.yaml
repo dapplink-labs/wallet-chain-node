@@ -1,4 +1,4 @@
-name: WalletChainNode Image Build Only
+name: App Image Build Only
 on:
   workflow_dispatch:
     inputs:
