@@ -128,6 +128,11 @@ type Block struct {
 type WalletAdaptor struct {
 }
 
+func (a *WalletAdaptor) GetBlockHeaderByNumber(req *wallet2.BlockHeaderRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
 	return &WalletAdaptor{}, nil
 }

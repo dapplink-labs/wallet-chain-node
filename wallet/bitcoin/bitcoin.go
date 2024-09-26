@@ -48,6 +48,11 @@ type WalletAdaptor struct {
 	oklClient *OkLinkClient
 }
 
+func (a *WalletAdaptor) GetBlockHeaderByNumber(req *wallet2.BlockHeaderRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (a *WalletAdaptor) GetBlock(req *wallet2.BlockRequest) (*wallet2.BlockResponse, error) {
 	//TODO implement me
 	panic("implement me")

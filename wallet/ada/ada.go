@@ -36,6 +36,11 @@ type WalletAdaptor struct {
 	clients *multiclient.MultiClient
 }
 
+func (a *WalletAdaptor) GetBlockHeaderByNumber(req *wallet2.BlockHeaderRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
 	clients, err := NewAdaClient(conf)
 	if err != nil {
