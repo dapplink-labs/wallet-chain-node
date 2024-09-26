@@ -23,11 +23,11 @@ func NewTronScanClient(baseUrl, apiKey string, timeout time.Duration) (*TronScan
 	return &TronScan{TronScanCli: tronCli}, err
 }
 
-func (ts *TronScan) GetTxByAddress(page, pagesize uint64, address string) (*account.TransactionResponse[account.AccountTxResponse], error) {
+func (ts *TronScan) GetTxByAddress(page, pagesize uint64, address string, actionType account.ActionType) (*account.TransactionResponse[account.AccountTxResponse], error) {
 	request := &account.AccountTxRequest{
 		ChainShortName: ChainName,
 		ExplorerName:   oklink.ChainExplorerName,
-		Action:         account.OkLinkActionNormal,
+		Action:         actionType,
 		Address:        address,
 		PageRequest: chain.PageRequest{
 			Page:  page,
