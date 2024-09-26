@@ -29,12 +29,13 @@ func NewSolScanClient(baseUrl, apiKey string, timeout time.Duration) (*SolScan, 
 	return &SolScan{SolScanCli: solCli}, err
 }
 
-func (ss *SolScan) GetTxByAddress(page, pagesize uint64, address string) (*account.TransactionResponse[account.AccountTxResponse], error) {
+func (ss *SolScan) GetTxByAddress(page, pagesize uint64, address string, action account.ActionType) (*account.TransactionResponse[account.AccountTxResponse], error) {
 	request := &account.AccountTxRequest{
 		PageRequest: chain.PageRequest{
 			Page:  page,
 			Limit: pagesize,
 		},
+		Action:  action,
 		Address: address,
 	}
 	txData, err := ss.SolScanCli.GetTxByAddress(request)

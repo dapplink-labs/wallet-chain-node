@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"github.com/dapplink-labs/chain-explorer-api/common/account"
 	"math/big"
 	"strconv"
 	"strings"
@@ -100,7 +101,7 @@ func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balanc
 	grpcClient := a.getClient().grpcClient
 
 	var result *big.Int
-	if req.ContractAddress != "" {
+	if req.ContractAddress != "0x00" {
 		symbol, err := grpcClient.TRC20GetSymbol(req.ContractAddress)
 		if err != nil {
 			return &wallet2.BalanceResponse{
@@ -108,13 +109,7 @@ func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balanc
 				Msg:  "get balance fail",
 			}, err
 		}
-		if symbol != req.Chain {
-			err = fmt.Errorf("contract's symbol %v != symbol:%v", symbol, req.Coin)
-			return &wallet2.BalanceResponse{
-				Code: common.ReturnCode_ERROR,
-				Msg:  "get balance fail",
-			}, err
-		}
+		log.Info("Get symbol success", "symbol", symbol)
 		result, err = grpcClient.TRC20ContractBalance(req.Address, req.ContractAddress)
 		if err != nil {
 			return &wallet2.BalanceResponse{
@@ -125,7 +120,6 @@ func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balanc
 	} else {
 		acc, err := grpcClient.GetAccount(req.Address)
 		if err != nil {
-			fmt.Println("sssss", err)
 			return &wallet2.BalanceResponse{
 				Code: common.ReturnCode_ERROR,
 				Msg:  "get balance fail",
@@ -153,11 +147,19 @@ func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balanc
 }
 
 func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
-	resp, err := a.tronScan.GetTxByAddress(uint64(req.Page), uint64(req.Pagesize), req.Address)
-	if err != nil {
-		return nil, err
+	var resp *account.TransactionResponse[account.AccountTxResponse]
+	var err error
+	if req.ContractAddress != "0x00" {
+		resp, err = a.tronScan.GetTxByAddress(uint64(req.Page), uint64(req.Pagesize), req.Address, "token")
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		resp, err = a.tronScan.GetTxByAddress(uint64(req.Page), uint64(req.Pagesize), req.Address, "normal")
+		if err != nil {
+			return nil, err
+		}
 	}
-
 	var tx_list []*wallet2.TxMessage
 	for _, tx := range resp.TransactionList {
 		tx_list = append(tx_list, &wallet2.TxMessage{
