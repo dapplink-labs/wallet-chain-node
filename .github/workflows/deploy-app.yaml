@@ -17,7 +17,7 @@ permissions:
 run-name: Build Image For Repo
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     outputs:
       commit_sha: ${{ steps.get-commit-sha.outputs.commit_sha }}
       ecr_registry: ${{ steps.login-ecr.outputs.registry }}
