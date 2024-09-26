@@ -9,7 +9,6 @@ on:
         - testnet
         - mainnet
 env:
-  AWS_REGION : "ap-southeast-1"
   app: walletchainnode
 permissions:
   id-token: write
