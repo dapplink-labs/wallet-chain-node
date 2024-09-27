@@ -21,5 +21,8 @@ FROM alpine:3.18
 COPY --from=builder /app/wallet-chain-node/wallet-chain-node /usr/local/bin
 COPY --from=builder /app/wallet-chain-node/config.yaml /app/wallet-chain-node/config.yaml
 
+WORKDIR /app
+ENV SELAGINELLA_CONFIG="/app/wallet-chain-node/config.yaml"
+
 ENTRYPOINT ["wallet-chain-node"]
 CMD ["-c", "/etc/wallet-chain-node/config.yml"]
