@@ -4,6 +4,8 @@ RUN apk add --no-cache make ca-certificates gcc musl-dev linux-headers git jq ba
 
 COPY ./go.mod /app/go.mod
 COPY ./go.sum /app/go.sum
+COPY ./config.yaml /app/config.yaml
+
 
 WORKDIR /app
 
