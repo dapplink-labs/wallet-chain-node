@@ -4,12 +4,12 @@ RUN apk add --no-cache make ca-certificates gcc musl-dev linux-headers git jq ba
 
 COPY ./go.mod /app/go.mod
 COPY ./go.sum /app/go.sum
-COPY ./config.yaml /app/config.yaml
-
 
 WORKDIR /app
 
 RUN go mod download
+
+ARG CONFIG=config.yml
 
 # build wallet-chain-node with the shared go.mod & go.sum files
 COPY . /app/wallet-chain-node
@@ -21,10 +21,9 @@ RUN make
 FROM alpine:3.18
 
 COPY --from=builder /app/wallet-chain-node/wallet-chain-node /usr/local/bin
-COPY --from=builder /app/wallet-chain-node/config.yaml /app/wallet-chain-node/config.yaml
+COPY --from=builder /app/wallet-chain-node/${CONFIG} /etc/wallet-chain-node/config.yml
 
 WORKDIR /app
-ENV SELAGINELLA_CONFIG="/app/wallet-chain-node/config.yaml"
 
 ENTRYPOINT ["wallet-chain-node"]
 CMD ["-c", "/etc/wallet-chain-node/config.yml"]
