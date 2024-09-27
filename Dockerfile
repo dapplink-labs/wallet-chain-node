@@ -21,7 +21,7 @@ RUN make
 FROM alpine:3.18
 
 COPY --from=builder /app/wallet-chain-node/wallet-chain-node /usr/local/bin
-COPY --from=builder /app/wallet-chain-node/${CONFIG} /etc/wallet-chain-node/config.yml
+COPY --from=builder /app/wallet-chain-node/${CONFIG} /etc/wallet-chain-node/
 
 WORKDIR /app
 
