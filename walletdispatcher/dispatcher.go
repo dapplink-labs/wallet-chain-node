@@ -68,8 +68,14 @@ func (d *WalletDispatcher) GetBlockHeaderByHash(ctx context.Context, request *wa
 }
 
 func (d *WalletDispatcher) GetBlockByRange(ctx context.Context, request *wallet2.BlockByRangeRequest) (*wallet2.BlockByRangeResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.BlockByRangeResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "unsupported chain",
+		}, nil
+	}
+	return d.registry[request.Chain].GetBlockByRange(request)
 }
 
 func (d *WalletDispatcher) GetTxReceiptByHash(ctx context.Context, request *wallet2.TxReceiptByHashRequest) (*wallet2.TxReceiptByHashResponse, error) {
