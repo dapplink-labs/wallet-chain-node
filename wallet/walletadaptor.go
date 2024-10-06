@@ -49,8 +49,8 @@ type WalletAdaptor interface {
 	GetLatestFinalizedBlockHeader(req *wallet2.BasicRequest) (*wallet2.BlockHeaderResponse, error)
 	// GetBlockHeaderByHash 根据区块hash获取区块头
 	GetBlockHeaderByHash(req *wallet2.BlockHeaderByHashRequest) (*wallet2.BlockHeaderResponse, error)
-	// GetBlockHeadersByRange 根据区块高度范围获取区块头
-	GetBlockHeadersByRange(req *wallet2.BlockHeadersByRangeRequest) (*wallet2.BlockHeadersByRangeResponse, error)
+	// GetBlockByRange 根据区块高度范围获取区块头
+	GetBlockByRange(req *wallet2.BlockByRangeRequest) (*wallet2.BlockByRangeResponse, error)
 	// GetTxReceiptByHash 根据交易hash获取交易收据
 	GetTxReceiptByHash(req *wallet2.TxReceiptByHashRequest) (*wallet2.TxReceiptByHashResponse, error)
 	// GetStorageHash 获取store hash

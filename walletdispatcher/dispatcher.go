@@ -67,7 +67,7 @@ func (d *WalletDispatcher) GetBlockHeaderByHash(ctx context.Context, request *wa
 	panic("implement me")
 }
 
-func (d *WalletDispatcher) GetBlockHeadersByRange(ctx context.Context, request *wallet2.BlockHeadersByRangeRequest) (*wallet2.BlockHeadersByRangeResponse, error) {
+func (d *WalletDispatcher) GetBlockByRange(ctx context.Context, request *wallet2.BlockByRangeRequest) (*wallet2.BlockByRangeResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }

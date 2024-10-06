@@ -42,7 +42,7 @@ func (w *WalletAdaptor) GetBlockHeaderByHash(req *wallet2.BlockHeaderByHashReque
 	panic("implement me")
 }
 
-func (w *WalletAdaptor) GetBlockHeadersByRange(req *wallet2.BlockHeadersByRangeRequest) (*wallet2.BlockHeadersByRangeResponse, error) {
+func (w *WalletAdaptor) GetBlockByRange(req *wallet2.BlockByRangeRequest) (*wallet2.BlockByRangeResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }

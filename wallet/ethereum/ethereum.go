@@ -43,6 +43,11 @@ type WalletAdaptor struct {
 	etherscanCli *etherscan.Client
 }
 
+func (a *WalletAdaptor) GetBlockHeaderByHash(req *wallet2.BlockHeaderByHashRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (a *WalletAdaptor) GetLatestSafeBlockHeader(req *wallet2.BasicRequest) (*wallet2.BlockHeaderResponse, error) {
 	//TODO implement me
 	panic("implement me")
@@ -53,14 +58,37 @@ func (a *WalletAdaptor) GetLatestFinalizedBlockHeader(req *wallet2.BasicRequest)
 	panic("implement me")
 }
 
-func (a *WalletAdaptor) GetBlockHeaderByHash(req *wallet2.BlockHeaderByHashRequest) (*wallet2.BlockHeaderResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a *WalletAdaptor) GetBlockHeadersByRange(req *wallet2.BlockHeadersByRangeRequest) (*wallet2.BlockHeadersByRangeResponse, error) {
-	//TODO implement me
-	panic("implement me")
+func (a *WalletAdaptor) GetBlockByRange(req *wallet2.BlockByRangeRequest) (*wallet2.BlockByRangeResponse, error) {
+	var startBlock, endBlock = stringToBigInt(req.Start), stringToBigInt(req.End)
+	var blocks []*wallet2.BlockData
+	// 遍历指定的区块范围
+	for i := new(big.Int).Set(startBlock); i.Cmp(endBlock) <= 0; i.Add(i, big.NewInt(1)) {
+		var block *types.Block
+		// 自定义 RPC 调用以批量获取区块
+		block, err := a.getClient().BlockByNumber(context.Background(), i)
+		if err != nil {
+			return nil, fmt.Errorf("failed to get block %s: %v", i.String(), err)
+		}
+		// 遍历区块中的交易
+		var transactions []*wallet2.BlockInfoTransactionList
+		for _, transaction := range block.Transactions() {
+			transactions = append(transactions, &wallet2.BlockInfoTransactionList{
+				Hash: transaction.Hash().Hex(),
+				To:   transaction.To().Hex(),
+			})
+		}
+		// 添加区块到列表
+		blocks = append(blocks, &wallet2.BlockData{
+			Hash:         block.Hash().Hex(),
+			Transactions: transactions,
+			BaseFee:      block.BaseFee().String(),
+		})
+	}
+	return &wallet2.BlockByRangeResponse{
+		Code:   common.ReturnCode_SUCCESS,
+		Msg:    "success",
+		Blocks: blocks,
+	}, nil
 }
 
 func (a *WalletAdaptor) GetTxReceiptByHash(req *wallet2.TxReceiptByHashRequest) (*wallet2.TxReceiptByHashResponse, error) {
