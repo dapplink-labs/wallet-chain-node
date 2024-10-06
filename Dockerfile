@@ -1,22 +1,29 @@
-# Build wallet-chain-node in a stock Go builder container
-FROM golang:1.19.3-alpine as builder
+FROM golang:1.21.1-alpine3.18 as builder
 
-RUN apk add --no-cache make gcc musl-dev linux-headers
+RUN apk add --no-cache make ca-certificates gcc musl-dev linux-headers git jq bash
 
-ADD . /savour-core
-RUN cd /savour-core && go build
+COPY ./go.mod /app/go.mod
+COPY ./go.sum /app/go.sum
 
-# Pull wallet-chain-node into a second stage deploy alpine container
-FROM alpine:latest
+WORKDIR /app
 
-RUN apk add --no-cache ca-certificates
-RUN mkdir /etc/wallet-chain-node
+RUN go mod download
 
 ARG CONFIG=config.yml
 
-COPY --from=builder /savour-core/wallet-chain-node /usr/local/bin/
-COPY --from=builder /savour-core/${CONFIG} /etc/savour-core/config.yml
+# build wallet-chain-node with the shared go.mod & go.sum files
+COPY . /app/wallet-chain-node
 
-EXPOSE 8189
+WORKDIR /app/wallet-chain-node
+
+RUN make
+
+FROM alpine:3.18
+
+COPY --from=builder /app/wallet-chain-node/wallet-chain-node /usr/local/bin
+COPY --from=builder /app/wallet-chain-node/${CONFIG} /etc/wallet-chain-node/
+
+WORKDIR /app
+
 ENTRYPOINT ["wallet-chain-node"]
-CMD ["-c", "/etc/savour-core/config.yml"]
+CMD ["-c", "/etc/wallet-chain-node/config.yml"]
