@@ -3,12 +3,6 @@ package ethereum
 import (
 	"context"
 	"fmt"
-	"github.com/the-web3/etherscan-api"
-	"math"
-	"math/big"
-	"strconv"
-	"strings"
-
 	"github.com/btcsuite/btcd/btcec/v2"
 	"github.com/ethereum/go-ethereum"
 	ethcommon "github.com/ethereum/go-ethereum/common"
@@ -17,7 +11,13 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/ethereum/go-ethereum/rpc"
 	"github.com/shopspring/decimal"
+	"github.com/the-web3/etherscan-api"
+	"math"
+	"math/big"
+	"strconv"
+	"strings"
 
 	"github.com/savour-labs/wallet-chain-node/config"
 	"github.com/savour-labs/wallet-chain-node/rpc/common"
@@ -58,42 +58,82 @@ func (a *WalletAdaptor) GetLatestFinalizedBlockHeader(req *wallet2.BasicRequest)
 	panic("implement me")
 }
 
+type BlockResponse struct {
+	Block *types.Block
+	Err   error
+}
+
+func toBlockNumArg(number *big.Int) string {
+	if number == nil {
+		return "latest"
+	}
+	if number.Sign() >= 0 {
+		return hexutil.EncodeBig(number)
+	}
+	return rpc.BlockNumber(number.Int64()).String()
+}
+
+// BatchGetBlocks 批量获取指定区块范围内的区块信息
+func BatchGetBlocks(client *rpc.Client, startBlock, endBlock *big.Int) ([]BlockResponse, error) {
+	// 计算区块数量
+	blockCount := new(big.Int).Sub(endBlock, startBlock).Uint64() + 1
+	// 创建请求数组和响应数组
+	batchRequests := make([]rpc.BatchElem, blockCount)
+	blockResponses := make([]BlockResponse, blockCount)
+	// 遍历并构造批量请求
+	for i := uint64(0); i < blockCount; i++ {
+		blockNum := new(big.Int).Add(startBlock, big.NewInt(int64(i)))
+		batchRequests[i] = rpc.BatchElem{
+			Method: "eth_getBlockByNumber",
+			Args:   []any{toBlockNumArg(blockNum), true},
+			Result: new(types.Block),
+		}
+	}
+	// 使用 BatchCallContext 发送批量请求
+	err := client.BatchCallContext(context.Background(), batchRequests)
+	if err != nil {
+		return nil, fmt.Errorf("failed to batch call: %v", err)
+	}
+	// 处理每个响应
+	for i, req := range batchRequests {
+		if req.Error != nil {
+			blockResponses[i] = BlockResponse{Err: req.Error}
+		} else {
+			blockResponses[i] = BlockResponse{Block: req.Result.(*types.Block), Err: nil}
+		}
+	}
+	return blockResponses, nil
+}
+
 func (a *WalletAdaptor) GetBlockByRange(req *wallet2.BlockByRangeRequest) (*wallet2.BlockByRangeResponse, error) {
 	var startBlock, endBlock = stringToBigInt(req.Start), stringToBigInt(req.End)
-	var blocks []*wallet2.BlockData
-	// 遍历指定的区块范围
-	for i := new(big.Int).Set(startBlock); i.Cmp(endBlock) <= 0; i.Add(i, big.NewInt(1)) {
-		var block *types.Block
-		// 自定义 RPC 调用以批量获取区块
-		block, err := a.getClient().BlockByNumber(context.Background(), i)
-		if err != nil {
-			return nil, fmt.Errorf("failed to get block %s: %v", i.String(), err)
-		}
-		// 遍历区块中的交易
-		var transactions []*wallet2.BlockInfoTransactionList
-		for _, transaction := range block.Transactions() {
-			transactions = append(transactions, &wallet2.BlockInfoTransactionList{
-				Hash: transaction.Hash().Hex(),
-				To:   transaction.To().Hex(),
-			})
-		}
-		// 添加区块到列表
-		blocks = append(blocks, &wallet2.BlockData{
-			Hash:         block.Hash().Hex(),
-			Transactions: transactions,
-			BaseFee:      block.BaseFee().String(),
-		})
+	blockResponses, err := BatchGetBlocks(a.getClient().Client.Client(), startBlock, endBlock)
+	if err != nil {
+		log.Error("Error retrieving blocks :" + err.Error())
 	}
+	fmt.Println(blockResponses)
 	return &wallet2.BlockByRangeResponse{
-		Code:   common.ReturnCode_SUCCESS,
-		Msg:    "success",
-		Blocks: blocks,
+		Code: common.ReturnCode_SUCCESS,
+		Msg:  "success",
+		//Blocks: blocks,
 	}, nil
 }
 
 func (a *WalletAdaptor) GetTxReceiptByHash(req *wallet2.TxReceiptByHashRequest) (*wallet2.TxReceiptByHashResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	receipt, err := a.getClient().TransactionReceipt(context.Background(), ethcommon.HexToHash(req.Hash))
+	if err != nil {
+		return nil, err
+	}
+	return &wallet2.TxReceiptByHashResponse{
+		Code:              common.ReturnCode_SUCCESS,
+		Msg:               "success",
+		BlockHash:         receipt.BlockHash.String(),
+		BlockNumber:       receipt.BlockNumber.String(),
+		Status:            receipt.Status,
+		TransactionIndex:  uint64(receipt.TransactionIndex),
+		EffectiveGasPrice: receipt.EffectiveGasPrice.String(),
+		GasUsed:           receipt.GasUsed,
+	}, nil
 }
 
 func (a *WalletAdaptor) GetStorageHash(req *wallet2.StorageHashRequest) (*wallet2.StorageHashResponse, error) {
@@ -891,10 +931,22 @@ func (a *WalletAdaptor) GetBlockByNumber(req *wallet2.BlockInfoRequest) (*wallet
 		}, nil
 	}
 	var transactions []*wallet2.BlockInfoTransactionList
-	for _, transaction := range block.Transactions() {
+	for _, tx := range block.Transactions() {
+		signer := types.LatestSignerForChainID(tx.ChainId())
+		from, err := types.Sender(signer, tx)
+		if err != nil {
+			log.Error("Failed to get sender from transaction: %v", err)
+		}
+		toAddress := ""
+		if tx.To() != nil {
+			toAddress = tx.To().Hex()
+		}
 		transactions = append(transactions, &wallet2.BlockInfoTransactionList{
-			Hash: transaction.Hash().Hex(),
-			To:   transaction.To().Hex(),
+			Hash:   tx.Hash().Hex(),
+			To:     toAddress,
+			From:   from.Hex(),
+			Time:   tx.Time().String(),
+			Amount: tx.Value().String(),
 		})
 	}
 	return &wallet2.BlockInfoResponse{
