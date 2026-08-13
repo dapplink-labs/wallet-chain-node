@@ -42,7 +42,7 @@ go build or go install wallet-chain-node
 ### Start the RPC interface test interface
 
 ```bash
-grpcui -plaintext 127.0.0.1:8089
+grpcui -plaintext 127.0.0.1:8189
 ```
 
 ## Contribute

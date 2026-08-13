@@ -3,12 +3,6 @@ package ethereum
 import (
 	"context"
 	"fmt"
-	"github.com/the-web3/etherscan-api"
-	"math"
-	"math/big"
-	"strconv"
-	"strings"
-
 	"github.com/btcsuite/btcd/btcec/v2"
 	"github.com/ethereum/go-ethereum"
 	ethcommon "github.com/ethereum/go-ethereum/common"
@@ -17,13 +11,18 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/ethereum/go-ethereum/rpc"
 	"github.com/shopspring/decimal"
+	"github.com/the-web3/etherscan-api"
+	"math"
+	"math/big"
+	"strconv"
+	"strings"
 
 	"github.com/savour-labs/wallet-chain-node/config"
 	"github.com/savour-labs/wallet-chain-node/rpc/common"
 	wallet2 "github.com/savour-labs/wallet-chain-node/rpc/wallet"
 	"github.com/savour-labs/wallet-chain-node/wallet"
-	"github.com/savour-labs/wallet-chain-node/wallet/fallback"
 	"github.com/savour-labs/wallet-chain-node/wallet/multiclient"
 )
 
@@ -38,14 +37,134 @@ var (
 )
 
 type WalletAdaptor struct {
-	fallback.WalletAdaptor
 	clients      *multiclient.MultiClient
 	etherscanCli *etherscan.Client
 }
 
-func (a *WalletAdaptor) GetBlock(req *wallet2.BlockRequest) (*wallet2.BlockResponse, error) {
+func (a *WalletAdaptor) GetBlockHeaderByHash(req *wallet2.BlockHeaderByHashRequest) (*wallet2.BlockHeaderResponse, error) {
 	//TODO implement me
 	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetLatestSafeBlockHeader(req *wallet2.BasicRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetLatestFinalizedBlockHeader(req *wallet2.BasicRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+type BlockResponse struct {
+	Block *types.Block
+	Err   error
+}
+
+func toBlockNumArg(number *big.Int) string {
+	if number == nil {
+		return "latest"
+	}
+	if number.Sign() >= 0 {
+		return hexutil.EncodeBig(number)
+	}
+	return rpc.BlockNumber(number.Int64()).String()
+}
+
+// BatchGetBlocks 批量获取指定区块范围内的区块信息
+func BatchGetBlocks(client *rpc.Client, startBlock, endBlock *big.Int) ([]BlockResponse, error) {
+	// 计算区块数量
+	blockCount := new(big.Int).Sub(endBlock, startBlock).Uint64() + 1
+	// 创建请求数组和响应数组
+	batchRequests := make([]rpc.BatchElem, blockCount)
+	blockResponses := make([]BlockResponse, blockCount)
+	// 遍历并构造批量请求
+	for i := uint64(0); i < blockCount; i++ {
+		blockNum := new(big.Int).Add(startBlock, big.NewInt(int64(i)))
+		batchRequests[i] = rpc.BatchElem{
+			Method: "eth_getBlockByNumber",
+			Args:   []any{toBlockNumArg(blockNum), true},
+			Result: new(types.Block),
+		}
+	}
+	// 使用 BatchCallContext 发送批量请求
+	err := client.BatchCallContext(context.Background(), batchRequests)
+	if err != nil {
+		return nil, fmt.Errorf("failed to batch call: %v", err)
+	}
+	// 处理每个响应
+	for i, req := range batchRequests {
+		if req.Error != nil {
+			blockResponses[i] = BlockResponse{Err: req.Error}
+		} else {
+			blockResponses[i] = BlockResponse{Block: req.Result.(*types.Block), Err: nil}
+		}
+	}
+	return blockResponses, nil
+}
+
+func (a *WalletAdaptor) GetBlockByRange(req *wallet2.BlockByRangeRequest) (*wallet2.BlockByRangeResponse, error) {
+	var startBlock, endBlock = stringToBigInt(req.Start), stringToBigInt(req.End)
+	blockResponses, err := BatchGetBlocks(a.getClient().Client.Client(), startBlock, endBlock)
+	if err != nil {
+		log.Error("Error retrieving blocks :" + err.Error())
+	}
+	fmt.Println(blockResponses)
+	return &wallet2.BlockByRangeResponse{
+		Code: common.ReturnCode_SUCCESS,
+		Msg:  "success",
+		//Blocks: blocks,
+	}, nil
+}
+
+func (a *WalletAdaptor) GetTxReceiptByHash(req *wallet2.TxReceiptByHashRequest) (*wallet2.TxReceiptByHashResponse, error) {
+	receipt, err := a.getClient().TransactionReceipt(context.Background(), ethcommon.HexToHash(req.Hash))
+	if err != nil {
+		return nil, err
+	}
+	return &wallet2.TxReceiptByHashResponse{
+		Code:              common.ReturnCode_SUCCESS,
+		Msg:               "success",
+		BlockHash:         receipt.BlockHash.String(),
+		BlockNumber:       receipt.BlockNumber.String(),
+		Status:            receipt.Status,
+		TransactionIndex:  uint64(receipt.TransactionIndex),
+		EffectiveGasPrice: receipt.EffectiveGasPrice.String(),
+		GasUsed:           receipt.GasUsed,
+	}, nil
+}
+
+func (a *WalletAdaptor) GetStorageHash(req *wallet2.StorageHashRequest) (*wallet2.StorageHashResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetFilterLogs(req *wallet2.FilterLogsRequest) (*wallet2.FilterLogsResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetTxCountByAddress(req *wallet2.TxCountByAddressRequest) (*wallet2.TxCountByAddressResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetSuggestGasPrice(req *wallet2.SuggestGasPriceRequest) (*wallet2.SuggestGasPriceResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetSuggestGasTipCap(req *wallet2.SuggestGasPriceRequest) (*wallet2.SuggestGasPriceResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetBlock(req *wallet2.BlockRequest) (*wallet2.BlockResponse, error) {
+	return &wallet2.BlockResponse{
+		Code: common.ReturnCode_ERROR,
+		Msg:  "Don't support",
+	}, nil
+
 }
 
 func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
@@ -107,11 +226,11 @@ func (a *WalletAdaptor) makeSignerOffline(height int64) types.Signer {
 	return types.MakeSigner(a.getClient().chainConfig, big.NewInt(height), 1000)
 }
 
-func (wa *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.BalanceResponse, error) {
+func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.BalanceResponse, error) {
 	var result *big.Int
 	var err error
 	if len(req.ContractAddress) > 0 {
-		erc20Balance, err := wa.etherscanCli.TokenBalance(req.ContractAddress, req.Address)
+		erc20Balance, err := a.etherscanCli.TokenBalance(req.ContractAddress, req.Address)
 		if err != nil {
 			return &wallet2.BalanceResponse{
 				Code:    common.ReturnCode_ERROR,
@@ -121,7 +240,7 @@ func (wa *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balan
 		}
 		result = (*big.Int)(erc20Balance)
 	} else {
-		result, err = wa.getClient().BalanceAt(context.TODO(), ethcommon.HexToAddress(req.Address), nil)
+		result, err = a.getClient().BalanceAt(context.TODO(), ethcommon.HexToAddress(req.Address), nil)
 	}
 	if err != nil {
 		log.Error("get balance error", "err", err)
@@ -140,10 +259,10 @@ func (wa *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balan
 	}
 }
 
-func (wa *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
+func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
 	var tx_list []*wallet2.TxMessage
 	if req.ContractAddress == "0x00" {
-		txs, err := wa.etherscanCli.NormalTxByAddress(req.Address, &Startblock, &Endblock, int(req.Page), int(req.Pagesize), true)
+		txs, err := a.etherscanCli.NormalTxByAddress(req.Address, &Startblock, &Endblock, int(req.Page), int(req.Pagesize), true)
 		if err != nil {
 			return &wallet2.TxAddressResponse{
 				Code: common.ReturnCode_ERROR,
@@ -186,7 +305,7 @@ func (wa *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2
 			tx_list = append(tx_list, tx)
 		}
 	} else if req.ContractAddress == "0xSwap" {
-		txs, err := wa.etherscanCli.SwapTransactions(req.Address, &Startblock, &Endblock, int(req.Page), int(req.Pagesize), true)
+		txs, err := a.etherscanCli.SwapTransactions(req.Address, &Startblock, &Endblock, int(req.Page), int(req.Pagesize), true)
 		if err != nil {
 			return &wallet2.TxAddressResponse{
 				Code: common.ReturnCode_ERROR,
@@ -221,7 +340,7 @@ func (wa *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2
 			tx_list = append(tx_list, tx)
 		}
 	} else {
-		txs, err := wa.etherscanCli.ERC20Transfers(&req.ContractAddress, &req.Address, &Startblock, &Endblock, int(req.Page), int(req.Pagesize), true)
+		txs, err := a.etherscanCli.ERC20Transfers(&req.ContractAddress, &req.Address, &Startblock, &Endblock, int(req.Page), int(req.Pagesize), true)
 		if err != nil {
 			return &wallet2.TxAddressResponse{
 				Code: common.ReturnCode_ERROR,
@@ -268,8 +387,8 @@ func (wa *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2
 	}, nil
 }
 
-func (wa *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {
-	tx, _, err := wa.getClient().TransactionByHash(context.TODO(), ethcommon.HexToHash(req.Hash))
+func (a *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHashResponse, error) {
+	tx, _, err := a.getClient().TransactionByHash(context.TODO(), ethcommon.HexToHash(req.Hash))
 	if err != nil {
 		if err == ethereum.NotFound {
 			return &wallet2.TxHashResponse{
@@ -283,7 +402,7 @@ func (wa *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHas
 			Msg:  "Ethereum Tx NotFound",
 		}, nil
 	}
-	receipt, err := wa.getClient().TransactionReceipt(context.TODO(), ethcommon.HexToHash(req.Hash))
+	receipt, err := a.getClient().TransactionReceipt(context.TODO(), ethcommon.HexToHash(req.Hash))
 	if err != nil {
 		log.Error("get transaction receipt error", "err", err)
 		return &wallet2.TxHashResponse{
@@ -315,7 +434,7 @@ func (wa *WalletAdaptor) GetTxByHash(req *wallet2.TxHashRequest) (*wallet2.TxHas
 	}, nil
 }
 
-func (wa *WalletAdaptor) GetSupportCoins(req *wallet2.SupportCoinsRequest) (*wallet2.SupportCoinsResponse, error) {
+func (a *WalletAdaptor) GetSupportCoins(req *wallet2.SupportCoinsRequest) (*wallet2.SupportCoinsResponse, error) {
 	return &wallet2.SupportCoinsResponse{
 		Code:    common.ReturnCode_SUCCESS,
 		Msg:     "this coin support",
@@ -323,9 +442,9 @@ func (wa *WalletAdaptor) GetSupportCoins(req *wallet2.SupportCoinsRequest) (*wal
 	}, nil
 }
 
-func (wa *WalletAdaptor) GetNonce(req *wallet2.NonceRequest) (*wallet2.NonceResponse, error) {
+func (a *WalletAdaptor) GetNonce(req *wallet2.NonceRequest) (*wallet2.NonceResponse, error) {
 	var bockHeight *big.Int
-	nonce, err := wa.getClient().NonceAt(context.TODO(), ethcommon.HexToAddress(req.Address), bockHeight)
+	nonce, err := a.getClient().NonceAt(context.TODO(), ethcommon.HexToAddress(req.Address), bockHeight)
 	if err != nil {
 		log.Error("get nonce failed", "err", err)
 		return &wallet2.NonceResponse{
@@ -341,8 +460,8 @@ func (wa *WalletAdaptor) GetNonce(req *wallet2.NonceRequest) (*wallet2.NonceResp
 	}, nil
 }
 
-func (wa *WalletAdaptor) GetGasPrice(req *wallet2.GasPriceRequest) (*wallet2.GasPriceResponse, error) {
-	price, err := wa.getClient().SuggestGasPrice(context.TODO())
+func (a *WalletAdaptor) GetGasPrice(req *wallet2.GasPriceRequest) (*wallet2.GasPriceResponse, error) {
+	price, err := a.getClient().SuggestGasPrice(context.TODO())
 	if err != nil {
 		log.Error("get gas price failed", "err", err)
 		return &wallet2.GasPriceResponse{
@@ -358,7 +477,7 @@ func (wa *WalletAdaptor) GetGasPrice(req *wallet2.GasPriceRequest) (*wallet2.Gas
 	}, nil
 }
 
-func (wa *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxResponse, error) {
+func (a *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxResponse, error) {
 	txbytes, err := hexutil.Decode(req.RawTx)
 	if err != nil {
 		return &wallet2.SendTxResponse{
@@ -378,7 +497,7 @@ func (wa *WalletAdaptor) SendTx(req *wallet2.SendTxRequest) (*wallet2.SendTxResp
 	}
 	log.Info("broadcast tx", "tx", hexutil.Encode([]byte(req.RawTx)))
 	txHash := fmt.Sprintf("0x%x", txSigned.Hash())
-	if err := wa.getClient().SendTransaction(context.TODO(), txSigned); err != nil {
+	if err := a.getClient().SendTransaction(context.TODO(), txSigned); err != nil {
 		log.Error("braoadcast tx failed", "tx_hash", txHash, "err", err)
 		return &wallet2.SendTxResponse{
 			Code:   common.ReturnCode_ERROR,
@@ -754,26 +873,102 @@ func (a *WalletAdaptor) VerifyUtxoSignedTx(req *wallet2.VerifySignedTxRequest) (
 	}, nil
 }
 
-func (wa *WalletAdaptor) GetAccount(req *wallet2.AccountRequest) (*wallet2.AccountResponse, error) {
+func (a *WalletAdaptor) GetAccount(req *wallet2.AccountRequest) (*wallet2.AccountResponse, error) {
 	return &wallet2.AccountResponse{
 		Code: common.ReturnCode_ERROR,
 		Msg:  "Do not support this interface",
 	}, nil
 }
 
-func (wa *WalletAdaptor) GetUnspentOutputs(req *wallet2.UnspentOutputsRequest) (*wallet2.UnspentOutputsResponse, error) {
+func stringToBigInt(s string) (num *big.Int) {
+	if s != "" {
+		n, bol := big.NewInt(0).SetString(s, 10)
+		if bol == true {
+			num = n
+		}
+	}
+	return
+}
+
+// GetBlockHeaderByNumber 根据区块号获取区块头
+func (a *WalletAdaptor) GetBlockHeaderByNumber(req *wallet2.BlockHeaderRequest) (*wallet2.BlockHeaderResponse, error) {
+	header, err := a.getClient().HeaderByNumber(context.Background(), stringToBigInt(req.GetHeight()))
+	if err != nil {
+		return &wallet2.BlockHeaderResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  err.Error(),
+		}, nil
+	}
+	return &wallet2.BlockHeaderResponse{
+		Code:            common.ReturnCode_SUCCESS,
+		Msg:             "get block header by number success",
+		ParentHash:      header.ParentHash.Hex(),
+		UncleHash:       header.UncleHash.Hex(),
+		Coinbase:        header.Coinbase.Hex(),
+		Root:            header.Root.Hex(),
+		TxHash:          header.TxHash.Hex(),
+		ReceiptHash:     header.ReceiptHash.Hex(),
+		Number:          header.Number.String(),
+		Difficulty:      header.Difficulty.String(),
+		GasLimit:        header.GasLimit,
+		GasUsed:         header.GasUsed,
+		Time:            header.Time,
+		MixDigest:       header.MixDigest.Hex(),
+		BaseFee:         header.BaseFee.String(),
+		WithdrawalsHash: header.WithdrawalsHash.Hex(),
+	}, nil
+}
+
+// GetBlockByNumber 根据区块号获取区块
+func (a *WalletAdaptor) GetBlockByNumber(req *wallet2.BlockInfoRequest) (*wallet2.BlockInfoResponse, error) {
+	block, err := a.getClient().BlockByNumber(context.Background(), stringToBigInt(req.GetHeight()))
+	if err != nil {
+		return &wallet2.BlockInfoResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  err.Error(),
+		}, nil
+	}
+	var transactions []*wallet2.BlockInfoTransactionList
+	for _, tx := range block.Transactions() {
+		signer := types.LatestSignerForChainID(tx.ChainId())
+		from, err := types.Sender(signer, tx)
+		if err != nil {
+			log.Error("Failed to get sender from transaction: %v", err)
+		}
+		toAddress := ""
+		if tx.To() != nil {
+			toAddress = tx.To().Hex()
+		}
+		transactions = append(transactions, &wallet2.BlockInfoTransactionList{
+			Hash:   tx.Hash().Hex(),
+			To:     toAddress,
+			From:   from.Hex(),
+			Time:   tx.Time().String(),
+			Amount: tx.Value().String(),
+		})
+	}
+	return &wallet2.BlockInfoResponse{
+		Code:         common.ReturnCode_SUCCESS,
+		Msg:          "get block by number success",
+		Hash:         block.Hash().Hex(),
+		Transactions: transactions,
+		BaseFee:      block.BaseFee().String(),
+	}, nil
+}
+
+func (a *WalletAdaptor) GetUnspentOutputs(req *wallet2.UnspentOutputsRequest) (*wallet2.UnspentOutputsResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (wa *WalletAdaptor) GetUtxo(req *wallet2.UtxoRequest) (*wallet2.UtxoResponse, error) {
+func (a *WalletAdaptor) GetUtxo(req *wallet2.UtxoRequest) (*wallet2.UtxoResponse, error) {
 	return &wallet2.UtxoResponse{
 		Code: common.ReturnCode_ERROR,
 		Msg:  "Do not support this interface",
 	}, nil
 }
 
-func (wa *WalletAdaptor) GetMinRent(req *wallet2.MinRentRequest) (*wallet2.MinRentResponse, error) {
+func (a *WalletAdaptor) GetMinRent(req *wallet2.MinRentRequest) (*wallet2.MinRentResponse, error) {
 	return &wallet2.MinRentResponse{
 		Code: common.ReturnCode_ERROR,
 		Msg:  "Do not support this interface",

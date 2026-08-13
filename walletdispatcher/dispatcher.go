@@ -52,6 +52,84 @@ type WalletDispatcher struct {
 	registry map[ChainType]wallet.WalletAdaptor
 }
 
+func (d *WalletDispatcher) GetLatestSafeBlockHeader(ctx context.Context, request *wallet2.BasicRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetLatestFinalizedBlockHeader(ctx context.Context, request *wallet2.BasicRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetBlockHeaderByHash(ctx context.Context, request *wallet2.BlockHeaderByHashRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetBlockByRange(ctx context.Context, request *wallet2.BlockByRangeRequest) (*wallet2.BlockByRangeResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.BlockByRangeResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "unsupported chain",
+		}, nil
+	}
+	return d.registry[request.Chain].GetBlockByRange(request)
+}
+
+func (d *WalletDispatcher) GetTxReceiptByHash(ctx context.Context, request *wallet2.TxReceiptByHashRequest) (*wallet2.TxReceiptByHashResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetStorageHash(ctx context.Context, request *wallet2.StorageHashRequest) (*wallet2.StorageHashResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetFilterLogs(ctx context.Context, request *wallet2.FilterLogsRequest) (*wallet2.FilterLogsResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetTxCountByAddress(ctx context.Context, request *wallet2.TxCountByAddressRequest) (*wallet2.TxCountByAddressResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetSuggestGasPrice(ctx context.Context, request *wallet2.SuggestGasPriceRequest) (*wallet2.SuggestGasPriceResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetSuggestGasTipCap(ctx context.Context, request *wallet2.SuggestGasPriceRequest) (*wallet2.SuggestGasPriceResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *WalletDispatcher) GetBlockByNumber(ctx context.Context, request *wallet2.BlockInfoRequest) (*wallet2.BlockInfoResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.BlockInfoResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "get block height by number fail",
+		}, nil
+	}
+	return d.registry[request.Chain].GetBlockByNumber(request)
+}
+
+func (d *WalletDispatcher) GetBlockHeaderByNumber(ctx context.Context, request *wallet2.BlockHeaderRequest) (*wallet2.BlockHeaderResponse, error) {
+	resp := d.preHandler(request)
+	if resp != nil {
+		return &wallet2.BlockHeaderResponse{
+			Code: common.ReturnCode_ERROR,
+			Msg:  "get block height by number fail",
+		}, nil
+	}
+	return d.registry[request.Chain].GetBlockHeaderByNumber(request)
+}
+
 func New(conf *config.Config) (*WalletDispatcher, error) {
 	dispatcher := WalletDispatcher{
 		registry: make(map[ChainType]wallet.WalletAdaptor),
@@ -221,7 +299,6 @@ func (d *WalletDispatcher) SendTx(ctx context.Context, request *wallet2.SendTxRe
 }
 
 func (d *WalletDispatcher) GetBalance(ctx context.Context, request *wallet2.BalanceRequest) (*wallet2.BalanceResponse, error) {
-	log.Info("GetBalance11", "req", request)
 	resp := d.preHandler(request)
 	if resp != nil {
 		return &wallet2.BalanceResponse{

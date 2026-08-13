@@ -3,9 +3,9 @@ package solana
 import (
 	"fmt"
 	"github.com/dapplink-labs/chain-explorer-api/common/account"
-	"github.com/dapplink-labs/chain-explorer-api/common/chain"
-	"github.com/dapplink-labs/chain-explorer-api/explorer/solscan"
+
 	"github.com/ethereum/go-ethereum/log"
+
 	"github.com/savour-labs/wallet-chain-node/config"
 	"github.com/savour-labs/wallet-chain-node/rpc/common"
 	wallet2 "github.com/savour-labs/wallet-chain-node/rpc/wallet"
@@ -22,7 +22,67 @@ const (
 type WalletAdaptor struct {
 	fallback.WalletAdaptor
 	client *SolanaClient
-	sol    *solscan.ChainExplorerAdaptor
+	sol    *SolScan
+}
+
+func (a *WalletAdaptor) GetLatestSafeBlockHeader(req *wallet2.BasicRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetLatestFinalizedBlockHeader(req *wallet2.BasicRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetBlockHeaderByHash(req *wallet2.BlockHeaderByHashRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetBlockByRange(req *wallet2.BlockByRangeRequest) (*wallet2.BlockByRangeResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetTxReceiptByHash(req *wallet2.TxReceiptByHashRequest) (*wallet2.TxReceiptByHashResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetStorageHash(req *wallet2.StorageHashRequest) (*wallet2.StorageHashResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetFilterLogs(req *wallet2.FilterLogsRequest) (*wallet2.FilterLogsResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetTxCountByAddress(req *wallet2.TxCountByAddressRequest) (*wallet2.TxCountByAddressResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetSuggestGasPrice(req *wallet2.SuggestGasPriceRequest) (*wallet2.SuggestGasPriceResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetSuggestGasTipCap(req *wallet2.SuggestGasPriceRequest) (*wallet2.SuggestGasPriceResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetBlockByNumber(req *wallet2.BlockInfoRequest) (*wallet2.BlockInfoResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a *WalletAdaptor) GetBlockHeaderByNumber(req *wallet2.BlockHeaderRequest) (*wallet2.BlockHeaderResponse, error) {
+	//TODO implement me
+	panic("implement me")
 }
 
 func (a *WalletAdaptor) GetBlock(req *wallet2.BlockRequest) (*wallet2.BlockResponse, error) {
@@ -119,14 +179,16 @@ func (a *WalletAdaptor) GetBalance(req *wallet2.BalanceRequest) (*wallet2.Balanc
 }
 
 func (a *WalletAdaptor) GetTxByAddress(req *wallet2.TxAddressRequest) (*wallet2.TxAddressResponse, error) {
-	request := account.AccountTxRequest{
-		PageRequest: chain.PageRequest{
-			Page:  uint64(req.Page),
-			Limit: uint64(req.Pagesize),
-		},
-		Address: req.Address,
+	var resp *account.TransactionResponse[account.AccountTxResponse]
+	var err error
+	fmt.Println("req.ContractAddress", req.ContractAddress)
+	if req.ContractAddress != "0x00" && req.ContractAddress != "" {
+		log.Info("Spl token transfer record")
+		resp, err = a.sol.GetTxByAddress(uint64(req.Page), uint64(req.Pagesize), req.Address, "spl")
+	} else {
+		log.Info("Sol transfer record")
+		resp, err = a.sol.GetTxByAddress(uint64(req.Page), uint64(req.Pagesize), req.Address, "sol")
 	}
-	resp, err := a.sol.GetTxByAddress(&request)
 	if err != nil {
 		log.Error("get GetTxByAddress error", "err", err)
 		return &wallet2.TxAddressResponse{
@@ -211,7 +273,7 @@ func (a *WalletAdaptor) GetMinRent(req *wallet2.MinRentRequest) (*wallet2.MinRen
 func NewChainAdaptor(conf *config.Config) (wallet.WalletAdaptor, error) {
 	cli, err := NewSolanaClients(conf)
 
-	sol, err := solscan.NewChainExplorerAdaptor(conf.Fullnode.Sol.SolScanApiKey, conf.Fullnode.Sol.SolScanBaseUrl, false, conf.Fullnode.Sol.SolScanBaseTimeout)
+	sol, err := NewSolScanClient(conf.Fullnode.Sol.SolScanBaseUrl, conf.Fullnode.Sol.SolScanApiKey, conf.Fullnode.Sol.SolScanBaseTimeout)
 	if err != nil {
 		return nil, err
 	}

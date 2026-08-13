@@ -34,6 +34,16 @@ type EstimateFeeResult struct {
 	FwdFee     string `json:"fwd_fee"`
 }
 
+type WalletInfoResult struct {
+	Balance             string `json:"balance"`
+	WalletType          string `json:"wallet_type"`
+	Seqno               uint64 `json:"seqno"`
+	WalletId            uint64 `json:"wallet_id"`
+	LastTransactionLt   string `json:"last_transaction_lt"`
+	LastTransactionHash string `json:"last_transaction_hash"`
+	Status              string `json:"status"`
+}
+
 func (e EstimateFeeResult) SumFees() (int64, error) {
 	var sum int64
 
@@ -199,16 +209,9 @@ func (t tonClient) GetLatestBlockHeight() (int64, error) {
 }
 
 func newTonClients(conf *config.Config) ([]*tonClient, error) {
-	var url string
-	if conf.NetWork == "testnet" {
-		url = "https://testnet.toncenter.com/api/v2/jsonRPC"
-	} else if conf.NetWork == "mainnet" {
-		url = "https://ton.org/global.config.json"
-	}
 	var clients []*tonClient
-
 	// get config
-	cfg, err := liteclient.GetConfigFromUrl(context.Background(), url)
+	cfg, err := liteclient.GetConfigFromUrl(context.Background(), conf.Fullnode.Ton.RPCs[0].RPCURL)
 
 	if err != nil {
 		return nil, err
@@ -227,7 +230,7 @@ func newTonClients(conf *config.Config) ([]*tonClient, error) {
 	api := ton.NewAPIClient(client, ton.ProofCheckPolicyFast).WithRetry()
 	api.SetTrustedBlockFromConfig(cfg)
 
-	var endpoint = conf.Fullnode.Ton.RPCs[0].RPCURL
+	var endpoint = conf.Fullnode.Ton.TpApiUrl
 
 	clients = append(clients, &tonClient{
 		client:     client,
@@ -290,6 +293,19 @@ func (c *tonClient) PostSendTx(boc string) (*SendTxResult, error) {
 	return res, nil
 }
 
+func (c *tonClient) WalletInfo(address string) (*WalletInfoResult, error) {
+	route := fmt.Sprintf("/walletInformation?address=%s&use_v2=true", address)
+	ret, err := c.doGet(route)
+	if err != nil {
+		return nil, err
+	}
+	res := new(WalletInfoResult)
+	if err := json.Unmarshal(ret, res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
 func (c *tonClient) PostEstimateFee(boc string, add string) (*EstimateFeeResult, error) {
 	route := fmt.Sprintf("/estimateFee")
 
@@ -310,22 +326,6 @@ func (c *tonClient) PostEstimateFee(boc string, add string) (*EstimateFeeResult,
 
 	return res, nil
 }
-
-//func (c *tonClient) GetGasPrice() (*EstimateGasPrice, error) {
-//	route := fmt.Sprintf("/v1/estimate_gas_price")
-//
-//	ret, err := c.doGet(route)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	res := new(EstimateGasPrice)
-//	if err := json.Unmarshal(ret, res); err != nil {
-//		return nil, err
-//	}
-//
-//	return res, nil
-//}
 
 func (c *tonClient) doPost(route string, input interface{}) ([]byte, error) {
 	requestBody, err := json.Marshal(input)

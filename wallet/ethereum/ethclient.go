@@ -3,6 +3,7 @@ package ethereum
 import (
 	"context"
 	"errors"
+	"github.com/ethereum/go-ethereum/rpc"
 	"math/big"
 	"net"
 	"strings"
@@ -40,6 +41,7 @@ type Client interface {
 	BlockByNumber(context.Context, *big.Int) (*types.Block, error)
 	TransactionReceipt(context.Context, common.Hash) (*types.Receipt, error)
 	NonceAt(context.Context, common.Address, *big.Int) (uint64, error)
+	Client() *rpc.Client
 }
 
 // newEthClient init the eth client

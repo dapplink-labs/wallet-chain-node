@@ -85,7 +85,7 @@ fullnode:
 
   tron:
     rpcs:
-      - rpc_url: 'https://tron.drpc.org'
+      - rpc_url: 'https://grpc.trongrid.io:50051'
     confirmations: 4
     tp_api_url: ''
     tp_api_key: ''
@@ -111,7 +111,7 @@ fullnode:
     network: "mainnet"
     NonceAccountAddr: DJyNpXgggw1WGgjTVzFsNjb3fuQZVMqhoakvSBfX9LYx
     FeeAccountPriKey: 4TMFNY9ntAn3CHzguSAvDNLPRoQTaK3sWbQQXdDXaE6KWRBLufGL6PJdsD2koiEe3gGmMdRK3aAw7sikGNksHJrN
-    solScanApiKey: ''
+    solScanApiKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVkQXQiOjE3MjQwNjIxMzk5MDYsImVtYWlsIjoiemFja2d1by5ndW9AZ21haWwuY29tIiwiYWN0aW9uIjoidG9rZW4tYXBpIiwiYXBpVmVyc2lvbiI6InYxIiwiaWF0IjoxNzI0MDYyMTM5fQ.EaWDC25lyGNx_LqRL5sAYYKLMbq10brnexKnAz9C3UY'
     solScanBaseUrl: 'https://pro-api.solscan.io'
     solScanBaseTimeout: 20s
   dot:
@@ -147,7 +147,8 @@ fullnode:
       - rpc_url: 'https://rest-mainnet.onflow.org/v1'
   ton:
     rpcs:
-      - rpc_url: 'https://toncenter.com/api/v3'
+      - rpc_url: 'https://ton.org/global.config.json'
+    tp_api_url: 'https://toncenter.com/api/v3'
 
   ar:
     rpcs:
@@ -155,7 +156,7 @@ fullnode:
 
 okLink:
   okLinkBaseUrl: 'https://www.oklink.com'
-  okLinkApiKey: ''
+  okLinkApiKey: '5181d535-b68f-41cf-bbc6-25905e46b6a6'
   okLinkTimeout: 20s
 
 chains: [ Bitcoin, Ethereum, Arbitrum, Optimism, BscChain, Heco, Polygon, Mantle, Base, Linea, NEAR, XRP, EOS, Solana, Ada,Flow,Sui,Ton, Arweave, Tron ]

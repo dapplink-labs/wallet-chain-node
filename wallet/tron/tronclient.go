@@ -41,7 +41,7 @@ func newTronClients(conf *config.Config) ([]*tronClient, error) {
 	} else if conf.NetWork == "regtest" {
 		chainConfig = params.AllCliqueProtocolChanges
 	}
-	log.Info("eth client setup", "chain_id", chainConfig.ChainID.Int64(), "network", conf.NetWork)
+	log.Info("tron client setup", "chain_id", chainConfig.ChainID.Int64(), "network", conf.NetWork)
 
 	for _, rpc := range conf.Fullnode.Tron.RPCs {
 
@@ -54,14 +54,13 @@ func newTronClients(conf *config.Config) ([]*tronClient, error) {
 		domain = strings.TrimPrefix(domain, "https://")
 		if strings.Contains(domain, ":") {
 			words := strings.Split(domain, ":")
-
 			ipAddr, err := net.ResolveIPAddr("ip", words[0])
 			if err != nil {
 				log.Error("resolve eth domain failed", "url", rpc.RPCURL)
 				continue
 			}
 			log.Info("tronclient setup client", "ip", ipAddr)
-			rpcURL = strings.Replace(rpc.RPCURL, words[0], ipAddr.String(), 1)
+			rpcURL = strings.Replace(domain, words[0], ipAddr.String(), 1)
 		}
 		c := tclient.NewGrpcClient(rpcURL)
 		if err := c.Start(grpc.WithTransportCredentials(insecure.NewCredentials())); err != nil {
